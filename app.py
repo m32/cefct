@@ -74,7 +74,7 @@ def main(args):
                 commandLine.contents,
                 flush=True,
             )
-            v = cast(processType, c_void_p)
+            v = ct.cast(processType, ct.c_void_p)
             print('processType=', v, v.value)
             s = commandLine.contents._get_command_line_string(commandLine)
             print('commandLine=', s.contents.ToString(True))
@@ -116,7 +116,7 @@ def main(args):
     cef.initialize(mainArgs, settings, app, None)
 
     print("*************** RUN", flush=True)
-    if 0 and cef.win32:
+    if cef.win32:
         import appwin
         appwin.main()
     else:
