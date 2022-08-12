@@ -1,0 +1,2 @@
+export LD_PRELOAD=`pwd`/bin/libcef.so
+$* vpython3 app.py

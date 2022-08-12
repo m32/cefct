@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/devel/bin/python3/bin/python",
+    "python.languageServer": "Pylance"
+}

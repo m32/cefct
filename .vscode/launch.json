@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "generate",
+      "type": "python",
+      "request": "launch",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/cefctgen",
+      "program": "${workspaceFolder}/cefctgen/cefglue_interop_gen.py",
+      "args": [
+        "--cpp-header-dir=include",
+        "--cefglue-dir=glucef/",
+        "--no-backup"
+      ],
+      "jinja": true
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}",
+      "program": "${file}"
+    }
+  ]
+}

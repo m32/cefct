@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+bin/
+bin-cef/
+cef-java
+cefglue
+cefpython
+cef_binary_102.0.3+g53d4ce9+chromium-102.0.5005.40_linux64_beta/
+cef_binary_102.0.3+g53d4ce9+chromium-102.0.5005.40_windows64_beta/
+chromium/
