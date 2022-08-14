@@ -1,9 +1,8 @@
 #!/usr/bin/env vpython3
-import time
 import sys
 import os
 
-top = os.path.join(os.getcwd(), 'bin')
+top = os.path.join(os.getcwd(), "bin")
 # os.chdir(top)
 
 for fname in (
@@ -17,7 +16,8 @@ for fname in (
 
 import ctypes as ct
 from cefct import libcefdef
-libcefdef.LoadLibrary(os.path.join(top, "libcef"+libcefdef.dllext))
+
+libcefdef.LoadLibrary(os.path.join(top, "libcef" + libcefdef.dllext))
 from cefct import libcef as cef
 
 
@@ -25,7 +25,7 @@ c_byte_p = ct.POINTER(ct.c_byte)
 
 
 def CefMainArgs(argv):
-    argb = [ct.create_string_buffer(s.encode("ascii")) for s in argv]
+    argb = [ct.create_string_buffer(s.encode("ascii")) for s in argv[1:]]
     cargv = (ct.c_void_p * (len(argb) + 1))()
     for i in range(len(argb)):
         v = argb[i]
@@ -45,21 +45,32 @@ def main(args):
     else:
         mainArgs, mainArgsB = CefMainArgs(args)
 
-    #command_line = libcef.command_line_create()
-    #command_line.contents._init_from_string(command_line, cef_string_t("--show-fps-counter"))
+    # command_line = libcef.command_line_create()
+    # command_line.contents._init_from_string(command_line, cef_string_t("--show-fps-counter"))
 
     settings = cef.cef_settings_t()
     settings.remote_debugging_port = 20480
-    #settings.no_sandbox = 1
+    # settings.no_sandbox = 1
     settings.chrome_runtime = 0
-    settings.browser_subprocess_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'pyhelper'+cef.exeext)))
-    #settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
-    #settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources\\locales')))
-    #settings.multi_threaded_message_loop = 1
-    settings.root_cache_path = cef.cef_string_t(os.path.join(os.getcwd(), "bin-cef", "root"))
-    settings.cache_path = cef.cef_string_t(os.path.join(os.getcwd(), "bin-cef", "root", "cache"))
-    settings.user_data_path= cef.cef_string_t(os.path.join(os.getcwd(), "bin-cef", "user-data"))
-    settings.log_file = cef.cef_string_t(os.path.join(os.getcwd(), "bin-cef", "cef.log"))
+    settings.browser_subprocess_path = cef.cef_string_t(
+        os.path.normpath(os.path.join(top, "cefsimple"))
+    )
+    # settings.browser_subprocess_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'pyhelper'+cef.exeext)))
+    # settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
+    # settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources\\locales')))
+    # settings.multi_threaded_message_loop = 1
+    settings.root_cache_path = cef.cef_string_t(
+        os.path.join(os.getcwd(), "bin-cef", "root")
+    )
+    settings.cache_path = cef.cef_string_t(
+        os.path.join(os.getcwd(), "bin-cef", "root", "cache")
+    )
+    settings.user_data_path = cef.cef_string_t(
+        os.path.join(os.getcwd(), "bin-cef", "user-data")
+    )
+    settings.log_file = cef.cef_string_t(
+        os.path.join(os.getcwd(), "bin-cef", "cef.log")
+    )
     settings.log_severity = 2
 
     class App(cef.CefApp):
@@ -75,9 +86,9 @@ def main(args):
                 flush=True,
             )
             v = ct.cast(processType, ct.c_void_p)
-            print('processType=', v, v.value)
+            print("processType=", v, v.value)
             s = commandLine.contents._get_command_line_string(commandLine)
-            print('commandLine=', s.contents.ToString(True))
+            print("commandLine=", s.contents.ToString(True))
             return None
 
         # def OnRegisterCustomSchemes(self, this, registrar):
@@ -95,7 +106,7 @@ def main(args):
             return None
             print("App.GetBrowserProcessHandler", flush=True)
             v = addressof(self.bph)
-            print('&bph=', v, flush=True)
+            print("&bph=", v, flush=True)
             v = 0
             return v
 
@@ -118,10 +129,12 @@ def main(args):
     print("*************** RUN", flush=True)
     if cef.win32:
         import appwin
+
         appwin.main()
     else:
-        import appgtk as xapp
-        #import appwx as xapp
+        # import appgtk as xapp
+        import appwx as xapp
+
         xapp.main()
     print("*************** /RUN", flush=True)
 
