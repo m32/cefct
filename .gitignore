@@ -130,9 +130,11 @@ dmypy.json
 
 bin/
 bin-cef/
+ChromiumGtk
 cef-java
 cefglue
 cefpython
 cef_binary_102.0.3+g53d4ce9+chromium-102.0.5005.40_linux64_beta/
 cef_binary_102.0.3+g53d4ce9+chromium-102.0.5005.40_windows64_beta/
+cef_binary_104.4.18+g2587cf2+chromium-104.0.5112.81_linux64/
 chromium/
