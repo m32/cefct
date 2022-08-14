@@ -1,68 +1,99 @@
-import sys
 import gi
 
 gi.require_version("Gtk", "3.0")
-gi.require_version("Gdk", "3.0")
-gi.require_version('Notify', '0.7')
-
-from gi.repository import Gtk
-from gi.repository import GdkX11
-from gi.repository import GLib
-from gi.repository import GObject
-from gi.repository import Notify
+from gi.repository import Gtk, GObject
 
 from cefct import libcef
-from appcommon import LifeSpanHandler, Client
+from appcommon import Client
 
-class MyWindow(Gtk.Window):
+
+def main():
+    app = Gtk3Example()
+    return app.run()
+
+
+class Gtk3Example(Gtk.Application):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Hello World")
-        Gtk.Window.set_default_size(self, 640, 480)
-        Notify.init("Simple GTK3 Application")
+        super(Gtk3Example, self).__init__(application_id="cefpython.gtk3")
+        self.browser = None
+        self.window = None
 
-        self.box = Gtk.Box(spacing=6)
-        self.add(self.box)
+    def run(self):
+        GObject.timeout_add(10, self.on_timer)
+        self.connect("startup", self.on_startup)
+        self.connect("activate", self.on_activate)
+        super().run()
 
-        self.button = Gtk.Button(label="Click Here")
-        self.button.set_halign(Gtk.Align.CENTER)
-        self.button.set_valign(Gtk.Align.CENTER)
-        self.button.connect("clicked", self.on_button_clicked)
-        self.box.pack_start(self.button, True, True, 0)
+    def get_handle(self):
+        return self.window.get_property("window").get_xid()
 
-    def on_button_clicked(self, widget):
-        n = Notify.Notification.new("Simple GTK3 Application", "Hello World !!")
-        n.show()
+    def on_timer(self):
+        libcef.do_message_loop_work()
+        return True
 
+    def on_startup(self, *_):
+        self.window = Gtk.ApplicationWindow.new(self)
+        self.window.set_title("GTK 3 example (PyGObject)")
+        self.window.set_default_size(800, 600)
+        self.window.connect("configure-event", self.on_configure)
+        self.window.connect("size-allocate", self.on_size_allocate)
+        self.window.connect("focus-in-event", self.on_focus_in)
+        self.window.connect("delete-event", self.on_window_close)
+        self.add_window(self.window)
+        appgtkutil.SetDefaultWindowVisual(self.window)
+
+    def on_activate(self, *_):
+        self.window.realize()
+        self.embed_browser()
+        self.window.show_all()
+        # Must set size of the window again after it was shown,
+        # otherwise browser occupies only part of the window area.
+        self.window.resize(*self.window.get_default_size())
+
+    def embed_browser(self):
         window_info = libcef.cef_window_info_t()
-        xid = self.button.get_window().get_xid()
-        print("Window xid:", xid)
-        window_info.parent_window = xid
+        if 1:
+            hwnd = self.get_handle()
+            print("hwnd=", hwnd)
+            window_info.parent_window = hwnd
 
         cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
-
         browser_settings = libcef.cef_browser_settings_t()
-
         client = Client()
 
         print("cef_browser_host_create_browser")
-        libcef.browser_host_create_browser(window_info, client, cef_url, browser_settings, None, None)
+        self.browser = libcef.browser_host_create_browser(
+            window_info, client, cef_url, browser_settings, None, None
+        )
 
-    def on_done(self, widget):
-        #libcef.quit_message_loop()
-        #libcef.shutdown()
-        Gtk.main_quit(widget)
+    def on_configure(self, *_):
+        if self.browser:
+            pass
+            # self.browser.NotifyMoveOrResizeStarted()
+        return False
+
+    def on_size_allocate(self, _, data):
+        if self.browser:
+            pass
+            # self.browser.SetBounds(data.x, data.y, data.width, data.height)
+
+    def on_focus_in(self, *_):
+        if self.browser:
+            # self.browser.SetFocus(True)
+            return True
+        return False
+
+    def on_window_close(self, *_):
+        if self.browser:
+            pass
+            # self.browser.CloseBrowser(True)
+            self.clear_browser_references()
+
+    def clear_browser_references(self):
+        # Clear browser references that you keep anywhere in your
+        # code. All references must be cleared for CEF to shutdown cleanly.
+        self.browser = None
 
 
-#def on_cef_timer():
-#    libcef.do_message_loop_work()
-#    return True
-
-#GObject.threads_init()
-#GObject.timeout_add(10, on_cef_timer)
-
-def main():
-    win = MyWindow()
-    win.connect("destroy", win.on_done)
-    win.show_all()
-    #Gtk.main()
-    libcef.run_message_loop()
+if __name__ == "__main__":
+    main()
