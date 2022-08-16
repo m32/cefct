@@ -205,24 +205,25 @@ class Main(wx.Frame):
                 hdwp = ct.windll.user32.BeginDeferWindowPos(1)
                 ct.windll.user32.DeferWindowPos(
                     hdwp, hwnd, None,
-                    0, 0, size.x, size.y, SWP_NOZORDER)
+                    0, 0, size.width, size.height, SWP_NOZORDER)
                 ct.windll.user32.EndDeferWindowPos(hdwp)
             elif 0:
                 sz = win32gui.GetWindowRect(hwnd)
                 print('MoveWindow=', sz)
-                win32gui.MoveWindow(hwnd, 0, 0, size.x, size.y, False)
+                win32gui.MoveWindow(hwnd, 0, 0, size.width, size.height, False)
             elif 1:
                 sz = win32gui.GetWindowRect(hwnd)
                 print('SetWindowPos=', sz)
                 win32gui.SetWindowPos(hwnd, None,
                     0, 0,
-                    size.x, size.y,
+                    size.width, size.height,
                     win32con.SWP_NOZORDER)
         else:
             print('X11.onsize', hwnd)
-            xd = libcef.libcefdll.cef_get_xdisplay()
-            libX11.XResizeWindow(xd, hwnd, size.x, size.y)
-            self.sw.get_window().move_resize(0, 0, size.x, size.y)
+            display = Gdk.Display.get_default()
+            window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
+            window.resize(size.width, size.height)
+            self.sw.get_window().move_resize(0, 0, size.width, size.height)
         host.contents._notify_move_or_resize_started(host)
 
 

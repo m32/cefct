@@ -35,7 +35,6 @@ class Gtk3Example(Gtk.Application):
         self.window = Gtk.ApplicationWindow.new(self)
         self.window.set_title("GTK 3 example (PyGObject)")
         self.window.set_default_size(800, 600)
-        self.window.connect("configure-event", self.on_configure)
         self.window.connect("size-allocate", self.on_size_allocate)
         self.window.connect("focus-in-event", self.on_focus_in)
         self.window.connect("delete-event", self.on_window_close)
@@ -46,9 +45,6 @@ class Gtk3Example(Gtk.Application):
         self.window.realize()
         self.embed_browser()
         self.window.show_all()
-        # Must set size of the window again after it was shown,
-        # otherwise browser occupies only part of the window area.
-        #self.window.resize(*self.window.get_default_size())
 
     def embed_browser(self):
         window_info = libcef.cef_window_info_t()
@@ -65,12 +61,6 @@ class Gtk3Example(Gtk.Application):
         self.browser = libcef.browser_host_create_browser_sync(
             window_info, client, cef_url, browser_settings, None, None
         )
-
-    def on_configure(self, *_):
-        if self.browser:
-            pass
-            # self.browser.NotifyMoveOrResizeStarted()
-        return False
 
     def on_size_allocate(self, _, data):
         self.window.resize(data.width, data.height)
