@@ -1,0 +1,8 @@
+from . import enum
+
+
+class CefPermissionRequestResult(enum.IntEnum):
+    CEF_PERMISSION_RESULT_ACCEPT = 0
+    CEF_PERMISSION_RESULT_DENY = 1
+    CEF_PERMISSION_RESULT_DISMISS = 2
+    CEF_PERMISSION_RESULT_IGNORE = 3

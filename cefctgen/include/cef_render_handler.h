@@ -68,8 +68,8 @@ class CefRenderHandler : public virtual CefBaseRefCounted {
   }
 
   ///
-  // Called to retrieve the root window rectangle in screen coordinates. Return
-  // true if the rectangle was provided. If this method returns false the
+  // Called to retrieve the root window rectangle in screen DIP coordinates.
+  // Return true if the rectangle was provided. If this method returns false the
   // rectangle from GetViewRect will be used.
   ///
   /*--cef()--*/
@@ -78,15 +78,17 @@ class CefRenderHandler : public virtual CefBaseRefCounted {
   }
 
   ///
-  // Called to retrieve the view rectangle which is relative to screen
-  // coordinates. This method must always provide a non-empty rectangle.
+  // Called to retrieve the view rectangle in screen DIP coordinates. This
+  // method must always provide a non-empty rectangle.
   ///
   /*--cef()--*/
   virtual void GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect) = 0;
 
   ///
-  // Called to retrieve the translation from view coordinates to actual screen
-  // coordinates. Return true if the screen coordinates were provided.
+  // Called to retrieve the translation from view DIP coordinates to screen
+  // coordinates. Windows/Linux should provide screen device (pixel) coordinates
+  // and MacOS should provide screen DIP coordinates. Return true if the
+  // requested coordinates were provided.
   ///
   /*--cef()--*/
   virtual bool GetScreenPoint(CefRefPtr<CefBrowser> browser,
@@ -160,6 +162,23 @@ class CefRenderHandler : public virtual CefBaseRefCounted {
                                   PaintElementType type,
                                   const RectList& dirtyRects,
                                   void* shared_handle) {}
+
+  ///
+  // Called to retrieve the size of the touch handle for the specified
+  // |orientation|.
+  ///
+  /*--cef()--*/
+  virtual void GetTouchHandleSize(CefRefPtr<CefBrowser> browser,
+                                  cef_horizontal_alignment_t orientation,
+                                  CefSize& size) {}
+
+  ///
+  // Called when touch handle state is updated. The client is responsible for
+  // rendering the touch handles.
+  ///
+  /*--cef()--*/
+  virtual void OnTouchHandleStateChanged(CefRefPtr<CefBrowser> browser,
+                                         const CefTouchHandleState& state) {}
 
   ///
   // Called when the user starts dragging content in the web view. Contextual

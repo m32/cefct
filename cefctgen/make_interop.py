@@ -1,6 +1,7 @@
 #
 # Copyright (C) Xilium CefGlue Project
 #
+import re
 from cef_parser import *
 import sys
 import schema
@@ -12,6 +13,7 @@ from xml.dom.minidom import getDOMImplementation
 # settings
 #
 indent = "    "
+bcb = re.compile('CEFCALLBACK\(POINTER\(\w+\)')
 
 #
 # Common
@@ -190,26 +192,15 @@ def make_struct_members(cls, step):
         result.append(indent + indent + "self._base.size = sizeof(self)")
 
         if schema.is_handler(cls):
-            result.append(indent + indent + "self._callbacks = [")
-            funcs = get_funcs(cls)
-            for func in funcs:
-                if not func["basefunc"]:
-                    result.append(
-                        indent
-                        + indent
-                        + indent
-                        + "CEFCALLBACK(%(csn_retval)s, %(csn_args_types)s)(self.%(name)s),"
-                        % func
-                    )
-            result.append(indent + indent + "]")
             callbackno = 0
+            funcs = get_funcs(cls)
             for func in funcs:
                 if not func["basefunc"]:
                     func["callbackno"] = callbackno
                     result.append(
                         indent
                         + indent
-                        + "self.%(field_name)s = self._callbacks[%(callbackno)d]" % func
+                        + "self.%(field_name)s = self._callbacks[%(callbackno)d](self.%(name)s)" % func
                     )
                     callbackno += 1
             result.append("")
@@ -217,14 +208,32 @@ def make_struct_members(cls, step):
         result.append("")
 
     elif step == 1:
-        fields = []
-        fields.append("('_base', {0}),".format(parentClassName))
         funcs = get_funcs(cls)
+        result.append(classname + "._callbacks = (")
+        ctype = "CEFCALLBACK" if schema.is_handler(cls) else "CFUNCTYPE"
         for func in funcs:
             if not func["basefunc"]:
+                line = (ctype + "(%(csn_retval)s, %(csn_args_types)s),") %func
+                if schema.is_handler(cls):
+                    m = bcb.match(line)
+                    if m and m.start() == 0:
+                        line1 = 'CEFCALLBACK(POINTER(c_void)'+line[m.end():]
+                        result.append(indent+'#'+line)
+                        result.append(indent+line1)
+                    else:
+                        result.append(indent+line)
+                else:
+                    result.append(indent+line)
+        result.append(")")
+        fields = []
+        fields.append("('_base', {0}),".format(parentClassName))
+        callbackno = 0
+        for func in funcs:
+            if not func["basefunc"]:
+                func["callbackno"] = callbackno
+                callbackno += 1
                 fields.append(
-                    "('%(field_name)s', CEFCALLBACK(%(csn_retval)s, %(csn_args_types)s)),"
-                    % func
+                    ("('%(field_name)s', "+classname+"._callbacks[%(callbackno)d]),") % func
                 )
         result.append(classname + "._fields_ = (")
         result.append(indent + ("\n" + indent).join(fields))
@@ -254,6 +263,7 @@ def make_libcef_file(header):
 from .libcefdef import *
 from .libcefstruct import *
 from .libcefversion import *
+from . import libcefsizes
 
 from .Handlers import *
 

@@ -21,3 +21,5 @@ from .cef_time_t import *
 from .cef_touch_event_t import *
 from .cef_urlparts_t import *
 from .cef_window_info_t import *
+
+from .cef_touch_handle_state_t import *

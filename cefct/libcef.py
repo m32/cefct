@@ -5,6 +5,7 @@
 from .libcefdef import *
 from .libcefstruct import *
 from .libcefversion import *
+from . import libcefsizes
 
 from .Handlers import *
 

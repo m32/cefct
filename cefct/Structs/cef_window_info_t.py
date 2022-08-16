@@ -1,6 +1,6 @@
 from ..libcefdef import *
 from ..cef_string_t import cef_string_t
-
+from .cef_rect_t import cef_rect_t
 
 class cef_window_info_t_windows(Structure):
     _align_ = CEFALIGN
@@ -8,11 +8,9 @@ class cef_window_info_t_windows(Structure):
         ('ex_style', c_uint),
         ('window_name', cef_string_t),
         ('style', c_uint),
-        ('x', c_int),
-        ('y', c_int),
-        ('width', c_int),
-        ('height', c_int),
+        ('bounds', cef_rect_t),
         ('parent_window', c_void_p),
+#        ('parent_window', c_uint64),
         ('menu', c_void_p),
         ('windowless_rendering_enabled', c_int),
         ('shared_texture_enabled', c_int),

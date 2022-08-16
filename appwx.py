@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import wx
+import ctypes as ct
 from cefct import libcef
 from appcommon import Client
 
 if libcef.win32:
     import win32con
+    import win32gui
 else:
     import gi
 
@@ -20,27 +22,28 @@ class Main(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent=parent, id=wx.ID_ANY, title="wxPython example")
         sz = wx.BoxSizer(wx.VERTICAL)
-        bt = wx.Button(self, wx.ID_ANY, "Button")
+        bt = wx.Button(self, wx.ID_ANY, "Start browser")
         lb = wx.StaticText(self, wx.ID_ANY, "Label")
         txt = wx.TextCtrl(self, wx.ID_ANY, "Editable")
 
         self.browser = None
         size = (800, 600)
-        self.bp = wx.Panel(self, wx.ID_ANY, size=size, style=wx.WANTS_CHARS)
-        self.bp.SetMinSize(size)
+        self.SetMinSize(size)
+        self.bp = wx.Window(self, wx.ID_ANY, size=size, style=wx.WANTS_CHARS)
+        #self.bp.SetMinSize(size)
         self.bp.Bind(wx.EVT_SET_FOCUS, self.OnBPSetFocus)
-        self.bp.Bind(wx.EVT_SIZE, self.OnBPSize)
+        self.Bind(wx.EVT_SIZE, self.OnBPSize)
 
         # Add controls
         sz.Add(bt, 1, wx.EXPAND | wx.ALL, 2)
         sz.Add(lb, 1, wx.EXPAND | wx.ALL, 2)
         sz.Add(txt, 1, wx.EXPAND | wx.ALL, 2)
-        sz.Add(self.bp, wx.EXPAND | wx.ALL, 2)
+        sz.Add(self.bp, 1, wx.EXPAND | wx.ALL, 2)
 
-        sz.CalcMin()
+        #sz.CalcMin()
         self.SetAutoLayout(True)
         self.SetSizer(sz)
-        self.Layout()
+        #self.Layout()
 
         self.Centre()
 
@@ -101,23 +104,23 @@ class Main(wx.Frame):
         )
         print("/cef_browser_host_create_browser")
 
-    def xembed_browser_windows(self):
+    def embed_browser_windows(self):
         (width, height) = self.bp.GetClientSize().Get()
         assert self.bp.GetHandle(), "Window handle not available"
         window_info = libcef.cef_window_info_t()
         xid = self.bp.GetHandle()
         window_info.style = (
-            win32con.WS_OVERLAPPEDWINDOW
-            | win32con.WS_CLIPCHILDREN
-            |
-            #                win32con.WS_CLIPSIBLINGS |
+            win32con.WS_CHILD |
+            win32con.WS_CLIPCHILDREN |
+            win32con.WS_CLIPSIBLINGS |
+            win32con.WS_TABSTOP |
             win32con.WS_VISIBLE
         )
         window_info.parent_window = xid
-        window_info.x = 0
-        window_info.y = 0
-        window_info.width = width
-        window_info.height = height
+        window_info.bounds.x = 0
+        window_info.bounds.y = 0
+        window_info.bounds.width = width
+        window_info.bounds.height = height
 
         cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
         browser_settings = libcef.cef_browser_settings_t()
@@ -160,23 +163,44 @@ class Main(wx.Frame):
         host.contents._set_focus(host, 1)
         # self.browser.SetFocus(True)
 
-    def OnBPSize(self, event):
-        event.Skip(True)
+    def OnBPSize(self, evt):
+        evt.Skip()
         if self.browser is None:
             return
-        if libcef.win32:
-            return
-        (x, y) = (0, 0)
-        (width, height) = self.bp.GetSize().Get()
+        print('*'*20)
+        print('self.bp.GetClientSize', self.bp.GetClientSize())
+        print('self.bp.GetSize', self.bp.GetSize())
+        print('evt.GetSize', evt.GetSize())
+        size = self.bp.GetClientSize()
         # self.browser.SetBounds(x, y, width, height)
         host = self.browser.contents._get_host(self.browser)
 
-        xd = libcef.libcefdll.cef_get_xdisplay()
-        hwnd = host.contents._get_window_handle(host)
-        libX11.XResizeWindow(xd, hwnd, width, height)
-        self.sw.get_window().move_resize(x, y, width, height)
+        if libcef.win32:
+            hwnd = host.contents._get_window_handle(host)
+            print('win32.onsize', hwnd)
+            if 0:
+                SWP_NOZORDER = 0x0004
+                hdwp = ct.windll.user32.BeginDeferWindowPos(1)
+                ct.windll.user32.DeferWindowPos(
+                    hdwp, hwnd, None,
+                    0, 0, size.x, size.y, SWP_NOZORDER)
+                ct.windll.user32.EndDeferWindowPos(hdwp)
+            elif 0:
+                sz = win32gui.GetWindowRect(hwnd)
+                print('MoveWindow=', sz)
+                win32gui.MoveWindow(hwnd, 0, 0, size.x, size.y, False)
+            elif 1:
+                sz = win32gui.GetWindowRect(hwnd)
+                print('SetWindowPos=', sz)
+                win32gui.SetWindowPos(hwnd, None,
+                    0, 0,
+                    size.x, size.y,
+                    win32con.SWP_NOZORDER)
+        else:
+            xd = libcef.libcefdll.cef_get_xdisplay()
+            libX11.XResizeWindow(xd, hwnd, width, height)
+            self.sw.get_window().move_resize(x, y, width, height)
         host.contents._notify_move_or_resize_started(host)
-        print("size:", x, y, width, height)
 
 
 class App(wx.App):
@@ -189,5 +213,5 @@ class App(wx.App):
 
 def main():
     app = App(False)
-    # app.MainLoop()
-    libcef.run_message_loop()
+    app.MainLoop()
+    #libcef.run_message_loop()

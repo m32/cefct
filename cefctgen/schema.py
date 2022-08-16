@@ -87,6 +87,7 @@ c2cs_types = {
     "cef_range_t": "cef_range_t",
     "cef_channel_layout_t": "CefChannelLayout",
     "cef_text_input_mode_t": "CefTextInputMode",
+    "cef_touch_handle_state_t": "cef_touch_handle_state_t",
 }
 
 c2cs_platform_retval = {
@@ -155,6 +156,13 @@ c2cs_enumtypes = {
     "cef_media_route_connection_state_t": "CefMediaRouteConnectionState",
     "cef_media_route_create_result_t": "CefMediaRouteCreateResult",
     "cef_media_sink_icon_type_t": "CefMediaSinkIconType",
+
+    "cef_quick_menu_edit_state_flags_t": "QuickMenuEditStateFlags",
+    "cef_permission_request_result_t": "CefPermissionRequestResult",
+    "cef_permission_request_types_t": "CefPermissionRequestTypes",
+    "cef_horizontal_alignment_t": "CefHorizontalAlignment",
+    "cef_touch_handle_state_flags_t": "CefTouchHandleStateFlags",
+    "cef_quick_menu_edit_state_flags_t": "CefQuickMenuEditStateFlags",
 }
 
 c2cs_structtypes = {}

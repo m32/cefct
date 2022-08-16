@@ -71,3 +71,10 @@ from .CefValueType import *
 from .CefWindowOpenDisposition import *
 from .CefXmlEncodingType import *
 from .CefXmlNodeType import *
+
+from .CefPermissionRequestResult import *
+from .CefPermissionRequestTypes import *
+from .CefQuickMenuEditStateFlags import *
+from .CefHorizontalAlignment import *
+from .CefTouchHandleStateFlags import *
+from .CefQuickMenuEditStateFlags import *

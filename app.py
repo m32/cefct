@@ -2,7 +2,7 @@
 import sys
 import os
 
-top = os.path.join(os.getcwd(), "bin")
+top = os.path.join(os.getcwd(), "bin-104")
 # os.chdir(top)
 
 for fname in (
@@ -53,12 +53,12 @@ def main(args):
     # settings.no_sandbox = 1
     settings.chrome_runtime = 0
     settings.browser_subprocess_path = cef.cef_string_t(
-        os.path.normpath(os.path.join(top, "cefsimple"))
+        os.path.normpath(os.path.join(top, "cefclient"))
     )
     # settings.browser_subprocess_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'pyhelper'+cef.exeext)))
     # settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
     # settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources\\locales')))
-    # settings.multi_threaded_message_loop = 1
+    #settings.multi_threaded_message_loop = 1
     settings.root_cache_path = cef.cef_string_t(
         os.path.join(os.getcwd(), "bin-cef", "root")
     )
@@ -127,7 +127,7 @@ def main(args):
     cef.initialize(mainArgs, settings, app, None)
 
     print("*************** RUN", flush=True)
-    if cef.win32:
+    if cef.win32 and 0:
         import appwin
 
         appwin.main()

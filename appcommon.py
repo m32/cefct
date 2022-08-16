@@ -74,3 +74,5 @@ class Client(cef.cef_client_t):
     def OnProcessMessageReceived(self, *args):
         #print('OnProcessMessageReceived')
         pass
+    def GetPermissionHandler(self, *args):
+        pass
