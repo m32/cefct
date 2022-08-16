@@ -174,9 +174,9 @@ class Main(wx.Frame):
         size = self.bp.GetClientSize()
         # self.browser.SetBounds(x, y, width, height)
         host = self.browser.contents._get_host(self.browser)
+        hwnd = host.contents._get_window_handle(host)
 
         if libcef.win32:
-            hwnd = host.contents._get_window_handle(host)
             print('win32.onsize', hwnd)
             if 0:
                 SWP_NOZORDER = 0x0004
@@ -197,9 +197,10 @@ class Main(wx.Frame):
                     size.x, size.y,
                     win32con.SWP_NOZORDER)
         else:
+            print('X11.onsize', hwnd)
             xd = libcef.libcefdll.cef_get_xdisplay()
-            libX11.XResizeWindow(xd, hwnd, width, height)
-            self.sw.get_window().move_resize(x, y, width, height)
+            libX11.XResizeWindow(xd, hwnd, size.x, size.y)
+            self.sw.get_window().move_resize(0, 0, size.x, size.y)
         host.contents._notify_move_or_resize_started(host)
 
 
@@ -213,5 +214,5 @@ class App(wx.App):
 
 def main():
     app = App(False)
-    app.MainLoop()
-    #libcef.run_message_loop()
+    #app.MainLoop()
+    libcef.run_message_loop()
