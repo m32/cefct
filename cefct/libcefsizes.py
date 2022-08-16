@@ -19,6 +19,7 @@ assert sizeof(cef_client_t)==192
 assert sizeof(cef_command_handler_t)==48
 assert sizeof(cef_command_line_t)==200
 assert sizeof(cef_run_context_menu_callback_t)==56
+assert sizeof(cef_run_quick_menu_callback_t)==56
 assert sizeof(cef_context_menu_handler_t)==96
 assert sizeof(cef_context_menu_params_t)==200
 assert sizeof(cef_cookie_manager_t)==80
@@ -61,6 +62,9 @@ assert sizeof(cef_media_source_t)==64
 assert sizeof(cef_menu_model_t)==488
 assert sizeof(cef_menu_model_delegate_t)==96
 assert sizeof(cef_navigation_entry_t)==120
+assert sizeof(cef_media_access_callback_t)==56
+assert sizeof(cef_permission_prompt_callback_t)==48
+assert sizeof(cef_permission_handler_t)==64
 assert sizeof(cef_print_dialog_callback_t)==56
 assert sizeof(cef_print_job_callback_t)==48
 assert sizeof(cef_print_handler_t)==88
@@ -90,6 +94,8 @@ assert sizeof(cef_scheme_registrar_t)==24
 assert sizeof(cef_scheme_handler_factory_t)==48
 assert sizeof(cef_server_t)==144
 assert sizeof(cef_server_handler_t)==104
+assert sizeof(cef_shared_memory_region_t)==64
+assert sizeof(cef_shared_process_message_builder_t)==72
 assert sizeof(cef_sslinfo_t)==56
 assert sizeof(cef_sslstatus_t)==80
 assert sizeof(cef_read_handler_t)==80
@@ -119,4 +125,3 @@ assert sizeof(cef_x509cert_principal_t)==112
 assert sizeof(cef_x509certificate_t)==120
 assert sizeof(cef_xml_reader_t)==272
 assert sizeof(cef_zip_reader_t)==136
-assert sizeof(cef_touch_handle_state_t)==36

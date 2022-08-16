@@ -20,6 +20,8 @@ This utility generates files for the CEF C++ to C API translation layer.
 """
 
 parser = OptionParser(description=disc)
+parser.add_option('--cef-dir', dest='cefdir', metavar='DIR',
+                  help='CEF source top [required]')
 parser.add_option('--cpp-header-dir', dest='cppheaderdir', metavar='DIR',
                   help='input directory for C++ header files [required]')
 parser.add_option('--cefglue-dir', dest='cefgluedir', metavar='DIR',
@@ -56,7 +58,7 @@ if not options.cefgluedir is None:
     # output cefglue interop
     if not options.quiet:
         sys.stdout.write('Generating CefGlue interop files...\n')
-    writect += write_interop(header, options.cefgluedir, not options.nobackup, 'cef3', options.cppheaderdir)
+    writect += write_interop(header, options.cefgluedir, not options.nobackup, 'cef3', options.cppheaderdir, options.cefdir)
 
 if not options.quiet:
     sys.stdout.write('Done - Wrote '+str(writect)+' files.\n')
