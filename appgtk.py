@@ -1,7 +1,7 @@
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, Gdk, GdkX11, GObject
 
 from cefct import libcef
 from appcommon import Client
@@ -40,15 +40,15 @@ class Gtk3Example(Gtk.Application):
         self.window.connect("focus-in-event", self.on_focus_in)
         self.window.connect("delete-event", self.on_window_close)
         self.add_window(self.window)
-        appgtkutil.SetDefaultWindowVisual(self.window)
 
     def on_activate(self, *_):
+        self.window.set_visual(self.window.get_screen().lookup_visual(0x21))
         self.window.realize()
         self.embed_browser()
         self.window.show_all()
         # Must set size of the window again after it was shown,
         # otherwise browser occupies only part of the window area.
-        self.window.resize(*self.window.get_default_size())
+        #self.window.resize(*self.window.get_default_size())
 
     def embed_browser(self):
         window_info = libcef.cef_window_info_t()
@@ -62,7 +62,7 @@ class Gtk3Example(Gtk.Application):
         client = Client()
 
         print("cef_browser_host_create_browser")
-        self.browser = libcef.browser_host_create_browser(
+        self.browser = libcef.browser_host_create_browser_sync(
             window_info, client, cef_url, browser_settings, None, None
         )
 
@@ -73,9 +73,14 @@ class Gtk3Example(Gtk.Application):
         return False
 
     def on_size_allocate(self, _, data):
+        self.window.resize(data.width, data.height)
         if self.browser:
-            pass
-            # self.browser.SetBounds(data.x, data.y, data.width, data.height)
+            host = self.browser.contents._get_host(self.browser)
+            hwnd = host.contents._get_window_handle(host)
+            display = Gdk.Display.get_default()
+            window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
+            window.resize(data.width, data.height)
+            host.contents._notify_move_or_resize_started(host)
 
     def on_focus_in(self, *_):
         if self.browser:
