@@ -17,6 +17,7 @@ else:
 
     libX11 = ctypes.CDLL("libX11.so.6")
 
+useTimer = False
 
 class Main(wx.Frame):
     def __init__(self, parent):
@@ -51,11 +52,32 @@ class Main(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         # wx.CallLater(100, self.embed_browser)
 
+        if useTimer:
+            # set up periodic screen capture
+            self.timer = wx.Timer(self)
+            self.timer.Start(100)
+            self.Bind(wx.EVT_TIMER, self.on_timer)
+        else:
+            self.timer = None
+
+    def on_timer(self, event):
+        libcef.do_message_loop_work()
+
     def OnClose(self, event):
-        event.Skip(True)
+        event.Skip()
+        if self.timer:
+            self.timer.Stop()
+            self.timer = None
         if self.browser is None:
+            self.Destroy()
             return
+        #self.client.life_span_handler.OnBeforeClose()
+        host = self.browser.contents._get_host(self.browser)
+        host.contents._close_browser(host, 0)
         self.browser = None
+        self.Destroy()
+        if not useTimer:
+            libcef.quit_message_loop()
 
     def embed_browser_linux(self):
         (width, height) = self.bp.GetClientSize().Get()
@@ -214,5 +236,7 @@ class App(wx.App):
 
 def main():
     app = App(False)
-    #app.MainLoop()
-    libcef.run_message_loop()
+    if useTimer:
+        app.MainLoop()
+    else:
+        libcef.run_message_loop()
