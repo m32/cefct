@@ -1,9 +1,16 @@
 # cefct
+
 Python bindings (ctypes) for the Chromium Embedded Framework (CEF)
 
-https://cef-builds.spotifycdn.com/index.html#linux64:102.0.3%2Bg53d4ce9%2Bchromium-102.0.5005.40
+* [Linux][#linux]
+* [Windows][#windows]
 
-https://cef-builds.spotifycdn.com/cef_binary_102.0.3%2Bg53d4ce9%2Bchromium-102.0.5005.40_linux64_beta.tar.bz2
+## Binaries
 
-https://cef-builds.spotifycdn.com/cef_binary_102.0.3%2Bg53d4ce9%2Bchromium-102.0.5005.40_windows64_beta.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_102.0.3%2Bg53d4ce9%2Bchromium-102.0.5005.40_windows64_beta_debug_symbols.tar.bz2
+## Linux
+[All] (https://cef-builds.spotifycdn.com/index.html#linux64:cef_binary_104.4.18+g2587cf2+chromium-104.0.5112.81)
+[CEF Client] (https://cef-builds.spotifycdn.com/cef_binary_104.4.22%2Bg181df42%2Bchromium-104.0.5112.81_linux64_client.tar.bz2)
+
+## Windows
+[All] (https://cef-builds.spotifycdn.com/index.html#windows64:cef_binary_104.4.18+g2587cf2+chromium-104.0.5112.81)
+[CEF Client] (https://cef-builds.spotifycdn.com/cef_binary_104.4.22%2Bg181df42%2Bchromium-104.0.5112.81_windows64_client.tar.bz2)
