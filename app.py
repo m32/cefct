@@ -2,7 +2,7 @@
 import sys
 import os
 
-top = os.path.join(os.getcwd(), "bin-104")
+top = os.path.join(os.getcwd(), "bin")
 # os.chdir(top)
 
 for fname in (
@@ -127,7 +127,7 @@ def main(args):
     cef.initialize(mainArgs, settings, app, None)
 
     print("*************** RUN", flush=True)
-    if cef.win32 and 0:
+    if cef.win32 and 1:
         import appwin
 
         appwin.main()

@@ -2,6 +2,8 @@ import win32gui, win32con, win32api
 from cefct import libcef
 from appcommon import LifeSpanHandler, Client
 
+browser = None
+
 def create_window(title, class_name, width, height, window_proc):
     # Register window class
     wndclass = win32gui.WNDCLASS()
@@ -41,10 +43,21 @@ def close_window(window_handle, message, wparam, lparam):
     # OFF: win32gui.DestroyWindow(window_handle)
     return win32gui.DefWindowProc(window_handle, message, wparam, lparam)
 
+def size_window(window_handle, message, wparam, lparam):
+    x = win32gui.LOWORD(lparam)
+    y = win32gui.HIWORD(lparam)
+    host = browser.contents._get_host(browser)
+    hwnd = host.contents._get_window_handle(host)
+    win32gui.SetWindowPos(hwnd, None,
+        0, 0,
+        x, y,
+        win32con.SWP_NOZORDER)
+    return win32gui.DefWindowProc(window_handle, message, wparam, lparam)
+
 window_proc = {
     win32con.WM_CLOSE: close_window,
 #    win32con.WM_DESTROY: exit_app,
-#    win32con.WM_SIZE: WindowUtils.OnSize,
+    win32con.WM_SIZE: size_window,
 #    win32con.WM_SETFOCUS: WindowUtils.OnSetFocus,
 #    win32con.WM_ERASEBKGND: WindowUtils.OnEraseBackground
 }
@@ -78,7 +91,8 @@ def main():
     client = Client()
 
     print("cef_browser_host_create_browser")
-    libcef.browser_host_create_browser_sync(window_info, client, cef_url, browser_settings, None, None)
+    global browser
+    browser = libcef.browser_host_create_browser_sync(window_info, client, cef_url, browser_settings, None, None)
 
     print("cef_run_message_loop")
     libcef.run_message_loop()
