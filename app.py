@@ -38,6 +38,11 @@ def CefMainArgs(argv):
 
 
 def main(args):
+    usewx = False
+    print(args)
+    if len(args) > 1 and args[1] == 'wx':
+        usewx = True
+        del args[1]
     print("*" * 20, "main", flush=True)
     if libcefdef.win32:
         mainArgs = cef.cef_main_args_t()
@@ -127,14 +132,17 @@ def main(args):
     cef.initialize(mainArgs, settings, app, None)
 
     print("*************** RUN", flush=True)
-    if cef.win32 and 1:
-        import appwin
-
-        appwin.main()
+    if cef.win32:
+        if usewx:
+            import appwx as xapp
+        else:
+            import appwin as xapp
+        xapp.main()
     else:
-        # import appgtk as xapp
-        import appwx as xapp
-
+        if usewx:
+            import appwx as xapp
+        else:
+            import appgtk as xapp
         xapp.main()
     print("*************** /RUN", flush=True)
 
