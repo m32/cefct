@@ -63,6 +63,9 @@ class Gtk3Example(Gtk.Application):
         )
 
     def on_size_allocate(self, _, data):
+        print('on-size-allocate', '_=', _, 'data=', data)
+        print('w/h=', data.width, data.height)
+        print('browser=', self.browser)
         self.window.resize(data.width, data.height)
         if self.browser:
             host = self.browser.contents._get_host(self.browser)

@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 bin/
-bin-cef/
+bin-cefdata/
 ChromiumGtk
 cef-java
 cefglue

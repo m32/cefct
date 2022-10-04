@@ -1,7 +1,6 @@
-from . import enum
+import ctypes
 
-
-class CefTransitionType(enum.IntEnum):
+class CefTransitionType(ctypes.c_int):
     Link = 0
     Explicit = 1
     AutoSubframe = 3

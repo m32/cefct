@@ -5,11 +5,12 @@ import os
 top = os.path.join(os.getcwd(), "bin")
 # os.chdir(top)
 
+cefdataroot = os.path.join(os.getcwd(), "bin-cefdata")
 for fname in (
-    os.path.join(os.getcwd(), "bin-cef"),
-    os.path.join(os.getcwd(), "bin-cef", "root"),
-    os.path.join(os.getcwd(), "bin-cef", "root", "cache"),
-    os.path.join(os.getcwd(), "bin-cef", "user-data"),
+    cefdataroot,
+    os.path.join(cefdataroot, "root"),
+    os.path.join(cefdataroot, "root", "cache"),
+    os.path.join(cefdataroot, "user-data"),
 ):
     if not os.path.isdir(fname):
         os.mkdir(fname)
@@ -65,16 +66,16 @@ def main(args):
     # settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources\\locales')))
     #settings.multi_threaded_message_loop = 1
     settings.root_cache_path = cef.cef_string_t(
-        os.path.join(os.getcwd(), "bin-cef", "root")
+        os.path.join(cefdataroot, "root")
     )
     settings.cache_path = cef.cef_string_t(
-        os.path.join(os.getcwd(), "bin-cef", "root", "cache")
+        os.path.join(cefdataroot, "root", "cache")
     )
     settings.user_data_path = cef.cef_string_t(
-        os.path.join(os.getcwd(), "bin-cef", "user-data")
+        os.path.join(cefdataroot, "user-data")
     )
     settings.log_file = cef.cef_string_t(
-        os.path.join(os.getcwd(), "bin-cef", "cef.log")
+        os.path.join(cefdataroot, "cef.log")
     )
     settings.log_severity = 2
 

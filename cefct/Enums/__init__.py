@@ -61,7 +61,7 @@ from .CefTextInputMode import *
 from .CefTextStyle import *
 from .CefThreadId import *
 from .CefTouchEventType import *
-from .CefTransitionType import *
+from .CefTransitionType import CefTransitionType
 from .CefUriUnescapeRules import *
 from .CefUrlRequestFlags import *
 from .CefUrlRequestStatus import *
