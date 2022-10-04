@@ -37,9 +37,16 @@ def create_window(title, class_name, width, height, window_proc):
     return window_handle
 
 def close_window(window_handle, message, wparam, lparam):
+    global browser
     if 0:
         browser = cef.GetBrowserByWindowHandle(window_handle)
         browser.CloseBrowser(True)
+    elif 0:
+        host = browser.contents._get_host(browser)
+        host.contents._close_browser(host, 1)
+    elif 1:
+        libcef.quit_message_loop()
+
     # OFF: win32gui.DestroyWindow(window_handle)
     return win32gui.DefWindowProc(window_handle, message, wparam, lparam)
 

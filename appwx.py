@@ -33,12 +33,12 @@ class Main(wx.Frame):
         self.bp = wx.Window(self, wx.ID_ANY, size=size, style=wx.WANTS_CHARS)
         #self.bp.SetMinSize(size)
         self.bp.Bind(wx.EVT_SET_FOCUS, self.OnBPSetFocus)
-        self.Bind(wx.EVT_SIZE, self.OnBPSize)
+        self.bp.Bind(wx.EVT_SIZE, self.OnBPSize)
 
         # Add controls
-        sz.Add(bt, 1, wx.EXPAND | wx.ALL, 2)
-        sz.Add(lb, 1, wx.EXPAND | wx.ALL, 2)
-        sz.Add(txt, 1, wx.EXPAND | wx.ALL, 2)
+        sz.Add(bt, 0, wx.TOP | wx.LEFT, 2)
+        sz.Add(lb, 0, wx.TOP | wx.LEFT, 2)
+        sz.Add(txt, 0, wx.TOP | wx.LEFT, 2)
         sz.Add(self.bp, 1, wx.EXPAND | wx.ALL, 2)
 
         #sz.CalcMin()
@@ -69,6 +69,8 @@ class Main(wx.Frame):
             self.timer.Stop()
             self.timer = None
         if self.browser is None:
+            if not useTimer:
+                libcef.quit_message_loop()
             self.Destroy()
             return
         #self.client.life_span_handler.OnBeforeClose()
@@ -179,6 +181,7 @@ class Main(wx.Frame):
 
     # https://github.com/cztomczak/cefpython/issues/393
     def OnBPSetFocus(self, event):
+        print('OnBPSetFocus')
         if self.browser is None:
             return
         host = self.browser.contents._get_host(self.browser)
@@ -187,12 +190,12 @@ class Main(wx.Frame):
 
     def OnBPSize(self, evt):
         evt.Skip()
-        if self.browser is None:
-            return
         print('*'*20)
         print('self.bp.GetClientSize', self.bp.GetClientSize())
         print('self.bp.GetSize', self.bp.GetSize())
         print('evt.GetSize', evt.GetSize())
+        if self.browser is None:
+            return
         size = self.bp.GetClientSize()
         # self.browser.SetBounds(x, y, width, height)
         host = self.browser.contents._get_host(self.browser)
@@ -200,8 +203,8 @@ class Main(wx.Frame):
 
         if libcef.win32:
             print('win32.onsize', hwnd)
+            SWP_NOZORDER = 0x0004
             if 0:
-                SWP_NOZORDER = 0x0004
                 hdwp = ct.windll.user32.BeginDeferWindowPos(1)
                 ct.windll.user32.DeferWindowPos(
                     hdwp, hwnd, None,
@@ -213,7 +216,7 @@ class Main(wx.Frame):
                 win32gui.MoveWindow(hwnd, 0, 0, size.width, size.height, False)
             elif 1:
                 sz = win32gui.GetWindowRect(hwnd)
-                print('SetWindowPos=', sz)
+                print('GetWindowRect=', (sz[2]-sz[0], sz[3]-sz[1]), 'size=', size)
                 win32gui.SetWindowPos(hwnd, None,
                     0, 0,
                     size.width, size.height,
@@ -224,7 +227,8 @@ class Main(wx.Frame):
             window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
             window.resize(size.width, size.height)
             self.sw.get_window().move_resize(0, 0, size.width, size.height)
-        host.contents._notify_move_or_resize_started(host)
+        #host.contents._notify_move_or_resize_started(host)
+        host.contents._was_resized(host)
 
 
 class App(wx.App):
