@@ -17,7 +17,7 @@ class LifeSpanHandler(cef.cef_life_span_handler_t):
 
 class LoadHandler(cef.cef_load_handler_t):
     def OnLoadingStateChange(self, this, browser, a, b, c):
-        print(f'OnLoadingStateChange(self, this, browser, {a}, {b}, {c})', browser)
+        print(f'OnLoadingStateChange(self, this, browser, {a}, {b}, {c})')
     def OnLoadStart(self, this, browser, frame, ttype):
         print(f'OnLoadStart(self, this, browser, frame, {ttype.value:08x})')
     def OnLoadEnd(self, this, browser, frame, a):
