@@ -18,39 +18,47 @@ else:
     libX11 = ctypes.CDLL("libX11.so.6")
 
 useTimer = False
+useTimer = True
+URL = "https://www.trisoft.com.pl/"
 
 class Main(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent=parent, id=wx.ID_ANY, title="wxPython example")
-        sz = wx.BoxSizer(wx.VERTICAL)
-        bt = wx.Button(self, wx.ID_ANY, "Start browser")
-        lb = wx.StaticText(self, wx.ID_ANY, "Label")
-        txt = wx.TextCtrl(self, wx.ID_ANY, "Editable")
+
+        szv = wx.BoxSizer(wx.VERTICAL)
+        szh = wx.BoxSizer(wx.HORIZONTAL)
+
+        btBrowser = wx.Button(self, wx.ID_ANY, "Start browser")
+        btZoom = wx.Button(self, wx.ID_ANY, "Zoom")
 
         self.browser = None
         size = (800, 600)
         self.SetMinSize(size)
-        self.bp = wx.Window(self, wx.ID_ANY, size=size, style=wx.WANTS_CHARS)
-        #self.bp.SetMinSize(size)
-        self.bp.Bind(wx.EVT_SET_FOCUS, self.OnBPSetFocus)
-        self.bp.Bind(wx.EVT_SIZE, self.OnBPSize)
+        self.browserWindow = wx.Window(self, wx.ID_ANY, size=size, style=wx.WANTS_CHARS)
+        #self.browserWindow.SetMinSize(size)
+        self.browserWindow.Bind(wx.EVT_SET_FOCUS, self.OnBrowserWindowSetFocus)
+        self.browserWindow.Bind(wx.EVT_SIZE, self.OnBrowserWindowSize)
 
         # Add controls
-        sz.Add(bt, 0, wx.TOP | wx.LEFT, 2)
-        sz.Add(lb, 0, wx.TOP | wx.LEFT, 2)
-        sz.Add(txt, 0, wx.TOP | wx.LEFT, 2)
-        sz.Add(self.bp, 1, wx.EXPAND | wx.ALL, 2)
+        szh.Add(btBrowser, 0, wx.TOP | wx.LEFT, 2)
+        szh.Add(btZoom, 0, wx.TOP | wx.LEFT, 2)
+
+        szv.Add(szh)
+        szv.Add(self.browserWindow, 1, wx.EXPAND | wx.ALL, 2)
 
         #sz.CalcMin()
         self.SetAutoLayout(True)
-        self.SetSizer(sz)
+        self.SetSizer(szv)
         #self.Layout()
 
         self.Centre()
 
-        bt.Bind(wx.EVT_BUTTON, self.OnButton)
+        btBrowser.Bind(wx.EVT_BUTTON, self.OnBrowser)
+        btZoom.Bind(wx.EVT_BUTTON, self.OnZoom)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         # wx.CallLater(100, self.embed_browser)
+
+        self.btZoom = btZoom
 
         if useTimer:
             # set up periodic screen capture
@@ -82,9 +90,9 @@ class Main(wx.Frame):
             libcef.quit_message_loop()
 
     def embed_browser_linux(self):
-        (width, height) = self.bp.GetClientSize().Get()
-        assert self.bp.GetHandle(), "Window handle not available"
-        handle_to_use = self.bp.GetHandle()
+        handle_to_use = self.browserWindow.GetHandle()
+        assert handle_to_use, "Window handle not available"
+        (width, height) = self.browserWindow.GetClientSize().Get()
         display = Gdk.Display.get_default()
         window = GdkX11.X11Window.foreign_new_for_display(display, handle_to_use)
         self.gtk_window = gtk_window = Gtk.Window()
@@ -106,33 +114,28 @@ class Main(wx.Frame):
         # self.Show()
 
         window_info = libcef.cef_window_info_t()
-        xid = sw.get_window().get_xid()
-        window_info.parent_window = xid
+        window_info.parent_window = sw.get_window().get_xid()
         window_info.x = 0
         window_info.y = 0
         window_info.width = width
         window_info.height = height
 
-        cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
+        cef_url = libcef.cef_string_t(URL)
         browser_settings = libcef.cef_browser_settings_t()
         client = Client()
 
-        self.window_info = window_info
-        self.cef_url = cef_url
-        self.browser_settings = browser_settings
         self.client = client
 
-        print("cef_browser_host_create_browser")
         self.browser = libcef.browser_host_create_browser_sync(
             window_info, client, cef_url, browser_settings, None, None
         )
-        print("/cef_browser_host_create_browser")
 
     def embed_browser_windows(self):
-        (width, height) = self.bp.GetClientSize().Get()
-        assert self.bp.GetHandle(), "Window handle not available"
+        handle_to_use = self.browserWindow.GetHandle()
+        assert handle_to_use, "Window handle not available"
+        (width, height) = self.browserWindow.GetClientSize().Get()
+
         window_info = libcef.cef_window_info_t()
-        xid = self.bp.GetHandle()
         window_info.style = (
             win32con.WS_CHILD |
             win32con.WS_CLIPCHILDREN |
@@ -140,7 +143,7 @@ class Main(wx.Frame):
             win32con.WS_TABSTOP |
             win32con.WS_VISIBLE
         )
-        window_info.parent_window = xid
+        window_info.parent_window = handle_to_use
         window_info.bounds.x = 0
         window_info.bounds.y = 0
         window_info.bounds.width = width
@@ -150,73 +153,63 @@ class Main(wx.Frame):
         browser_settings = libcef.cef_browser_settings_t()
         client = Client()
 
-        self.window_info = window_info
-        self.cef_url = cef_url
-        self.browser_settings = browser_settings
         self.client = client
 
-        print("cef_browser_host_create_browser")
         self.browser = libcef.browser_host_create_browser_sync(
             window_info, client, cef_url, browser_settings, None, None
         )
-        print("/cef_browser_host_create_browser")
 
-    plus = 1
-
-    def OnButton(self, event):
+    def OnBrowser(self, event):
         if self.browser is None:
             if libcef.win32:
                 self.embed_browser_windows()
             else:
                 self.embed_browser_linux()
+
+    zoom = 1
+    def OnZoom(self, event):
+        if self.browser is None:
             return
         host = self.browser.contents._get_host(self.browser)
         zoom = host.contents._get_zoom_level(host)
         if zoom == 5:
-            self.plus = -1
+            self.zoom = -1
         elif zoom == 0:
-            self.plus = 1
-        print("zoom=", zoom, "plus=", self.plus)
-        host.contents._set_zoom_level(host, zoom + self.plus)
+            self.zoom = 1
+        zoom = zoom + self.zoom
+        self.btZoom.SetLabel(f'Zoom: {zoom}')
+        host.contents._set_zoom_level(host, zoom)
 
-    # https://github.com/cztomczak/cefpython/issues/393
-    def OnBPSetFocus(self, event):
-        print('OnBPSetFocus')
+    def OnBrowserWindowSetFocus(self, event):
+        print('OnBrowserWindowSetFocus')
         if self.browser is None:
             return
         host = self.browser.contents._get_host(self.browser)
         host.contents._set_focus(host, 1)
         # self.browser.SetFocus(True)
 
-    def OnBPSize(self, evt):
+    def OnBrowserWindowSize(self, evt):
         evt.Skip()
-        print('*'*20)
-        print('self.bp.GetClientSize', self.bp.GetClientSize())
-        print('self.bp.GetSize', self.bp.GetSize())
-        print('evt.GetSize', evt.GetSize())
         if self.browser is None:
             return
-        size = self.bp.GetClientSize()
+        size = self.browserWindow.GetClientSize()
         # self.browser.SetBounds(x, y, width, height)
         host = self.browser.contents._get_host(self.browser)
         hwnd = host.contents._get_window_handle(host)
 
         if libcef.win32:
-            print('win32.onsize', hwnd)
-            SWP_NOZORDER = 0x0004
             if 0:
                 hdwp = ct.windll.user32.BeginDeferWindowPos(1)
                 ct.windll.user32.DeferWindowPos(
                     hdwp, hwnd, None,
-                    0, 0, size.width, size.height, SWP_NOZORDER)
+                    0, 0, size.width, size.height,
+                    win32con.SWP_NOZORDER)
                 ct.windll.user32.EndDeferWindowPos(hdwp)
             elif 0:
-                sz = win32gui.GetWindowRect(hwnd)
-                print('MoveWindow=', sz)
+                #sz = win32gui.GetWindowRect(hwnd)
                 win32gui.MoveWindow(hwnd, 0, 0, size.width, size.height, False)
             elif 1:
-                sz = win32gui.GetWindowRect(hwnd)
-                print('GetWindowRect=', (sz[2]-sz[0], sz[3]-sz[1]), 'size=', size)
+                #sz = win32gui.GetWindowRect(hwnd)
                 win32gui.SetWindowPos(hwnd, None,
                     0, 0,
                     size.width, size.height,
