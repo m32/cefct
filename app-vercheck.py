@@ -26,7 +26,11 @@ hashinfo = [
     cef.CEF_API_HASH_UNIVERSAL,
     cef.CEF_COMMIT_HASH,
 ]
-
+hashname = [
+    'platform',
+    'universal',
+    'commit'
+]
 for i in range(3):
     v = bytes(cef.api_hash(i)[:40]).decode('ascii')
-    print('api_hash({})={} == {}'.format(i, v, hashinfo[i]))
+    print('hash({})= dll:{} == lib:{} name:{}'.format(i, v, hashinfo[i], hashname[i]))
