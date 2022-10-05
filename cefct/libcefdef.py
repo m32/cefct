@@ -8,7 +8,7 @@ CEFCALLBACK = CFUNCTYPE
 libcefdll = None
 
 win32 = os.name == "nt"
-linux = os.name == "linux"
+linux = os.name == "posix"
 dllext = '.dll' if win32 else '.so'
 exeext = '.exe' if win32 else ''
 thisdir = os.path.dirname(__file__)
