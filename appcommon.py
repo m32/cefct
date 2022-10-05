@@ -28,6 +28,7 @@ class LoadHandler(cef.cef_load_handler_t):
 
 class Client(cef.cef_client_t):
     def __init__(self):
+        super().__init__()
         self.life_span_handler = LifeSpanHandler()
         self.load_handler = LoadHandler()
     def GetAudioHandler(self, *args):
