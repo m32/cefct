@@ -61,6 +61,9 @@ class Client(cef.cef_client_t):
     def GetFrameHandler(self, *args):
         #print('GetFrameHandler')
         pass
+    def GetPermissionHandler(self, *args):
+        #print('GetPermissionHandler')
+        pass
     def GetJSDialogHandler(self, *args):
         #print('GetJSDialogHandler')
         pass
@@ -86,8 +89,6 @@ class Client(cef.cef_client_t):
         pass
     def OnProcessMessageReceived(self, *args):
         #print('OnProcessMessageReceived')
-        pass
-    def GetPermissionHandler(self, *args):
         pass
 
 class BrowserProcessHandler(cef.cef_browser_process_handler_t):
