@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#import gc
 import wx
 import ctypes as ct
 from cefct import libcef
@@ -6,7 +7,6 @@ from appcommon import Client
 
 if libcef.win32:
     import win32con
-    import win32gui
 else:
     import gi
 
@@ -81,13 +81,24 @@ class Main(wx.Frame):
                 libcef.quit_message_loop()
             self.Destroy()
             return
+
         #self.client.life_span_handler.OnBeforeClose()
-        host = self.browser.contents._get_host(self.browser)
-        host.contents._close_browser(host, 0)
+        browser = self.browser.contents
+        host = browser._get_host(self.browser)
+        hwnd = host.contents._get_window_handle(host)
+        #if libcef.win32:
+        #    hwnd = ct.windll.user32.GetAncestor(hwnd, win32con.GA_ROOT)
+        #    ct.windll.user32.PostMessageW(hwnd, win32con.WM_CLOSE, 0, 0)
+        browser._stop_load(browser, 1)
+        host.contents._close_browser(host, 1)
+        host = None
+        browser = None
+        self.client = None
         self.browser = None
-        self.Destroy()
+        #gc.collect()
         if not useTimer:
             libcef.quit_message_loop()
+        self.Destroy()
 
     def embed_browser_linux(self):
         handle_to_use = self.browserWindow.GetHandle()
@@ -198,22 +209,23 @@ class Main(wx.Frame):
         hwnd = host.contents._get_window_handle(host)
 
         if libcef.win32:
+            SWP_NOZORDER = 0x0004
             if 0:
                 hdwp = ct.windll.user32.BeginDeferWindowPos(1)
                 ct.windll.user32.DeferWindowPos(
                     hdwp, hwnd, None,
                     0, 0, size.width, size.height,
-                    win32con.SWP_NOZORDER)
+                    SWP_NOZORDER)
                 ct.windll.user32.EndDeferWindowPos(hdwp)
             elif 0:
-                #sz = win32gui.GetWindowRect(hwnd)
-                win32gui.MoveWindow(hwnd, 0, 0, size.width, size.height, False)
+                ct.windll.user32.MoveWindow(hwnd,
+                    0, 0, size.width, size.height,
+                    False)
             elif 1:
-                #sz = win32gui.GetWindowRect(hwnd)
-                win32gui.SetWindowPos(hwnd, None,
+                ct.windll.user32.SetWindowPos(hwnd, None,
                     0, 0,
                     size.width, size.height,
-                    win32con.SWP_NOZORDER)
+                    SWP_NOZORDER)
         else:
             print('X11.onsize', hwnd)
             display = Gdk.Display.get_default()

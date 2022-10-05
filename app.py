@@ -87,8 +87,6 @@ def main(args):
         def OnBeforeCommandLineProcessing(self, this, processType, commandLine):
             print(
                 "App.OnBeforeCommandLineProcessing",
-                processType,
-                commandLine.contents,
                 flush=True,
             )
             v = ct.cast(processType, ct.c_void_p)
