@@ -1,2 +1,0 @@
-class CefRuntimeException(Exception):
-    pass

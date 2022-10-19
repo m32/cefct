@@ -5,5 +5,5 @@ class cef_base_scoped_t(Structure):
 
 cef_base_scoped_t._fields_ = [
     ('size', c_size_t),
-    ('del', CEFCALLBACK(POINTER(cef_base_scoped_t))),
+    ('delete', CEFCALLBACK(POINTER(cef_base_scoped_t))),
 ]

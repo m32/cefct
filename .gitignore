@@ -130,9 +130,7 @@ dmypy.json
 
 bin/
 bin-cefdata/
-ChromiumGtk
-cef-java
-cefglue
-cefpython
-cef_binary_*/
-chromium/
+cef
+cefsizes
+tempwindow/
+linuxhelper.so

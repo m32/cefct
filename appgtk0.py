@@ -1,15 +1,22 @@
+#!/usr/bin/env vpython3
+import cefapp
+
 import gi
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkX11, GObject
 
 from cefct import libcef
-from appcommon import Client
+from cefappcommon import Client
 
 
 def main():
+    c = cefapp.App()
+    cdata = cefapp.AppStartup(c,[''])
     app = Gtk3Example()
-    return app.run()
+    rc = app.run()
+    cefapp.AppCleanup(cdata)
+    return rc
 
 
 class Gtk3Example(Gtk.Application):
@@ -28,7 +35,7 @@ class Gtk3Example(Gtk.Application):
         return self.window.get_property("window").get_xid()
 
     def on_timer(self):
-        libcef.do_message_loop_work()
+        libcef.cef_do_message_loop_work()
         return True
 
     def on_startup(self, *_):
@@ -55,29 +62,31 @@ class Gtk3Example(Gtk.Application):
 
         cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
         browser_settings = libcef.cef_browser_settings_t()
+        browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
         client = Client()
 
         print("cef_browser_host_create_browser")
-        self.browser = libcef.browser_host_create_browser_sync(
+        self.browser = libcef.cef_browser_host_create_browser_sync(
             window_info, client, cef_url, browser_settings, None, None
         )
 
     def on_size_allocate(self, _, data):
-        print('on-size-allocate', '_=', _, 'data=', data)
-        print('w/h=', data.width, data.height)
-        print('browser=', self.browser)
+        print("on-size-allocate", "_=", _, "data=", data)
+        print("w/h=", data.width, data.height)
+        print("browser=", self.browser)
         self.window.resize(data.width, data.height)
-        print('1')
+        print("1")
         if self.browser is not None:
-            print('2')
-            host = self.browser.contents._get_host(self.browser)
-            hwnd = host.contents._get_window_handle(host)
+            print("2")
+            host = self.browser.contents.get_host(self.browser)
+            host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
+            hwnd = host.contents.get_window_handle(host)
             display = Gdk.Display.get_default()
             window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
             window.resize(data.width, data.height)
-            #host.contents._notify_move_or_resize_started(host)
+            # host.contents._notify_move_or_resize_started(host)
             host.contents._was_resized(host)
-            print('8')
+            print("8")
 
     def on_focus_in(self, *_):
         if self.browser is not None:

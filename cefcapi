@@ -1,0 +1,4 @@
+python cefcapiparse.py
+python cefcapiparseinternal.py
+gcc -Icef -o cefsizes cefsizes.c
+./cefsizes

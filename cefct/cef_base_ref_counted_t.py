@@ -14,24 +14,24 @@ class cef_base_ref_counted_t(Structure):
         self.has_at_least_one_ref = CEFCALLBACK(c_int, POINTER(cef_base_ref_counted_t))(self.HasAtLeastOneRef)
 
     def AddRef(self, this):
-#        print('AddRef', self, this, self.ref_count)
+        #print('AddRef', self, this, self.ref_count)
         self.ref_count += 1
 
     def Release(self, this):
-#        print('Release', self, this, self.ref_count)
+        #print('Release', self, this, self.ref_count)
         self.ref_count -= 1
         if self.ref_count == 0:
             pass
         return 1 if self.ref_count == 0 else 0
 
     def HasOneRef(self, this):
-#        print('HasOneRef', self, this, self.ref_count)
+        #print('HasOneRef', self, this, self.ref_count)
         if self.ref_count == 1:
             return 1
         return 0
 
     def HasAtLeastOneRef(self, this):
-#        print('HasAtLeastOneRef', self, this, self.ref_count)
+        #print('HasAtLeastOneRef', self, this, self.ref_count)
         if self.ref_count > 0:
             return 1
         return 0
