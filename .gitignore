@@ -134,6 +134,7 @@ cef
 cef-source
 tempwindow/
 cefsizes
+cefsizes.obj
 cefsizes.exe
 cefsizes.c
 linuxhelper.so
