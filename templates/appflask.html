@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script src="https://unpkg.com/vue@next/dist/vue.runtime.global.prod.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+        <script>
+            const options = {
+                moduleCache: {
+                    vue: Vue
+                },
+                getFile(url, asBinary = false) {
+                    return new Promise((resolve, reject) => {
+                        fetch(url).then((result) => {
+                            if (!result.ok) return reject(result);
+                            return resolve({
+                                getContentData: (asBinary) =>
+                                    asBinary
+                                        ? result.arrayBuffer()
+                                        : result.text()
+                            });
+                        });
+                    });
+                },
+                addStyle(textContent) {
+                    const style = Object.assign(
+                        document.createElement('style'),
+                        { textContent }
+                    );
+                    const ref =
+                        document.head.getElementsByTagName('style')[0] || null;
+                    document.head.insertBefore(style, ref);
+                },
+                handleModule: async function (
+                    type,
+                    getContentData,
+                    path,
+                    options
+                ) {
+                    switch (type) {
+                        case '.svg':
+                            return getContentData(false);
+                    }
+                },
+                log(type, ...args) {
+                    console[type](...args);
+                }
+            };
+
+            Vue.createApp(
+                Vue.defineAsyncComponent(() =>
+                    window['vue3-sfc-loader'].loadModule('/static/main.vue', options)
+                )
+            ).mount(document.body);
+        </script>
+    </body>
+</html>
