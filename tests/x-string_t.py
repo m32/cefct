@@ -1,11 +1,12 @@
 #!/usr/bin/env vpython3
+import ctypes as ct
 import initcef
 from cefct import cef_string_t
-#t = cef_string_t.cef_string_t
-#print("sizeof(cef_string_t)", sizeof(t))
-#print("sizeof(c_char_p)", sizeof(c_char_p))
-#print("sizeof(c_size_t)", sizeof(c_size_t))
-#print("sizeof(POINTER(cef_string_t))", sizeof(POINTER(t)))
+
+def stringcb(s):
+    print('*'*10, 'stringcb')
+    print('s=={}=='.format(s.contents))
+    print('*'*10, '/stringcb')
 
 b = "zażółcić gęślą jaźń"
 b = 'ala ma kota'
@@ -21,5 +22,11 @@ print("ToString(True)", v)
 print("str(v)=", str(v))
 print("repr(v)=", repr(v))
 print("v=", v)
+
+cb = ct.CFUNCTYPE(None, ct.POINTER(cef_string_t.cef_string_t))(stringcb)
+cb(s)
+
 cef_string_t.string_clear(s)
 print("1, s._str:", s._str, "s.size:", s.size, "s.dtor:", s._dtor)
+
+cb(s)
