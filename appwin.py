@@ -1,7 +1,7 @@
 import cefapp
 import win32gui, win32con, win32api
 from cefct import libcef
-from cefappcommon import LifeSpanHandler, Client
+from cefappcommon import Client
 
 browser = None
 
