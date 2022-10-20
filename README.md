@@ -2,21 +2,30 @@
 
 Python bindings (ctypes) for the Chromium Embedded Framework (CEF)
 
-## Binaries for Linux64
-[Browse All](https://cef-builds.spotifycdn.com/index.html#linux64:cef_binary_104.4.18+g2587cf2+chromium-104.0.5112.81),
-[CEF Client](https://cef-builds.spotifycdn.com/cef_binary_104.4.22+g181df42+chromium-104.0.5112.81_linux64_client.tar.bz2)
+[Binaries for Linux64](https://cef-builds.spotifycdn.com/index.html#linux64),
+[Binaries for Windows64](https://cef-builds.spotifycdn.com/index.html#windows64)
 
-## Binaries for Windows64
-[Browse All](https://cef-builds.spotifycdn.com/index.html#windows64:cef_binary_104.4.18+g2587cf2+chromium-104.0.5112.81),
-[CEF Client](https://cef-builds.spotifycdn.com/cef_binary_104.4.22+g181df42+chromium-104.0.5112.81_windows64_client.tar.bz2)
+## DIY
+Recompiling cefpython3 is a complicated process, generating version 67+ almost impossible.
+Instead of generating code for another middleware and making it available for python,
+I decided to use the standard python library - ctypes.
 
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_linux64.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_linux64_minimal.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_linux64_client.tar.bz2
+cefcapiparse.py and cefcapiparseinternal.py prepare function calls exported directly from
+libcef (dll or so). In order to check the correctness of the size of the generated structures,
+a tiny (also generated) program cefsizes.c is required.
 
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_windows64.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_windows64_minimal.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_106.0.26%2Bge105400%2Bchromium-106.0.5249.91_windows64_client.tar.bz2
+For proper operation, you need a library, e.g.:
+https://cef-builds.spotifycdn.com/cef_binary_106.1.0%2Bg30ad805%2Bchromium-106.0.5249.119_linux64_client.tar.bz2 
+or its equivalent for MS-Windows.
 
-https://cef-builds.spotifycdn.com/cef_binary_107.0.3%2Bge92a530%2Bchromium-107.0.5304.18_linux64_beta.tar.bz2
-https://cef-builds.spotifycdn.com/cef_binary_107.0.3%2Bge92a530%2Bchromium-107.0.5304.18_windows64_beta.tar.bz2
+After unpacking the archive, rename the directory from Release to bin and you can test.
+This library is at the stage of testing and playing, but something can be started:
+- appwin.py is only for windows,
+- appwx [12] .py - windows / linux
+- appgtk [01] .py - linux
+
+If you want to check the operation of another version of CEF,
+you will have to download its standard distribution and generate the required files.
+The commands ./cefcapi (linux) and cefcapi.cmd (windows) are used for this purpose,
+but first create a soft link from cef_binary .... to the cef directory and prepare
+the cefclient file (cefclient.exe)
