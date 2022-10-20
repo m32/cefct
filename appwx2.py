@@ -258,8 +258,8 @@ class Main(wx.Frame):
                     SWP_NOZORDER)
         else:
             print('X11.onsize', hwnd)
-            display = gui.Gdk.Display.get_default()
-            window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd)
+            display = gui.Gdk.Display.get_default() # GdkX11.X11Display
+            window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)
             #self.sw.get_window().move_resize(0, 0, size.width, size.height)
         #host.contents._notify_move_or_resize_started(host)

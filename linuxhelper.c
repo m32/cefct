@@ -30,3 +30,13 @@ void FixGtk(void *window)
 {
     fix_default_x11_visual(GTK_WIDGET(window));
 }
+
+void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int width, int height)
+{
+    XWindowChanges changes = {0};
+    changes.x = x;
+    changes.y = y;
+    changes.width = width;
+    changes.height = height;
+    XConfigureWindow(xdisplay, xwindow, CWX | CWY | CWHeight | CWWidth, &changes);
+}

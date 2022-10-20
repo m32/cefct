@@ -298,6 +298,11 @@ if 1:
                     )
                 )
 
+        fp.write(
+                """\
+
+""")
+
         for enum in self.enum:
             fp.write(
                 """\

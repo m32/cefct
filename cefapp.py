@@ -53,19 +53,18 @@ class App(cef.cef_app_t):
             ),
             flush=True,
         )
-        print(dir(processType))
         v = processType
-        print('v=',v, bool(v))
+        print('\tprocessType==',v, bool(v))
         #v = processType.contents
         #if v is not None:
         #    v = v.ToString()
         #print("processType=", v)
         if 0:
             cl = commandLine.contents
-            print('cl.valid', cl.is_valid(cl))
+            print('\tcl.valid', cl.is_valid(cl))
             s = cl.get_command_line_string(cl)
-            print('cl.s=', s)
-            print("processType=", v, v.value, commandLine.contents)
+            print('\tcl.s=', s)
+            print("\tprocessType=", v, v.value, commandLine.contents)
         return None
 
     # def OnRegisterCustomSchemes(self, this, registrar):

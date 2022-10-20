@@ -917,6 +917,7 @@ if 1:
     CEF_TEST_CERT_OK_IP = 1
     CEF_TEST_CERT_OK_DOMAIN = 2
     CEF_TEST_CERT_EXPIRED = 3
+
 cef_log_severity_t = c_int
 cef_state_t = c_int
 cef_return_value_t = c_int

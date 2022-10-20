@@ -131,6 +131,8 @@ dmypy.json
 bin/
 bin-cefdata/
 cef
-cefsizes
+cef-source
 tempwindow/
+cefsizes
 linuxhelper.so
+crash_reporter.cfg
