@@ -124,7 +124,7 @@ class Main(wx.Frame):
         self.browserWindow.Bind(wx.EVT_SET_FOCUS, self.OnBrowserWindowSetFocus)
         self.browserWindow.Bind(wx.EVT_SIZE, self.OnBrowserWindowSize)
         self.szv.Add(self.browserWindow, 1, wx.EXPAND | wx.ALL, 2)
-
+        self.Layout()
 
     def embed_browser_linux(self):
         xid = self.browserWindow.GetHandle()
