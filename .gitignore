@@ -134,5 +134,7 @@ cef
 cef-source
 tempwindow/
 cefsizes
+cefsizes.exe
+cefsizes.c
 linuxhelper.so
 crash_reporter.cfg
