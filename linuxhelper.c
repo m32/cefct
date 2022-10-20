@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <X11/Xlib.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
@@ -39,4 +40,9 @@ void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int wid
     changes.width = width;
     changes.height = height;
     XConfigureWindow(xdisplay, xwindow, CWX | CWY | CWHeight | CWWidth, &changes);
+}
+
+void DebugBreak()
+{
+    raise(SIGINT);
 }
