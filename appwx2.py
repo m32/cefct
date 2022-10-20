@@ -92,7 +92,7 @@ class Main(wx.Frame):
             if not useTimer:
                 libcef.cef_quit_message_loop()
             event.Skip()
-            print('wx.Destroy')
+            print('wx.Destroy.0')
             self.Destroy()
             return
 
@@ -108,9 +108,10 @@ class Main(wx.Frame):
         browser = None
         event.Skip()
         #gc.collect()
+        print('wx.Destroy.1')
+        return
         if not useTimer:
             libcef.cef_quit_message_loop()
-        print('wx.Destroy.1')
         self.Destroy()
 
     def addBrowserWindow(self):
