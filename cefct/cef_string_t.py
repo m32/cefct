@@ -3,6 +3,11 @@ from .libcefdef import *
 
 class cef_string_t(Structure):
     _align_ = CEFALIGN
+    _fields_ = [
+        ("_str", c_void_p),
+        ("size", c_size_t),
+        ("_dtor", CEFCALLBACK(POINTER(c_void))),
+    ]
 
     def __init__(self, src: str = None):
         super().__init__()
@@ -32,16 +37,10 @@ class cef_string_t(Structure):
         return v.decode("utf-16")
 
     def __str__(self):
-        return self.ToString(True)
+        return str(self.ToString(True))
 
     __repr__ = __str__
 
-
-cef_string_t._fields_ = [
-    ("_str", c_void_p),
-    ("size", c_size_t),
-    ("_dtor", CEFCALLBACK(POINTER(cef_string_t))),
-]
 
 # These functions set string values. If |copy| is true (1) the value will be
 # copied instead of referenced. It is up to the user to properly manage
