@@ -6,9 +6,8 @@ Python bindings (ctypes) for the Chromium Embedded Framework (CEF)
 [Binaries for Windows64](https://cef-builds.spotifycdn.com/index.html#windows64)
 
 ## DIY
-Recompiling cefpython3 is a complicated process, generating version 67+ almost impossible.
-Instead of generating code for another middleware and making it available for python,
-I decided to use the standard python library - ctypes.
+Compiling cefpython3 is a complicated process, so instead of creating intermediate
+code and sharing it with Python, I decided to use the standard Python library, ctypes.
 
 cefcapiparse.py and cefcapiparseinternal.py prepare function calls exported directly from
 libcef (dll or so). In order to check the correctness of the size of the generated structures,
