@@ -18,18 +18,23 @@ class cef_string_t(Structure):
         else:
             src1 = (src+'\0').encode("utf-16")
             src1 = src1[2:] # skip boom
-            string_set(src1, len(src)+1, byref(self), 1)
+            string_set(src1, len(src)+1, byref(self), 1) # 1=Copy
 
     def ToString(self, decode=True) -> str:
         if self._str == None:
             return None
-        size = self.size * 2
+        size = self.size * 2 - 2 # null terminated
         a = (c_char * size)()
         memmove(a, self._str, size)
         v = b''.join(a)
         if not decode:
             return v
         return v.decode("utf-16")
+
+    def __str__(self):
+        return self.ToString(True)
+
+    __repr__ = __str__
 
 
 cef_string_t._fields_ = [
