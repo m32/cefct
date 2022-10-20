@@ -122,7 +122,7 @@ def appmain():
     c = cefapp.App()
     result = cefapp.AppStartup(c, [])
     main()
-    #cefapp.AppCleanup(result)
+    cefapp.AppCleanup(result)
 
 if __name__ == '__main__':
     appmain()
