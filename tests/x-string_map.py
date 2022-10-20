@@ -1,10 +1,8 @@
 #!/usr/bin/env vpython3
-from ctypes import *
-from glucef import cef_string_map
+import initcef
+from cefct import cef_string_map
 
-t = cef_string_map.cef_string_map
-
-s = t()
+s = cef_string_map.cef_string_map()
 
 k = '1'
 v = "zażółcić gęślą jaźń"
