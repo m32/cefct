@@ -1,24 +1,25 @@
 <template>
-    <mycomponent
-        :name="'circle' + index % 2"
-    />
+    <mycomponent :name="'circle' + (index % 2)" />
+    <clock />
 </template>
 
 <script>
-import mycomponent from './myComponent.vue'
-import { ref } from 'vue'
+import { ref } from 'vue';
+import mycomponent from './myComponent.vue';
+import clock from './clock.vue';
 
 export default {
     components: {
-        mycomponent
+        mycomponent,
+        clock
     },
     setup() {
         const index = ref(0);
         setInterval(() => index.value++, 1000);
 
         return {
-            index,
-        }
-    },
-}
+            index
+        };
+    }
+};
 </script>
