@@ -91,69 +91,71 @@ class App(cef.cef_app_t):
         print("App.GetRenderProcessHandler", flush=True)
         return None
 
-def AppStartup(app, args):
-    print("*" * 20, "AppStartup", flush=True)
-    if libcefdef.win:
-        mainArgs = cef.cef_main_args_t()
-        mainArgs.instance = ct.windll.kernel32.GetModuleHandleA(None)
-        mainArgsB = None
-    else:
-        mainArgs, mainArgsB = CefMainArgs(args)
 
-    # command_line = libcef.command_line_create()
-    # command_line.contents._init_from_string(command_line, cef_string_t("--show-fps-counter"))
+class AppSetup:
+    def __init__(self, app, args):
+        print("*" * 20, "AppSetup", flush=True)
+        if libcefdef.win:
+            mainArgs = cef.cef_main_args_t()
+            mainArgs.instance = ct.windll.kernel32.GetModuleHandleA(None)
+            mainArgsB = None
+        else:
+            mainArgs, mainArgsB = CefMainArgs(args)
 
-    settings = cef.cef_settings_t()
-    settings.size = ct.sizeof(cef.cef_settings_t)
-    # settings.no_sandbox = 1
-    settings.browser_subprocess_path = cef.cef_string_t(
-        os.path.normpath(os.path.join(top, "cefclient"))
-    )
-    # settings.framework_dir_path = 
-    settings.chrome_runtime = 0
-    # settings.multi_threaded_message_loop = 1
-    # settings.external_message_pump = 1
-    # settings.windowless_rendering_enabled = 1
-    # command_line_args_disabled
-    # cache_path
-    #settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
-    settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'locales')))
-    settings.remote_debugging_port = 20480
-    settings.root_cache_path = cef.cef_string_t(os.path.join(cefdataroot, "root"))
-    settings.cache_path = cef.cef_string_t(os.path.join(cefdataroot, "root", "cache"))
-    settings.user_data_path = cef.cef_string_t(os.path.join(cefdataroot, "user-data"))
-    settings.log_file = cef.cef_string_t(os.path.join(cefdataroot, "cef.log"))
-    settings.log_severity = 2
-    settings.uncaught_exception_stack_size = 200
+        # command_line = libcef.command_line_create()
+        # command_line.contents._init_from_string(command_line, cef_string_t("--show-fps-counter"))
 
-    print('cef.cef_execute_process', mainArgs, app, None)
-    rc = cef.cef_execute_process(mainArgs, app, None)
-    print("libcef.execute_process rc=", rc, flush=True)
-    if rc != -1:
-        return rc
+        settings = cef.cef_settings_t()
+        settings.size = ct.sizeof(cef.cef_settings_t)
+        # settings.no_sandbox = 1
+        settings.browser_subprocess_path = cef.cef_string_t(
+            os.path.normpath(os.path.join(top, "cefclient"))
+        )
+        # settings.framework_dir_path = 
+        settings.chrome_runtime = 0
+        # settings.multi_threaded_message_loop = 1
+        # settings.external_message_pump = 1
+        # settings.windowless_rendering_enabled = 1
+        # command_line_args_disabled
+        # cache_path
+        #settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
+        settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'locales')))
+        settings.remote_debugging_port = 20480
+        settings.root_cache_path = cef.cef_string_t(os.path.join(cefdataroot, "root"))
+        settings.cache_path = cef.cef_string_t(os.path.join(cefdataroot, "root", "cache"))
+        settings.user_data_path = cef.cef_string_t(os.path.join(cefdataroot, "user-data"))
+        settings.log_file = cef.cef_string_t(os.path.join(cefdataroot, "cef.log"))
+        settings.log_severity = 2
+        settings.uncaught_exception_stack_size = 200
 
-    if 1:
+        self.mainArgs = mainArgs
+        self.mainArgsB = mainArgsB
+        self.settings = settings
+        self.app = app
+
+    def ShowSettings(self):
         print('*'*20, 'settings:')
-        for fname, ftype in settings._fields_:
-            v = getattr(settings, fname)
+        for fname, ftype in self.settings._fields_:
+            v = getattr(self.settings, fname)
             if ftype == cef.cef_string_t:
-                v = v.ToString()
+                v = str(v)
             print('    {} = {}'.format(fname, v))
 
-    print("libcef.initialize", flush=True)
-    cef.cef_initialize(mainArgs, settings, app, None)
-    print("/libcef.initialize", flush=True)
-    result = (
-        mainArgs,
-        mainArgsB,
-        settings,
-    )
-    return result
+    def Execute(self):
+        print('cef.cef_execute_process', self.mainArgs, self.app, None)
+        rc = cef.cef_execute_process(self.mainArgs, self.app, None)
+        print("libcef.execute_process rc=", rc, flush=True)
+        if rc != -1:
+            return rc
 
-def AppCleanup(result):
-    print("finish", flush=True)
-    gc.collect()
-    print("libcef.shutdown", flush=True)
-    cef.cef_shutdown()
-    time.sleep(2)
-    print("done", flush=True)
+        print("libcef.initialize", flush=True)
+        cef.cef_initialize(self.mainArgs, self.settings, self.app, None)
+        print("/libcef.initialize", flush=True)
+
+    def Cleanup(self):
+        print("finish", flush=True)
+        gc.collect()
+        print("libcef.shutdown", flush=True)
+        cef.cef_shutdown()
+        time.sleep(2)
+        print("done", flush=True)

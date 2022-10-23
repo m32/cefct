@@ -12,10 +12,10 @@ def appmain():
     ]
     c = cefapp.App()
     print('AppStartup')
-    result = cefapp.AppStartup(c, args)
+    cls = cefapp.AppSetup(c, args)
     time.sleep(3)
     print('AppCleanup')
-    cefapp.AppCleanup(result)
+    cls.Cleanup()
     print('exit', c)
 
 if __name__ == '__main__':

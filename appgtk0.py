@@ -4,7 +4,7 @@ import cefapp
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkX11, GObject
+from gi.repository import Gtk, Gdk, GdkX11, GObject, GLib
 
 from cefct import libcef
 from cefappcommon import Client
@@ -12,10 +12,10 @@ from cefappcommon import Client
 
 def main():
     c = cefapp.App()
-    cdata = cefapp.AppStartup(c,[''])
+    cls = cefapp.AppSetup(c,[''])
     app = Gtk3Example()
     rc = app.run()
-    cefapp.AppCleanup(cdata)
+    cls.Cleanup()
     return rc
 
 
@@ -26,7 +26,7 @@ class Gtk3Example(Gtk.Application):
         self.window = None
 
     def run(self):
-        GObject.timeout_add(10, self.on_timer)
+        GLib.timeout_add(10, self.on_timer)
         self.connect("startup", self.on_startup)
         self.connect("activate", self.on_activate)
         super().run()

@@ -294,11 +294,12 @@ def appmain():
         '/devel/bin/python3/bin/python3',
     ]
     c = cefapp.App()
-    result = cefapp.AppStartup(c, args)
+    cls = cefapp.AppSetup(c, args)
+    cls.Execute()
     print('main')
     main()
     print('after main')
-    #cefapp.AppCleanup(result)
+    #cls.Cleanup()
     print('exit', c)
 
 if __name__ == '__main__':

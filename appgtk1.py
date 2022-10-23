@@ -1,7 +1,7 @@
 #!/usr/bin/env vpython3
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkX11, GObject
+from gi.repository import Gtk, Gdk, GdkX11, GObject, GLib
 
 
 from cefct import libcef
@@ -26,7 +26,7 @@ class Example(Gtk.Window):
         self.browser = None
         self.init_ui()
         if useTimer:
-            GObject.timeout_add(10, self.on_timer)
+            GLib.timeout_add(10, self.on_timer)
 
     def on_timer(self, *args):
         print('on_timer', args)

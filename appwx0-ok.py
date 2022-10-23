@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 import cefapp
 import wx
-import ctypes
-from cefct import libcef
 import ctypes as ct
 from cefct import libcef
 from cefappcommon import Client
 
-libX11 = ctypes.CDLL("libX11.so.6")
+libX11 = ct.CDLL("libX11.so.6")
 
 def main():
     input('main')
@@ -21,11 +19,12 @@ def appmain():
         '/devel/bin/python3/bin/python3',
     ]
     c = cefapp.App()
-    result = cefapp.AppStartup(c, args)
+    cls = cefapp.AppSetup(c, args)
+    cls.Execute()
     print('call.main')
     main()
     print('/call.main')
-    #cefapp.AppCleanup(result)
+    cls.Cleanup()
     print('exit', c)
 
 if __name__ == '__main__':
