@@ -120,9 +120,10 @@ def main():
 
 def appmain():
     c = cefapp.App()
-    result = cefapp.AppStartup(c, [])
+    cls = cefapp.AppSetup(c, [])
+    cls.Execute()
     main()
-    cefapp.AppCleanup(result)
+    cls.Cleanup()
 
 if __name__ == '__main__':
     appmain()
