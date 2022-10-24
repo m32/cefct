@@ -13,6 +13,7 @@ def appmain():
     c = cefapp.App()
     print('AppStartup')
     cls = cefapp.AppSetup(c, args)
+    cls.Execute()
     time.sleep(3)
     print('AppCleanup')
     cls.Cleanup()
