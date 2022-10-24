@@ -1,262 +1,175 @@
 #!/usr/bin/env vpython3
 import sys
-import os
-
-top = os.path.join(os.getcwd(), "bin")
-# os.chdir(top)
-
-cefdataroot = os.path.join(os.getcwd(), "bin-cefdata")
-for fname in (
-    cefdataroot,
-    os.path.join(cefdataroot, "root"),
-    os.path.join(cefdataroot, "root", "cache"),
-    os.path.join(cefdataroot, "user-data"),
-):
-    if not os.path.isdir(fname):
-        os.mkdir(fname)
-
 import ctypes as ct
-from cefct import libcefdef
-
-libcefdef.LoadLibrary(os.path.join(top, "libcef" + libcefdef.dllext))
+import cefapp
 from cefct import libcef as cef
-from appcommon import Client, BrowserProcessHandler
+import cefappcommon
 from PIL import Image
-
-
-c_byte_p = ct.POINTER(ct.c_byte)
-
-
-def CefMainArgs(argv):
-    argb = [ct.create_string_buffer(s.encode("ascii")) for s in argv[1:]]
-    cargv = (ct.c_void_p * (len(argb) + 1))()
-    for i in range(len(argb)):
-        v = argb[i]
-        cargv[i] = ct.cast(v, ct.c_void_p)
-    cargv[len(argb)] = None
-    data = cef.cef_main_args_t()
-    data.argc = len(argb)
-    data.argv = ct.cast(cargv, ct.c_void_p)
-    return data, (argb, cargv)
 
 # Config
 URL = "https://www.trisoft.com.pl"
-VIEWPORT_SIZE = (1024, 5000)
-SCREENSHOT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "screenshot.png")
+VIEWPORT_SIZE = (1024, 20000)
+
+def save_screenshot(size, buff):
+    tbuff = ct.c_ubyte*(size[0]*size[1])
+    t = ct.cast(buff, ct.POINTER(tbuff))
+    size = (size[0], size[1]//4)
+    #open('screenshot.bin', 'wb').write(t.contents)
+    image = Image.frombytes("RGBA", size, t.contents, "raw", "RGBA", 0, 1)
+    image.save('screenshot.png', "PNG")
+    # See comments in exit_app() why PostTask must be used
+    #cef.PostTask(cef.TID_UI, exit_app, browser)
+
+def main():
+    c = cefapp.App()
+    switches = [
+        "--disable-gpu",
+        "--disable-gpu-compositing",
+        "--enable-begin-frame-scheduling",
+        "--disable-surfaces",
+    ]
+    cls = cefapp.AppSetup(c, switches)
+    #
+    cls.settings.windowless_rendering_enabled = 1
+    cls.Execute()
+    print('call.main')
+    bmain()
+    print('/call.main')
+    cls.Cleanup()
 
 
-class App(cef.CefApp):
+def stopbrowser(browser):
+    host = browser.contents.get_host(browser)
+    host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
+
+    browser.contents.stop_load(browser, 1)
+    host.contents.close_browser(host, 1)
+    cef.cef_quit_message_loop()
+
+loaded = False
+
+class CefLoadHandler(cefappcommon.CefLoadHandler):
+    def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
+        print('_on_loading_state_change', isLoading, canGoBack, canGoForward, flush=True)
+        if not isLoading:
+            global loaded
+            loaded = True
+
+    def _on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
+        print("ERROR: Failed to load url: {url}, Error code: {code}".format(
+            url=failedurl,
+            code=errorCode
+        ), flush=True)
+        if not frame.is_main(frame):
+            return
+        cef.cef_quit_message_loop()
+        return
+        task = cef.cef_task_t()
+        cef.cef_post_task(cef.TID_UI, exit_app, browser)
+
+class CefRendererHandler(cef.cef_render_handler_t):
+    n = 15
+
+    def _get_accessibility_handler(self, this):
+        pass
+
+    def _get_root_screen_rect(self, this, browser, rect):
+        return 0
+
+    def _get_view_rect(self, this, browser, rect):
+        r = rect.contents
+        r.x = 0
+        r.y = 0
+        r.width = VIEWPORT_SIZE[0]
+        r.height = VIEWPORT_SIZE[1]
+
+    def _get_screen_point(self, this, browser, viewX, viewY, screenX, screenY):
+        return 0
+
+    def _get_screen_info(self, this, browser, screen_info):
+        return 0
+
+    def _on_popup_show(self, this, browser, show):
+        pass
+
+    def _on_popup_size(self, this, browser, rect):
+        pass
+
+    def _on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
+        if eltype == cef.PET_VIEW and loaded:
+            self.n -= 1
+            if self.n != 0:
+                return
+            print('CefRendererHandler(browser,', eltype, dirtyRectsCount, width, height, flush=True)
+            try:
+                save_screenshot((width, height), buffer)
+            finally:
+                stopbrowser(browser)
+
+    def _on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
+        pass
+
+    def _get_touch_handle_size(self, this, browser, orientation, size):
+        pass
+
+    def _on_touch_handle_state_changed(self, this, browser, state):
+        pass
+
+    def _start_dragging(self, this, browser, drag_data, allowed_ops, x, y):
+        return 0
+
+    def _update_drag_cursor(self, this, browser, operation):
+        pass
+
+    def _on_scroll_offset_changed(self, this, browser, x, y):
+        pass
+
+    def _on_ime_composition_range_changed(self, this, browser, selected_range, character_boundsCount, character_bounds):
+        pass
+
+    def _on_text_selection_changed(self, this, browser, selected_text, selected_range):
+        pass
+
+    def _on_virtual_keyboard_requested(self, this, browser, input_mode):
+        pass
+
+class Client(cef.cef_client_t):
     def __init__(self):
         super().__init__()
-        self.bph = BrowserProcessHandler()
+        self.life_span_handler = cefappcommon.CefLifeSpanHandler()
+        self.load_handler = CefLoadHandler()
+        self.render_handler = CefRendererHandler()
 
-    def OnBeforeCommandLineProcessing(self, this, processType, commandLine):
-        ptv = ct.cast(processType, ct.c_void_p)
-        commandLine.contents._append_switch(commandLine, cef.cef_string_t("--headless"))
-        commandLine.contents._append_switch(commandLine, cef.cef_string_t("--disable-gpu"))
-        cls = commandLine.contents._get_command_line_string(commandLine).contents.ToString()
-        print(
-            "App.OnBeforeCommandLineProcessing",
-            ptv,
-            cls,
-            flush=True,
-        )
-        return None
+    def _get_life_span_handler(self, *args):
+        ret = ct.addressof(self.life_span_handler)
+        return ret
 
-    # def OnRegisterCustomSchemes(self, this, registrar):
-    def OnRegisterCustomSchemes(self, this, registar):
-        print("App.OnRegisterCustomSchemes", registar, flush=True)
-        return None
+    def _get_load_handler(self, *args):
+        ret = ct.addressof(self.load_handler)
+        return ret
 
-    # def GetResourceBundleHandler(self, this):
-    def GetResourceBundleHandler(self, this):
-        return None
-        print("App.GetResourceBundleHandler", flush=True)
+    def _get_render_handler(self, *args):
+        ret = ct.addressof(self.render_handler)
+        return ret
 
-    # def GetBrowserProcessHandler(self, this):
-    def GetBrowserProcessHandler(self, this):
-        print("App.GetBrowserProcessHandler", flush=True)
-        v = ct.addressof(self.bph)
-        return v
-
-    # def GetRenderProcessHandler(self, this):
-    def GetRenderProcessHandler(self, this):
-        print("App.GetRenderProcessHandler", flush=True)
-        return None
-
-
-c_byte_p = ct.POINTER(ct.c_byte)
-
-
-def CefMainArgs(argv):
-    argb = [ct.create_string_buffer(s.encode("ascii")) for s in argv[1:]]
-    cargv = (ct.c_void_p * (len(argb) + 1))()
-    for i in range(len(argb)):
-        v = argb[i]
-        cargv[i] = ct.cast(v, ct.c_void_p)
-    cargv[len(argb)] = None
-    data = cef.cef_main_args_t()
-    data.argc = len(argb)
-    data.argv = ct.cast(cargv, ct.c_void_p)
-    return data, (argb, cargv)
-
-def runapp(app):
+def bmain():
     window_info = cef.cef_window_info_t()
     window_info.windowless_rendering_enabled = 1
 
     cef_url = cef.cef_string_t(URL)
     browser_settings = cef.cef_browser_settings_t()
+    browser_settings.size = cef.sizeof(cef.cef_browser_settings_t)
+    browser_settings.windowless_frame_rate = 30
     client = Client()
 
-    #self.window_info = window_info
-    #self.cef_url = cef_url
-    #self.browser_settings = browser_settings
-    #self.client = client
-
     print("cef_browser_host_create_browser")
-    browser = cef.browser_host_create_browser_sync(
+    browser = cef.cef_browser_host_create_browser_sync(
         window_info, client, cef_url, browser_settings, None, None
     )
     print("/cef_browser_host_create_browser")
     print('cef.run_message_loop()')
-    cef.run_message_loop()
+    cef.cef_run_message_loop()
     print('/cef.run_message_loop()')
 
-def main(args):
-    del args[0]
-    mainArgs, mainArgsB = CefMainArgs(args)
-    settings = cef.cef_settings_t()
-    # settings.remote_debugging_port = 20480
-    settings.no_sandbox = 1
-    # settings.chrome_runtime = 0
-    settings.browser_subprocess_path = cef.cef_string_t(
-        os.path.normpath(os.path.join(top, "cefclient"))
-    )
-    settings.windowless_rendering_enabled = 1
-    # settings.browser_subprocess_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'pyhelper'+cef.exeext)))
-    # settings.resources_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources')))
-    # settings.locales_dir_path = cef.cef_string_t(os.path.normpath(os.path.join(top, 'Resources\\locales')))
-    #settings.multi_threaded_message_loop = 1
-    settings.root_cache_path = cef.cef_string_t(
-        os.path.join(cefdataroot, "root")
-    )
-    settings.cache_path = cef.cef_string_t(
-        os.path.join(cefdataroot, "root", "cache")
-    )
-    settings.user_data_path = cef.cef_string_t(
-        os.path.join(cefdataroot, "user-data")
-    )
-    settings.log_file = cef.cef_string_t(
-        os.path.join(cefdataroot, "cef.log")
-    )
-    settings.log_severity = 2
-
-    app = App()
-
-    rc = cef.execute_process(mainArgs, app, None)
-    print("cef.execute_process rc=", rc, flush=True)
-    if rc != -1:
-        return rc
-
-    print("cef.initialize", flush=True)
-    cef.initialize(mainArgs, settings, app, None)
-    try:
-        runapp(app)
-    finally:
-        cef.shutdown()
-    return
-
-    switches = {
-        # GPU acceleration is not supported in OSR mode, so must disable
-        # it using these Chromium switches (Issue #240 and #463)
-        "disable-gpu": "",
-        "disable-gpu-compositing": "",
-        # Tweaking OSR performance by setting the same Chromium flags
-        # as in upstream cefclient (Issue #240).
-        "enable-begin-frame-scheduling": "",
-        "disable-surfaces": "",  # This is required for PDF ext to work
-    }
-    browser_settings = {
-        # Tweaking OSR performance (Issue #240)
-        "windowless_frame_rate": 30,  # Default frame rate in CEF is 30
-    }
-
-
-def save_screenshot(browser):
-    # Browser object provides GetUserData/SetUserData methods
-    # for storing custom data associated with browser. The
-    # "OnPaint.buffer_string" data is set in RenderHandler.OnPaint.
-    buffer_string = browser.GetUserData("OnPaint.buffer_string")
-    if not buffer_string:
-        raise Exception("buffer_string is empty, OnPaint never called?")
-    image = Image.frombytes("RGBA", VIEWPORT_SIZE, buffer_string,
-                            "raw", "RGBA", 0, 1)
-    image.save(SCREENSHOT_PATH, "PNG")
-    print("[screenshot.py] Saved image: {path}".format(path=SCREENSHOT_PATH))
-    # See comments in exit_app() why PostTask must be used
-    cef.PostTask(cef.TID_UI, exit_app, browser)
-
-
-class LoadHandler(object):
-    def OnLoadingStateChange(self, browser, is_loading, **_):
-        """Called when the loading state has changed."""
-        if not is_loading:
-            # Loading is complete
-            sys.stdout.write(os.linesep)
-            print("[screenshot.py] Web page loading is complete")
-            print("[screenshot.py] Will save screenshot in 2 seconds")
-            # Give up to 2 seconds for the OnPaint call. Most of the time
-            # it is already called, but sometimes it may be called later.
-            cef.PostDelayedTask(cef.TID_UI, 2000, save_screenshot, browser)
-
-    def OnLoadError(self, browser, frame, error_code, failed_url, **_):
-        """Called when the resource load for a navigation fails
-        or is canceled."""
-        if not frame.IsMain():
-            # We are interested only in loading main url.
-            # Ignore any errors during loading of other frames.
-            return
-        print("[screenshot.py] ERROR: Failed to load url: {url}"
-              .format(url=failed_url))
-        print("[screenshot.py] Error code: {code}"
-              .format(code=error_code))
-        # See comments in exit_app() why PostTask must be used
-        cef.PostTask(cef.TID_UI, exit_app, browser)
-
-
-class RenderHandler(object):
-    def __init__(self):
-        self.OnPaint_called = False
-
-    def GetViewRect(self, rect_out, **_):
-        """Called to retrieve the view rectangle which is relative
-        to screen coordinates. Return True if the rectangle was
-        provided."""
-        # rect_out --> [x, y, width, height]
-        rect_out.extend([0, 0, VIEWPORT_SIZE[0], VIEWPORT_SIZE[1]])
-        return True
-
-    def OnPaint(self, browser, element_type, paint_buffer, **_):
-        """Called when an element should be painted."""
-        if self.OnPaint_called:
-            sys.stdout.write(".")
-            sys.stdout.flush()
-        else:
-            sys.stdout.write("[screenshot.py] OnPaint")
-            self.OnPaint_called = True
-        if element_type == cef.PET_VIEW:
-            # Buffer string is a huge string, so for performance
-            # reasons it would be better not to copy this string.
-            # I think that Python makes a copy of that string when
-            # passing it to SetUserData.
-            buffer_string = paint_buffer.GetBytes(mode="rgba",
-                                                  origin="top-left")
-            # Browser object provides GetUserData/SetUserData methods
-            # for storing custom data associated with browser.
-            browser.SetUserData("OnPaint.buffer_string", buffer_string)
-        else:
-            raise Exception("Unsupported element_type in OnPaint")
-
-
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
