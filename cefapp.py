@@ -79,11 +79,8 @@ class App(cef.cef_app_t):
 
     # def GetBrowserProcessHandler(self, this):
     def _get_browser_process_handler(self, this):
-        return None
         print("App.GetBrowserProcessHandler", flush=True)
-        v = addressof(self.bph)
-        print("&bph=", v, flush=True)
-        v = 0
+        v = ct.addressof(self.bph)
         return v
 
     # def GetRenderProcessHandler(self, this):
@@ -125,7 +122,7 @@ class AppSetup:
         settings.cache_path = cef.cef_string_t(os.path.join(cefdataroot, "root", "cache"))
         settings.user_data_path = cef.cef_string_t(os.path.join(cefdataroot, "user-data"))
         settings.log_file = cef.cef_string_t(os.path.join(cefdataroot, "cef.log"))
-        settings.log_severity = 2
+        settings.log_severity = cef.LOGSEVERITY_DEBUG
         settings.uncaught_exception_stack_size = 200
 
         self.mainArgs = mainArgs
