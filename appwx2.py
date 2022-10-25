@@ -284,11 +284,8 @@ def main():
         libcef.cef_run_message_loop()
 
 def appmain():
-    args = [
-        '/devel/bin/python3/bin/python3',
-    ]
     c = cefapp.App()
-    cls = cefapp.AppSetup(c, args)
+    cls = cefapp.AppSetup(c)
     cls.Execute()
     print('main')
     main()

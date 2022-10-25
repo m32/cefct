@@ -9,7 +9,7 @@ useTimer = False
 
 def main():
     c = cefapp.App()
-    cls = cefapp.AppSetup(c,[''])
+    cls = cefapp.AppSetup(c)
     cls.Execute()
 
     print('loop', flush=True)

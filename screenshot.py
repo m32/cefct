@@ -21,14 +21,22 @@ def save_screenshot(size, buff):
     #cef.PostTask(cef.TID_UI, exit_app, browser)
 
 def main():
-    c = cefapp.App()
     switches = [
-        "--disable-gpu",
-        "--disable-gpu-compositing",
-        "--enable-begin-frame-scheduling",
-        "--disable-surfaces",
+        #"enable-webgl",
+        #"single-process",
+
+        "enable-begin-frame-scheduling",
+        "enable-media-stream",
+
+        "disable-surfaces",
+
+        "disable-gpu",
+        "disable-gpu-compositing",
+        ("disable-gpu-vsync", "gpu")
     ]
-    cls = cefapp.AppSetup(c, switches)
+
+    c = cefapp.App(switches)
+    cls = cefapp.AppSetup(c)
     #
     cls.settings.windowless_rendering_enabled = 1
     cls.Execute()

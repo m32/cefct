@@ -120,7 +120,7 @@ def main():
 
 def appmain():
     c = cefapp.App()
-    cls = cefapp.AppSetup(c, [])
+    cls = cefapp.AppSetup(c)
     cls.Execute()
     main()
     cls.Cleanup()

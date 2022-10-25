@@ -42,9 +42,10 @@ def CefMainArgs(argv):
 
 
 class App(cef.cef_app_t):
-    def __init__(self):
+    def __init__(self, switches=None):
         super().__init__()
         self.bph = cef.cef_browser_process_handler_t()
+        self.switches = switches
 
     def _on_before_command_line_processing(self, this, processType, commandLine):
         print("App.OnBeforeCommandLineProcessing", flush=True)
@@ -64,29 +65,33 @@ class App(cef.cef_app_t):
                 print("\tcommandLine=", v)
                 s.contents.Free()
 
-        showcl()
-        return None
-        cl = commandLine.contents
-        def cladd(s1, s2=None):
-            #print('cladd', s1, '*', s2)
-            s1 = cef.cef_string_t(s1)
-            if s2 is None:
-                cl.append_switch(cl, s1)
-            else:
-                s2 = cef.cef_string_t(s2)
-                cl.append_switch_with_value(cl, s1, s2)
+        if self.switches:
+            cl = commandLine.contents
+            def cladd(s1, s2=None):
+                #print('cladd', s1, '*', s2)
+                s1 = cef.cef_string_t(s1)
+                if s2 is None:
+                    cl.append_switch(cl, s1)
+                else:
+                    s2 = cef.cef_string_t(s2)
+                    cl.append_switch_with_value(cl, s1, s2)
+            for sw in self.switches:
+                if type(sw) == str:
+                    cladd(sw)
+                else:
+                    cladd(sw[0], sw[1])
 
-        cladd("enable-media-stream")
-        cladd("autoplay-policy", "no-user-gesture-required")
-        cladd("enable-media-stream")
-        cladd("disable-dev-shm-usage") # https://github.com/GoogleChrome/puppeteer/issues/1834
-        cladd("enable-begin-frame-scheduling") # https://bitbucket.org/chromiumembedded/cef/issues/1368
+        #cladd("enable-media-stream")
+        #cladd("autoplay-policy", "no-user-gesture-required")
+        #cladd("enable-media-stream")
+        #cladd("disable-dev-shm-usage") # https://github.com/GoogleChrome/puppeteer/issues/1834
+        #cladd("enable-begin-frame-scheduling") # https://bitbucket.org/chromiumembedded/cef/issues/1368
 
         # Optimize for no gpu usage
-        cladd("disable-gpu")
-        cladd("disable-gpu-compositing")
+        #cladd("disable-gpu")
+        #cladd("disable-gpu-compositing")
 
-        cladd("remote-debugging-port", "9921")
+        #cladd("remote-debugging-port", "9921")
 
         showcl()
         return None
@@ -114,7 +119,7 @@ class App(cef.cef_app_t):
 
 
 class AppSetup:
-    def __init__(self, app, args):
+    def __init__(self, app, *args):
         print("*" * 20, "AppSetup", flush=True)
         if libcefdef.win:
             mainArgs = cef.cef_main_args_t()
