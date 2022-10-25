@@ -13,6 +13,8 @@ class Element(object):
         if atype == "long" and atype1 and atype1[0] == "long":
             aname = aname[len(atype) :].strip()
             atype = "longlong"
+        elif atype =="cef_string_userfree_t":
+            aname = "*" + aname
         isptr = len(aname) and aname[0] == "*"
         if isptr:
             aname = aname[1:].strip()
