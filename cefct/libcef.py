@@ -208,13 +208,13 @@ def cef_create_url(parts, url):
 
 
 #cef_string_userfree_t cef_format_url_for_security_display(cef_string_t* origin_url);
-@CEFENTRY(cef_string_userfree_t, "cef_format_url_for_security_display", POINTER(cef_string_t))
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_format_url_for_security_display", POINTER(cef_string_t))
 def cef_format_url_for_security_display(origin_url):
     return cef_format_url_for_security_display._api_(origin_url)
 
 
 #cef_string_userfree_t cef_get_mime_type(cef_string_t* extension);
-@CEFENTRY(cef_string_userfree_t, "cef_get_mime_type", POINTER(cef_string_t))
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_get_mime_type", POINTER(cef_string_t))
 def cef_get_mime_type(extension):
     return cef_get_mime_type._api_(extension)
 
@@ -226,7 +226,7 @@ def cef_get_extensions_for_mime_type(mime_type, extensions):
 
 
 #cef_string_userfree_t cef_base64encode(void* data, size_t data_size);
-@CEFENTRY(cef_string_userfree_t, "cef_base64encode", POINTER(c_void), size_t)
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_base64encode", POINTER(c_void), size_t)
 def cef_base64encode(data, data_size):
     return cef_base64encode._api_(data, data_size)
 
@@ -238,13 +238,13 @@ def cef_base64decode(data):
 
 
 #cef_string_userfree_t cef_uriencode(cef_string_t* text, int use_plus);
-@CEFENTRY(cef_string_userfree_t, "cef_uriencode", POINTER(cef_string_t), c_int)
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_uriencode", POINTER(cef_string_t), c_int)
 def cef_uriencode(text, use_plus):
     return cef_uriencode._api_(text, use_plus)
 
 
 #cef_string_userfree_t cef_uridecode(cef_string_t* text, int convert_to_utf8, cef_uri_unescape_rule_t unescape_rule);
-@CEFENTRY(cef_string_userfree_t, "cef_uridecode", POINTER(cef_string_t), c_int, cef_uri_unescape_rule_t)
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_uridecode", POINTER(cef_string_t), c_int, cef_uri_unescape_rule_t)
 def cef_uridecode(text, convert_to_utf8, unescape_rule):
     return cef_uridecode._api_(text, convert_to_utf8, unescape_rule)
 
@@ -268,7 +268,7 @@ def cef_parse_jsonand_return_error(json_string, options, error_msg_out):
 
 
 #cef_string_userfree_t cef_write_json(cef_value_t* node, cef_json_writer_options_t options);
-@CEFENTRY(cef_string_userfree_t, "cef_write_json", POINTER(cef_value_t), cef_json_writer_options_t)
+@CEFENTRY(POINTER(cef_string_userfree_t), "cef_write_json", POINTER(cef_value_t), cef_json_writer_options_t)
 def cef_write_json(node, options):
     return cef_write_json._api_(node, options)
 
