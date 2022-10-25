@@ -21,14 +21,16 @@ class cef_string_t(Structure):
         if src is None:
             string_set(None, 0, self, 1)
         else:
-            src1 = (src+'\0').encode("utf-16")
+            #src1 = (src+'\0').encode("utf-16")
+            src1 = src.encode("utf-16")
             src1 = src1[2:] # skip boom
-            string_set(src1, len(src)+1, byref(self), 1) # 1=Copy
+            string_set(src1, len(src), byref(self), 1) # 1=Copy
 
     def ToString(self, decode=True) -> str:
         if self._str == None:
             return None
-        size = self.size * 2 - 2 # null terminated
+        #size = self.size * 2 - 2 # null terminated
+        size = self.size * 2
         a = (c_char * size)()
         memmove(a, self._str, size)
         v = b''.join(a)
