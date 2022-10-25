@@ -47,24 +47,48 @@ class App(cef.cef_app_t):
         self.bph = cef.cef_browser_process_handler_t()
 
     def _on_before_command_line_processing(self, this, processType, commandLine):
-        print(
-            "App.OnBeforeCommandLineProcessing:\n\t{}\n\t{}\n\t{}".format(
-                this, processType, commandLine
-            ),
-            flush=True,
-        )
-        v = processType
-        print('\tprocessType==',v, bool(v))
+        print("App.OnBeforeCommandLineProcessing", flush=True)
+        #v = processType
+        #print('\tprocessType==',v, bool(v))
         #v = processType.contents
         #if v is not None:
         #    v = v.ToString()
         #print("processType=", v)
-        if 0:
+        def showcl():
             cl = commandLine.contents
-            print('\tcl.valid', cl.is_valid(cl))
-            s = cl.get_command_line_string(cl)
-            print('\tcl.s=', s)
-            print("\tprocessType=", v, v.value, commandLine.contents)
+            #print('\tcl.valid=', cl.is_valid(cl))
+            if cl.is_valid(cl):
+                s = cl.get_command_line_string(cl)
+                s = ct.cast(s, ct.POINTER(cef.cef_string_userfree_t))
+                v = s.contents.ToString(True)
+                print("\tcommandLine=", v)
+                s.contents.Free()
+
+        showcl()
+        return None
+        cl = commandLine.contents
+        def cladd(s1, s2=None):
+            #print('cladd', s1, '*', s2)
+            s1 = cef.cef_string_t(s1)
+            if s2 is None:
+                cl.append_switch(cl, s1)
+            else:
+                s2 = cef.cef_string_t(s2)
+                cl.append_switch_with_value(cl, s1, s2)
+
+        cladd("enable-media-stream")
+        cladd("autoplay-policy", "no-user-gesture-required")
+        cladd("enable-media-stream")
+        cladd("disable-dev-shm-usage") # https://github.com/GoogleChrome/puppeteer/issues/1834
+        cladd("enable-begin-frame-scheduling") # https://bitbucket.org/chromiumembedded/cef/issues/1368
+
+        # Optimize for no gpu usage
+        cladd("disable-gpu")
+        cladd("disable-gpu-compositing")
+
+        cladd("remote-debugging-port", "9921")
+
+        showcl()
         return None
 
     # def OnRegisterCustomSchemes(self, this, registrar):
