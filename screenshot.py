@@ -32,7 +32,11 @@ def main():
 
         "disable-gpu",
         "disable-gpu-compositing",
-        ("disable-gpu-vsync", "gpu")
+        ("disable-gpu-vsync", "gpu"),
+
+        # verbose logging
+        #"enable-logging",
+        #("v", "1")
     ]
 
     c = cefapp.App(switches)
