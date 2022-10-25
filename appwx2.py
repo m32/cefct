@@ -34,6 +34,7 @@ def guiStartup():
 useTimer = False
 #useTimer = True
 URL = "https://www.trisoft.com.pl/"
+URL = "http://html5test.com/"
 browser = None
 
 class Main(wx.Frame):
