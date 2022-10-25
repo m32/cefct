@@ -9,7 +9,8 @@ from cefappcommon import Client
 libX11 = ct.CDLL("libX11.so.6")
 
 def main():
-    input('main')
+    print('!!!!!!!!!! in main, press enter to continue')
+    input()
     import gi
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk, Gdk, GdkX11
