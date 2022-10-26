@@ -362,7 +362,7 @@ def cefchecksize(name, t, size):\\n\\
         )
         for typedef in self.typedef:
             fp.write(
-                '    fprintf(fp, "cefsizesok &= cefchecksize(\\"{}\\", {}, %ld)\\n", sizeof({}));\n'.format(
+                '    fprintf(fp, "cefsizesok &= cefchecksize(\\"{}\\", {}, %d)\\n", (int)sizeof({}));\n'.format(
                     typedef.typename, typedef.typename, typedef.typename
                 )
             )
