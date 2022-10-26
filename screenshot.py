@@ -50,19 +50,27 @@ def main():
     cls.Cleanup()
 
 
-def stopbrowser(browser):
-    host = browser.contents.get_host(browser)
-    host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
+class exit_app(cef.cef_task_t):
+    browser = None
+    def _execute(self, this):
+        print('exit_app', self.browser)
+        browser = self.browser
+        host = browser.contents.get_host(browser)
+        host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
 
-    browser.contents.stop_load(browser, 1)
-    host.contents.close_browser(host, 1)
-    cef.cef_quit_message_loop()
+        browser.contents.stop_load(browser, 1)
+        host.contents.close_browser(host, 1)
+        browser.contents._base.release(browser.contents._base)
+        libcef.cef_quit_message_loop()
 
+texit = exit_app()
+texit._base.debug = True
+texit._base.AddRef(texit)
 loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
     def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
-        print('_on_loading_state_change', isLoading, canGoBack, canGoForward, flush=True)
+        print('_on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
         if not isLoading:
             global loaded
             loaded = True
@@ -74,10 +82,9 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
         ), flush=True)
         if not frame.is_main(frame):
             return
-        cef.cef_quit_message_loop()
-        return
-        task = cef.cef_task_t()
-        cef.cef_post_task(cef.TID_UI, exit_app, browser)
+        browser.contents._base.add_ref(browser.contents._base)
+        texit.browser = browser
+        cef.cef_post_task(cef.TID_UI, texit)
 
 class CefRendererHandler(cef.cef_render_handler_t):
     n = 15
@@ -112,11 +119,16 @@ class CefRendererHandler(cef.cef_render_handler_t):
             self.n -= 1
             if self.n != 0:
                 return
-            print('CefRendererHandler(browser,', eltype, dirtyRectsCount, width, height, flush=True)
+            print('CefRendererHandler({}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height), flush=True)
             try:
                 save_screenshot((width, height), buffer)
             finally:
-                stopbrowser(browser)
+                print('browser.contents._base.add_ref')
+                browser.contents._base.add_ref(browser.contents._base)
+                texit.browser = browser
+                print('cef.cef_post_task')
+                cef.cef_post_task(cef.TID_UI, texit)
+                print('/cef.cef_post_task')
 
     def _on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
         pass
