@@ -15,7 +15,7 @@ def save_screenshot(size, buff):
     t = ct.cast(buff, ct.POINTER(tbuff))
     size = (size[0], size[1]//4)
     #open('screenshot.bin', 'wb').write(t.contents)
-    image = Image.frombytes("RGBA", size, t.contents, "raw", "RGBA", 0, 1)
+    image = Image.frombytes("RGBA", size, t.contents, "raw", "BGRA", 0, 1)
     image.save('screenshot.png', "PNG")
     # See comments in exit_app() why PostTask must be used
     #cef.PostTask(cef.TID_UI, exit_app, browser)
@@ -54,6 +54,8 @@ def stopbrowser(browser):
     host = browser.contents.get_host(browser)
     host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
 
+    host.contents.try_close_browser(host)
+    return
     browser.contents.stop_load(browser, 1)
     host.contents.close_browser(host, 1)
 
