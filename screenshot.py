@@ -36,7 +36,7 @@ def main():
 
         # verbose logging
         #"enable-logging",
-        #("v", "1")
+        #("v", "1"),
     ]
 
     c = cefapp.App(switches)
@@ -50,41 +50,30 @@ def main():
     cls.Cleanup()
 
 
-class exit_app(cef.cef_task_t):
-    browser = None
-    def _execute(self, this):
-        print('exit_app', self.browser)
-        browser = self.browser
-        host = browser.contents.get_host(browser)
-        host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
+def stopbrowser(browser):
+    host = browser.contents.get_host(browser)
+    host = cef.cast(host, cef.POINTER(cef.cef_browser_host_t))
 
-        browser.contents.stop_load(browser, 1)
-        host.contents.close_browser(host, 1)
-        browser.contents._base.release(browser.contents._base)
-        libcef.cef_quit_message_loop()
+    browser.contents.stop_load(browser, 1)
+    host.contents.close_browser(host, 1)
 
-texit = exit_app()
-texit._base.debug = True
-texit._base.AddRef(texit)
 loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
     def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
-        print('_on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
+        print('CefLoadHandler._on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
         if not isLoading:
             global loaded
             loaded = True
 
     def _on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
-        print("ERROR: Failed to load url: {url}, Error code: {code}".format(
+        print("CefLoadHandler._on_load_error: Failed to load url: {url}, Error code: {code}".format(
             url=failedurl,
             code=errorCode
         ), flush=True)
         if not frame.is_main(frame):
             return
-        browser.contents._base.add_ref(browser.contents._base)
-        texit.browser = browser
-        cef.cef_post_task(cef.TID_UI, texit)
+        stopbrowser(browser)
 
 class CefRendererHandler(cef.cef_render_handler_t):
     n = 15
@@ -119,16 +108,11 @@ class CefRendererHandler(cef.cef_render_handler_t):
             self.n -= 1
             if self.n != 0:
                 return
-            print('CefRendererHandler({}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height), flush=True)
+            print('CefRendererHandler(browser, {}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height), flush=True)
             try:
                 save_screenshot((width, height), buffer)
             finally:
-                print('browser.contents._base.add_ref')
-                browser.contents._base.add_ref(browser.contents._base)
-                texit.browser = browser
-                print('cef.cef_post_task')
-                cef.cef_post_task(cef.TID_UI, texit)
-                print('/cef.cef_post_task')
+                stopbrowser(browser)
 
     def _on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
         pass
