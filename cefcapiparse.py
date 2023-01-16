@@ -87,19 +87,20 @@ class TypeDef(Element):
         self.typename = typename
         self.lines = lines
         self.typedata = []
-        self.scoped = False
+        self.basename = None
 
         rename = {
             "del": "delete",
             "from": "xfrom",
+            "reload": "xreload",
         }
         lp = 0
         for elem in lines:
             line = elem.split(" ", 1)
-            if line[0] == "cef_base_ref_counted_t":
-                continue
-            if line[0] == "cef_base_scoped_t":
-                self.scoped = True
+            if line[1] == 'base':
+                if self.basename is not None:
+                    print('bang', self.basename, line)
+                self.basename = line[0]
                 continue
             elem = elem.strip()
             i = elem.find("(")
@@ -251,24 +252,14 @@ class {}(Structure):
 )
 """
             )
-            if typedef.scoped:
-                fp.write(
+            fp.write(
                     """\
 {}._fields_ = (
-    ('_base', cef_base_scoped_t),
+    ('_base', {}),
 """.format(
-                        typedef.typename
-                    )
+                typedef.typename, typedef.basename
                 )
-            else:
-                fp.write(
-                    """\
-{}._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-""".format(
-                        typedef.typename
-                    )
-                )
+            )
             for typedata in typedef.typedata:
                 fp.write(
                     """\

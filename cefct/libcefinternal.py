@@ -633,8 +633,7 @@ if 1:
 #class cef_pdf_print_margin_type_t(enum):
     PDF_PRINT_MARGIN_DEFAULT = 1
     PDF_PRINT_MARGIN_NONE = 2
-    PDF_PRINT_MARGIN_MINIMUM = 3
-    PDF_PRINT_MARGIN_CUSTOM = 4
+    PDF_PRINT_MARGIN_CUSTOM = 3
 
 
 #class cef_scale_factor_t(enum):
@@ -903,7 +902,7 @@ if 1:
     CEF_PERMISSION_TYPE_STORAGE_ACCESS = 65536
     CEF_PERMISSION_TYPE_U2F_API_REQUEST = 131072
     CEF_PERMISSION_TYPE_VR_SESSION = 262144
-    CEF_PERMISSION_TYPE_WINDOW_PLACEMENT = 524288
+    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 524288
 
 
 #class cef_permission_request_result_t(enum):
@@ -917,6 +916,11 @@ if 1:
     CEF_TEST_CERT_OK_IP = 1
     CEF_TEST_CERT_OK_DOMAIN = 2
     CEF_TEST_CERT_EXPIRED = 3
+
+
+#class cef_preferences_type_t(enum):
+    CEF_PREFERENCES_TYPE_GLOBAL = 1
+    CEF_PREFERENCES_TYPE_REQUEST_CONTEXT = 2
 
 cef_log_severity_t = c_int
 cef_state_t = c_int
@@ -1003,6 +1007,7 @@ cef_media_access_permission_types_t = c_int
 cef_permission_request_types_t = c_int
 cef_permission_request_result_t = c_int
 cef_test_cert_type_t = c_int
+cef_preferences_type_t = c_int
 
 class cef_point_t(Structure):
     _align_ = CEFALIGN
@@ -1250,20 +1255,21 @@ class cef_cursor_info_t(Structure):
 class cef_pdf_print_settings_t(Structure):
     _align_ = CEFALIGN
     _fields_ = (
-        ('header_footer_title', cef_string_t),
-        ('header_footer_url', cef_string_t),
-        ('page_width', c_int),
-        ('page_height', c_int),
-        ('scale_factor', c_int),
-        ('margin_top', c_int),
-        ('margin_right', c_int),
-        ('margin_bottom', c_int),
-        ('margin_left', c_int),
-        ('margin_type', cef_pdf_print_margin_type_t),
-        ('header_footer_enabled', c_int),
-        ('selection_only', c_int),
         ('landscape', c_int),
-        ('backgrounds_enabled', c_int),
+        ('print_background', c_int),
+        ('scale', double),
+        ('paper_width', double),
+        ('paper_height', double),
+        ('prefer_css_page_size', c_int),
+        ('margin_type', cef_pdf_print_margin_type_t),
+        ('margin_top', double),
+        ('margin_right', double),
+        ('margin_bottom', double),
+        ('margin_left', double),
+        ('page_ranges', cef_string_t),
+        ('display_header_footer', c_int),
+        ('header_template', cef_string_t),
+        ('footer_template', cef_string_t),
     )
 
 class cef_box_layout_settings_t(Structure):
@@ -1326,23 +1332,25 @@ class cef_touch_handle_state_t(Structure):
         ('alpha', float),
     )
 
-if linux:
+if win:
 
     class cef_main_args_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
-            ('argc', c_int),
-            ('argv', POINTER(POINTER(char))),
+            ('instance', HINSTANCE),
         )
 
-if linux:
+if win:
 
     class cef_window_info_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
+            ('ex_style', DWORD),
             ('window_name', cef_string_t),
+            ('style', DWORD),
             ('bounds', cef_rect_t),
             ('parent_window', cef_window_handle_t),
+            ('menu', HMENU),
             ('windowless_rendering_enabled', c_int),
             ('shared_texture_enabled', c_int),
             ('external_begin_frame_enabled', c_int),
@@ -1448,12 +1456,6 @@ def cef_trace_event_async_step_past(category, name, id, step, arg1_name, arg1_va
 @CEFENTRY(c_void, "cef_trace_event_async_end", POINTER(char), POINTER(char), uint64, POINTER(char), uint64, POINTER(char), uint64, c_int)
 def cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy):
     return cef_trace_event_async_end._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy)
-
-if linux:
-    #XDisplay* cef_get_xdisplay(void);
-    @CEFENTRY(POINTER(XDisplay), "cef_get_xdisplay")
-    def cef_get_xdisplay():
-        return cef_get_xdisplay._api_()
 
 #char* cef_api_hash(int entry);
 @CEFENTRY(POINTER(char), "cef_api_hash", c_int)

@@ -45,18 +45,6 @@ def cef_quit_message_loop():
     return cef_quit_message_loop._api_()
 
 
-#void cef_set_osmodal_loop(int osModalLoop);
-@CEFENTRY(c_void, "cef_set_osmodal_loop", c_int)
-def cef_set_osmodal_loop(osModalLoop):
-    return cef_set_osmodal_loop._api_(osModalLoop)
-
-
-#void cef_enable_highdpi_support(void);
-@CEFENTRY(c_void, "cef_enable_highdpi_support")
-def cef_enable_highdpi_support():
-    return cef_enable_highdpi_support._api_()
-
-
 #int cef_browser_host_create_browser( cef_window_info_t* windowInfo, cef_client_t* client, cef_string_t* url, cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context);
 @CEFENTRY(c_int, "cef_browser_host_create_browser", POINTER(cef_window_info_t), POINTER(cef_client_t), POINTER(cef_string_t), POINTER(cef_browser_settings_t), POINTER(cef_dictionary_value_t), POINTER(cef_request_context_t))
 def cef_browser_host_create_browser(windowInfo, client, url, settings, extra_info, request_context):
@@ -195,6 +183,12 @@ def cef_clear_cross_origin_whitelist():
     return cef_clear_cross_origin_whitelist._api_()
 
 
+#int cef_resolve_url(cef_string_t* base_url, cef_string_t* relative_url, cef_string_t* resolved_url);
+@CEFENTRY(c_int, "cef_resolve_url", POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_string_t))
+def cef_resolve_url(base_url, relative_url, resolved_url):
+    return cef_resolve_url._api_(base_url, relative_url, resolved_url)
+
+
 #int cef_parse_url(cef_string_t* url, cef_urlparts_t* parts);
 @CEFENTRY(c_int, "cef_parse_url", POINTER(cef_string_t), POINTER(cef_urlparts_t))
 def cef_parse_url(url, parts):
@@ -277,6 +271,12 @@ def cef_write_json(node, options):
 @CEFENTRY(c_int, "cef_get_path", cef_path_key_t, POINTER(cef_string_t))
 def cef_get_path(key, path):
     return cef_get_path._api_(key, path)
+
+
+#cef_preference_manager_t* cef_preference_manager_get_global(void);
+@CEFENTRY(POINTER(cef_preference_manager_t), "cef_preference_manager_get_global")
+def cef_preference_manager_get_global():
+    return cef_preference_manager_get_global._api_()
 
 
 #cef_print_settings_t* cef_print_settings_create(void);
@@ -553,6 +553,12 @@ def cef_v8value_create_array_buffer(buffer, length, release_callback):
 @CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_function", POINTER(cef_string_t), POINTER(cef_v8handler_t))
 def cef_v8value_create_function(name, handler):
     return cef_v8value_create_function._api_(name, handler)
+
+
+#cef_v8value_t* cef_v8value_create_promise(void);
+@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_promise")
+def cef_v8value_create_promise():
+    return cef_v8value_create_promise._api_()
 
 
 #cef_v8stack_trace_t* cef_v8stack_trace_get_current(int frame_limit);

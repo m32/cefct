@@ -109,7 +109,7 @@ class cef_browser_t(Structure):
         self.can_go_forward = self._callbacks[4](self._can_go_forward)
         self.go_forward = self._callbacks[5](self._go_forward)
         self.is_loading = self._callbacks[6](self._is_loading)
-        self.reload = self._callbacks[7](self._reload)
+        self.xreload = self._callbacks[7](self._xreload)
         self.reload_ignore_cache = self._callbacks[8](self._reload_ignore_cache)
         self.stop_load = self._callbacks[9](self._stop_load)
         self.get_identifier = self._callbacks[10](self._get_identifier)
@@ -138,7 +138,7 @@ class cef_browser_t(Structure):
         pass
     def _is_loading(self, this):
         pass
-    def _reload(self, this):
+    def _xreload(self, this):
         pass
     def _reload_ignore_cache(self, this):
         pass
@@ -414,11 +414,14 @@ class cef_browser_process_handler_t(Structure):
         super().__init__()
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_context_initialized = self._callbacks[0](self._on_context_initialized)
-        self.on_before_child_process_launch = self._callbacks[1](self._on_before_child_process_launch)
-        self.on_schedule_message_pump_work = self._callbacks[2](self._on_schedule_message_pump_work)
-        self.get_default_client = self._callbacks[3](self._get_default_client)
+        self.on_register_custom_preferences = self._callbacks[0](self._on_register_custom_preferences)
+        self.on_context_initialized = self._callbacks[1](self._on_context_initialized)
+        self.on_before_child_process_launch = self._callbacks[2](self._on_before_child_process_launch)
+        self.on_schedule_message_pump_work = self._callbacks[3](self._on_schedule_message_pump_work)
+        self.get_default_client = self._callbacks[4](self._get_default_client)
 
+    def _on_register_custom_preferences(self, this, type, registrar):
+        pass
     def _on_context_initialized(self, this):
         pass
     def _on_before_child_process_launch(self, this, command_line):
@@ -2086,6 +2089,44 @@ class cef_permission_handler_t(Structure):
         pass
 
 
+class cef_preference_registrar_t(Structure):
+    _align_ = CEFALIGN
+
+    def __init__(self):
+        super().__init__()
+        self._base.c_init()
+        self._base.size = sizeof(self)
+        self.add_preference = self._callbacks[0](self._add_preference)
+
+    def _add_preference(self, this, name, default_value):
+        pass
+
+
+class cef_preference_manager_t(Structure):
+    _align_ = CEFALIGN
+
+    def __init__(self):
+        super().__init__()
+        self._base.c_init()
+        self._base.size = sizeof(self)
+        self.has_preference = self._callbacks[0](self._has_preference)
+        self.get_preference = self._callbacks[1](self._get_preference)
+        self.get_all_preferences = self._callbacks[2](self._get_all_preferences)
+        self.can_set_preference = self._callbacks[3](self._can_set_preference)
+        self.set_preference = self._callbacks[4](self._set_preference)
+
+    def _has_preference(self, this, name):
+        pass
+    def _get_preference(self, this, name):
+        pass
+    def _get_all_preferences(self, this, include_defaults):
+        pass
+    def _can_set_preference(self, this, name):
+        pass
+    def _set_preference(self, this, name, value, error):
+        pass
+
+
 class cef_print_dialog_callback_t(Structure):
     _align_ = CEFALIGN
 
@@ -2524,21 +2565,16 @@ class cef_request_context_t(Structure):
         self.get_cookie_manager = self._callbacks[5](self._get_cookie_manager)
         self.register_scheme_handler_factory = self._callbacks[6](self._register_scheme_handler_factory)
         self.clear_scheme_handler_factories = self._callbacks[7](self._clear_scheme_handler_factories)
-        self.has_preference = self._callbacks[8](self._has_preference)
-        self.get_preference = self._callbacks[9](self._get_preference)
-        self.get_all_preferences = self._callbacks[10](self._get_all_preferences)
-        self.can_set_preference = self._callbacks[11](self._can_set_preference)
-        self.set_preference = self._callbacks[12](self._set_preference)
-        self.clear_certificate_exceptions = self._callbacks[13](self._clear_certificate_exceptions)
-        self.clear_http_auth_credentials = self._callbacks[14](self._clear_http_auth_credentials)
-        self.close_all_connections = self._callbacks[15](self._close_all_connections)
-        self.resolve_host = self._callbacks[16](self._resolve_host)
-        self.load_extension = self._callbacks[17](self._load_extension)
-        self.did_load_extension = self._callbacks[18](self._did_load_extension)
-        self.has_extension = self._callbacks[19](self._has_extension)
-        self.get_extensions = self._callbacks[20](self._get_extensions)
-        self.get_extension = self._callbacks[21](self._get_extension)
-        self.get_media_router = self._callbacks[22](self._get_media_router)
+        self.clear_certificate_exceptions = self._callbacks[8](self._clear_certificate_exceptions)
+        self.clear_http_auth_credentials = self._callbacks[9](self._clear_http_auth_credentials)
+        self.close_all_connections = self._callbacks[10](self._close_all_connections)
+        self.resolve_host = self._callbacks[11](self._resolve_host)
+        self.load_extension = self._callbacks[12](self._load_extension)
+        self.did_load_extension = self._callbacks[13](self._did_load_extension)
+        self.has_extension = self._callbacks[14](self._has_extension)
+        self.get_extensions = self._callbacks[15](self._get_extensions)
+        self.get_extension = self._callbacks[16](self._get_extension)
+        self.get_media_router = self._callbacks[17](self._get_media_router)
 
     def _is_same(self, this, other):
         pass
@@ -2555,16 +2591,6 @@ class cef_request_context_t(Structure):
     def _register_scheme_handler_factory(self, this, scheme_name, domain_name, factory):
         pass
     def _clear_scheme_handler_factories(self, this):
-        pass
-    def _has_preference(self, this, name):
-        pass
-    def _get_preference(self, this, name):
-        pass
-    def _get_all_preferences(self, this, include_defaults):
-        pass
-    def _can_set_preference(self, this, name):
-        pass
-    def _set_preference(self, this, name, value, error):
         pass
     def _clear_certificate_exceptions(self, this, callback):
         pass
@@ -2628,12 +2654,11 @@ class cef_request_handler_t(Structure):
         self.on_open_urlfrom_tab = self._callbacks[1](self._on_open_urlfrom_tab)
         self.get_resource_request_handler = self._callbacks[2](self._get_resource_request_handler)
         self.get_auth_credentials = self._callbacks[3](self._get_auth_credentials)
-        self.on_quota_request = self._callbacks[4](self._on_quota_request)
-        self.on_certificate_error = self._callbacks[5](self._on_certificate_error)
-        self.on_select_client_certificate = self._callbacks[6](self._on_select_client_certificate)
-        self.on_render_view_ready = self._callbacks[7](self._on_render_view_ready)
-        self.on_render_process_terminated = self._callbacks[8](self._on_render_process_terminated)
-        self.on_document_available_in_main_frame = self._callbacks[9](self._on_document_available_in_main_frame)
+        self.on_certificate_error = self._callbacks[4](self._on_certificate_error)
+        self.on_select_client_certificate = self._callbacks[5](self._on_select_client_certificate)
+        self.on_render_view_ready = self._callbacks[6](self._on_render_view_ready)
+        self.on_render_process_terminated = self._callbacks[7](self._on_render_process_terminated)
+        self.on_document_available_in_main_frame = self._callbacks[8](self._on_document_available_in_main_frame)
 
     def _on_before_browse(self, this, browser, frame, request, user_gesture, is_redirect):
         pass
@@ -2642,8 +2667,6 @@ class cef_request_handler_t(Structure):
     def _get_resource_request_handler(self, this, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
         pass
     def _get_auth_credentials(self, this, browser, origin_url, isProxy, host, port, realm, scheme, callback):
-        pass
-    def _on_quota_request(self, this, browser, origin_url, new_size, callback):
         pass
     def _on_certificate_error(self, this, browser, cert_error, request_url, ssl_info, callback):
         pass
@@ -3467,40 +3490,43 @@ class cef_v8value_t(Structure):
         self.is_array = self._callbacks[10](self._is_array)
         self.is_array_buffer = self._callbacks[11](self._is_array_buffer)
         self.is_function = self._callbacks[12](self._is_function)
-        self.is_same = self._callbacks[13](self._is_same)
-        self.get_bool_value = self._callbacks[14](self._get_bool_value)
-        self.get_int_value = self._callbacks[15](self._get_int_value)
-        self.get_uint_value = self._callbacks[16](self._get_uint_value)
-        self.get_double_value = self._callbacks[17](self._get_double_value)
-        self.get_date_value = self._callbacks[18](self._get_date_value)
-        self.get_string_value = self._callbacks[19](self._get_string_value)
-        self.is_user_created = self._callbacks[20](self._is_user_created)
-        self.has_exception = self._callbacks[21](self._has_exception)
-        self.get_exception = self._callbacks[22](self._get_exception)
-        self.clear_exception = self._callbacks[23](self._clear_exception)
-        self.will_rethrow_exceptions = self._callbacks[24](self._will_rethrow_exceptions)
-        self.set_rethrow_exceptions = self._callbacks[25](self._set_rethrow_exceptions)
-        self.has_value_bykey = self._callbacks[26](self._has_value_bykey)
-        self.has_value_byindex = self._callbacks[27](self._has_value_byindex)
-        self.delete_value_bykey = self._callbacks[28](self._delete_value_bykey)
-        self.delete_value_byindex = self._callbacks[29](self._delete_value_byindex)
-        self.get_value_bykey = self._callbacks[30](self._get_value_bykey)
-        self.get_value_byindex = self._callbacks[31](self._get_value_byindex)
-        self.set_value_bykey = self._callbacks[32](self._set_value_bykey)
-        self.set_value_byindex = self._callbacks[33](self._set_value_byindex)
-        self.set_value_byaccessor = self._callbacks[34](self._set_value_byaccessor)
-        self.get_keys = self._callbacks[35](self._get_keys)
-        self.set_user_data = self._callbacks[36](self._set_user_data)
-        self.get_user_data = self._callbacks[37](self._get_user_data)
-        self.get_externally_allocated_memory = self._callbacks[38](self._get_externally_allocated_memory)
-        self.adjust_externally_allocated_memory = self._callbacks[39](self._adjust_externally_allocated_memory)
-        self.get_array_length = self._callbacks[40](self._get_array_length)
-        self.get_array_buffer_release_callback = self._callbacks[41](self._get_array_buffer_release_callback)
-        self.neuter_array_buffer = self._callbacks[42](self._neuter_array_buffer)
-        self.get_function_name = self._callbacks[43](self._get_function_name)
-        self.get_function_handler = self._callbacks[44](self._get_function_handler)
-        self.execute_function = self._callbacks[45](self._execute_function)
-        self.execute_function_with_context = self._callbacks[46](self._execute_function_with_context)
+        self.is_promise = self._callbacks[13](self._is_promise)
+        self.is_same = self._callbacks[14](self._is_same)
+        self.get_bool_value = self._callbacks[15](self._get_bool_value)
+        self.get_int_value = self._callbacks[16](self._get_int_value)
+        self.get_uint_value = self._callbacks[17](self._get_uint_value)
+        self.get_double_value = self._callbacks[18](self._get_double_value)
+        self.get_date_value = self._callbacks[19](self._get_date_value)
+        self.get_string_value = self._callbacks[20](self._get_string_value)
+        self.is_user_created = self._callbacks[21](self._is_user_created)
+        self.has_exception = self._callbacks[22](self._has_exception)
+        self.get_exception = self._callbacks[23](self._get_exception)
+        self.clear_exception = self._callbacks[24](self._clear_exception)
+        self.will_rethrow_exceptions = self._callbacks[25](self._will_rethrow_exceptions)
+        self.set_rethrow_exceptions = self._callbacks[26](self._set_rethrow_exceptions)
+        self.has_value_bykey = self._callbacks[27](self._has_value_bykey)
+        self.has_value_byindex = self._callbacks[28](self._has_value_byindex)
+        self.delete_value_bykey = self._callbacks[29](self._delete_value_bykey)
+        self.delete_value_byindex = self._callbacks[30](self._delete_value_byindex)
+        self.get_value_bykey = self._callbacks[31](self._get_value_bykey)
+        self.get_value_byindex = self._callbacks[32](self._get_value_byindex)
+        self.set_value_bykey = self._callbacks[33](self._set_value_bykey)
+        self.set_value_byindex = self._callbacks[34](self._set_value_byindex)
+        self.set_value_byaccessor = self._callbacks[35](self._set_value_byaccessor)
+        self.get_keys = self._callbacks[36](self._get_keys)
+        self.set_user_data = self._callbacks[37](self._set_user_data)
+        self.get_user_data = self._callbacks[38](self._get_user_data)
+        self.get_externally_allocated_memory = self._callbacks[39](self._get_externally_allocated_memory)
+        self.adjust_externally_allocated_memory = self._callbacks[40](self._adjust_externally_allocated_memory)
+        self.get_array_length = self._callbacks[41](self._get_array_length)
+        self.get_array_buffer_release_callback = self._callbacks[42](self._get_array_buffer_release_callback)
+        self.neuter_array_buffer = self._callbacks[43](self._neuter_array_buffer)
+        self.get_function_name = self._callbacks[44](self._get_function_name)
+        self.get_function_handler = self._callbacks[45](self._get_function_handler)
+        self.execute_function = self._callbacks[46](self._execute_function)
+        self.execute_function_with_context = self._callbacks[47](self._execute_function_with_context)
+        self.resolve_promise = self._callbacks[48](self._resolve_promise)
+        self.reject_promise = self._callbacks[49](self._reject_promise)
 
     def _is_valid(self, this):
         pass
@@ -3527,6 +3553,8 @@ class cef_v8value_t(Structure):
     def _is_array_buffer(self, this):
         pass
     def _is_function(self, this):
+        pass
+    def _is_promise(self, this):
         pass
     def _is_same(self, this, that):
         pass
@@ -3595,6 +3623,10 @@ class cef_v8value_t(Structure):
     def _execute_function(self, this, object, argumentsCount, arguments):
         pass
     def _execute_function_with_context(self, this, context, object, argumentsCount, arguments):
+        pass
+    def _resolve_promise(self, this, arg):
+        pass
+    def _reject_promise(self, this, errorMsg):
         pass
 
 
@@ -4282,7 +4314,7 @@ cef_browser_t._fields_ = (
     ('can_go_forward', cef_browser_t._callbacks[4]),
     ('go_forward', cef_browser_t._callbacks[5]),
     ('is_loading', cef_browser_t._callbacks[6]),
-    ('reload', cef_browser_t._callbacks[7]),
+    ('xreload', cef_browser_t._callbacks[7]),
     ('reload_ignore_cache', cef_browser_t._callbacks[8]),
     ('stop_load', cef_browser_t._callbacks[9]),
     ('get_identifier', cef_browser_t._callbacks[10]),
@@ -4461,6 +4493,7 @@ cef_browser_host_t._fields_ = (
 
 
 cef_browser_process_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), cef_preferences_type_t, POINTER(cef_preference_registrar_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), POINTER(cef_command_line_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64),
@@ -4468,10 +4501,11 @@ cef_browser_process_handler_t._callbacks = (
 )
 cef_browser_process_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('on_context_initialized', cef_browser_process_handler_t._callbacks[0]),
-    ('on_before_child_process_launch', cef_browser_process_handler_t._callbacks[1]),
-    ('on_schedule_message_pump_work', cef_browser_process_handler_t._callbacks[2]),
-    ('get_default_client', cef_browser_process_handler_t._callbacks[3]),
+    ('on_register_custom_preferences', cef_browser_process_handler_t._callbacks[0]),
+    ('on_context_initialized', cef_browser_process_handler_t._callbacks[1]),
+    ('on_before_child_process_launch', cef_browser_process_handler_t._callbacks[2]),
+    ('on_schedule_message_pump_work', cef_browser_process_handler_t._callbacks[3]),
+    ('get_default_client', cef_browser_process_handler_t._callbacks[4]),
 )
 
 
@@ -5597,6 +5631,32 @@ cef_permission_handler_t._fields_ = (
 )
 
 
+cef_preference_registrar_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_preference_registrar_t), POINTER(cef_string_t), POINTER(cef_value_t)),
+)
+cef_preference_registrar_t._fields_ = (
+    ('_base', cef_base_scoped_t),
+    ('add_preference', cef_preference_registrar_t._callbacks[0]),
+)
+
+
+cef_preference_manager_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)),
+)
+cef_preference_manager_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('has_preference', cef_preference_manager_t._callbacks[0]),
+    ('get_preference', cef_preference_manager_t._callbacks[1]),
+    ('get_all_preferences', cef_preference_manager_t._callbacks[2]),
+    ('can_set_preference', cef_preference_manager_t._callbacks[3]),
+    ('set_preference', cef_preference_manager_t._callbacks[4]),
+)
+
+
 cef_print_dialog_callback_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t), POINTER(cef_print_settings_t)),
     CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t)),
@@ -5892,11 +5952,6 @@ cef_request_context_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_scheme_handler_factory_t)),
     CFUNCTYPE(c_int, POINTER(cef_request_context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)),
     CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
@@ -5909,7 +5964,7 @@ cef_request_context_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
 )
 cef_request_context_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
+    ('_base', cef_preference_manager_t),
     ('is_same', cef_request_context_t._callbacks[0]),
     ('is_sharing_with', cef_request_context_t._callbacks[1]),
     ('is_global', cef_request_context_t._callbacks[2]),
@@ -5918,21 +5973,16 @@ cef_request_context_t._fields_ = (
     ('get_cookie_manager', cef_request_context_t._callbacks[5]),
     ('register_scheme_handler_factory', cef_request_context_t._callbacks[6]),
     ('clear_scheme_handler_factories', cef_request_context_t._callbacks[7]),
-    ('has_preference', cef_request_context_t._callbacks[8]),
-    ('get_preference', cef_request_context_t._callbacks[9]),
-    ('get_all_preferences', cef_request_context_t._callbacks[10]),
-    ('can_set_preference', cef_request_context_t._callbacks[11]),
-    ('set_preference', cef_request_context_t._callbacks[12]),
-    ('clear_certificate_exceptions', cef_request_context_t._callbacks[13]),
-    ('clear_http_auth_credentials', cef_request_context_t._callbacks[14]),
-    ('close_all_connections', cef_request_context_t._callbacks[15]),
-    ('resolve_host', cef_request_context_t._callbacks[16]),
-    ('load_extension', cef_request_context_t._callbacks[17]),
-    ('did_load_extension', cef_request_context_t._callbacks[18]),
-    ('has_extension', cef_request_context_t._callbacks[19]),
-    ('get_extensions', cef_request_context_t._callbacks[20]),
-    ('get_extension', cef_request_context_t._callbacks[21]),
-    ('get_media_router', cef_request_context_t._callbacks[22]),
+    ('clear_certificate_exceptions', cef_request_context_t._callbacks[8]),
+    ('clear_http_auth_credentials', cef_request_context_t._callbacks[9]),
+    ('close_all_connections', cef_request_context_t._callbacks[10]),
+    ('resolve_host', cef_request_context_t._callbacks[11]),
+    ('load_extension', cef_request_context_t._callbacks[12]),
+    ('did_load_extension', cef_request_context_t._callbacks[13]),
+    ('has_extension', cef_request_context_t._callbacks[14]),
+    ('get_extensions', cef_request_context_t._callbacks[15]),
+    ('get_extension', cef_request_context_t._callbacks[16]),
+    ('get_media_router', cef_request_context_t._callbacks[17]),
 )
 
 
@@ -5961,7 +6011,6 @@ cef_request_handler_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)),
     CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), int64, POINTER(cef_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_sslinfo_t), POINTER(cef_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, size_t, POINTER(POINTER(cef_x509certificate_t)), POINTER(cef_select_client_certificate_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t)),
@@ -5974,12 +6023,11 @@ cef_request_handler_t._fields_ = (
     ('on_open_urlfrom_tab', cef_request_handler_t._callbacks[1]),
     ('get_resource_request_handler', cef_request_handler_t._callbacks[2]),
     ('get_auth_credentials', cef_request_handler_t._callbacks[3]),
-    ('on_quota_request', cef_request_handler_t._callbacks[4]),
-    ('on_certificate_error', cef_request_handler_t._callbacks[5]),
-    ('on_select_client_certificate', cef_request_handler_t._callbacks[6]),
-    ('on_render_view_ready', cef_request_handler_t._callbacks[7]),
-    ('on_render_process_terminated', cef_request_handler_t._callbacks[8]),
-    ('on_document_available_in_main_frame', cef_request_handler_t._callbacks[9]),
+    ('on_certificate_error', cef_request_handler_t._callbacks[4]),
+    ('on_select_client_certificate', cef_request_handler_t._callbacks[5]),
+    ('on_render_view_ready', cef_request_handler_t._callbacks[6]),
+    ('on_render_process_terminated', cef_request_handler_t._callbacks[7]),
+    ('on_document_available_in_main_frame', cef_request_handler_t._callbacks[8]),
 )
 
 
@@ -6535,6 +6583,7 @@ cef_v8value_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(int32, POINTER(cef_v8value_t)),
@@ -6569,6 +6618,8 @@ cef_v8value_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8context_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)),
 )
 cef_v8value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -6585,40 +6636,43 @@ cef_v8value_t._fields_ = (
     ('is_array', cef_v8value_t._callbacks[10]),
     ('is_array_buffer', cef_v8value_t._callbacks[11]),
     ('is_function', cef_v8value_t._callbacks[12]),
-    ('is_same', cef_v8value_t._callbacks[13]),
-    ('get_bool_value', cef_v8value_t._callbacks[14]),
-    ('get_int_value', cef_v8value_t._callbacks[15]),
-    ('get_uint_value', cef_v8value_t._callbacks[16]),
-    ('get_double_value', cef_v8value_t._callbacks[17]),
-    ('get_date_value', cef_v8value_t._callbacks[18]),
-    ('get_string_value', cef_v8value_t._callbacks[19]),
-    ('is_user_created', cef_v8value_t._callbacks[20]),
-    ('has_exception', cef_v8value_t._callbacks[21]),
-    ('get_exception', cef_v8value_t._callbacks[22]),
-    ('clear_exception', cef_v8value_t._callbacks[23]),
-    ('will_rethrow_exceptions', cef_v8value_t._callbacks[24]),
-    ('set_rethrow_exceptions', cef_v8value_t._callbacks[25]),
-    ('has_value_bykey', cef_v8value_t._callbacks[26]),
-    ('has_value_byindex', cef_v8value_t._callbacks[27]),
-    ('delete_value_bykey', cef_v8value_t._callbacks[28]),
-    ('delete_value_byindex', cef_v8value_t._callbacks[29]),
-    ('get_value_bykey', cef_v8value_t._callbacks[30]),
-    ('get_value_byindex', cef_v8value_t._callbacks[31]),
-    ('set_value_bykey', cef_v8value_t._callbacks[32]),
-    ('set_value_byindex', cef_v8value_t._callbacks[33]),
-    ('set_value_byaccessor', cef_v8value_t._callbacks[34]),
-    ('get_keys', cef_v8value_t._callbacks[35]),
-    ('set_user_data', cef_v8value_t._callbacks[36]),
-    ('get_user_data', cef_v8value_t._callbacks[37]),
-    ('get_externally_allocated_memory', cef_v8value_t._callbacks[38]),
-    ('adjust_externally_allocated_memory', cef_v8value_t._callbacks[39]),
-    ('get_array_length', cef_v8value_t._callbacks[40]),
-    ('get_array_buffer_release_callback', cef_v8value_t._callbacks[41]),
-    ('neuter_array_buffer', cef_v8value_t._callbacks[42]),
-    ('get_function_name', cef_v8value_t._callbacks[43]),
-    ('get_function_handler', cef_v8value_t._callbacks[44]),
-    ('execute_function', cef_v8value_t._callbacks[45]),
-    ('execute_function_with_context', cef_v8value_t._callbacks[46]),
+    ('is_promise', cef_v8value_t._callbacks[13]),
+    ('is_same', cef_v8value_t._callbacks[14]),
+    ('get_bool_value', cef_v8value_t._callbacks[15]),
+    ('get_int_value', cef_v8value_t._callbacks[16]),
+    ('get_uint_value', cef_v8value_t._callbacks[17]),
+    ('get_double_value', cef_v8value_t._callbacks[18]),
+    ('get_date_value', cef_v8value_t._callbacks[19]),
+    ('get_string_value', cef_v8value_t._callbacks[20]),
+    ('is_user_created', cef_v8value_t._callbacks[21]),
+    ('has_exception', cef_v8value_t._callbacks[22]),
+    ('get_exception', cef_v8value_t._callbacks[23]),
+    ('clear_exception', cef_v8value_t._callbacks[24]),
+    ('will_rethrow_exceptions', cef_v8value_t._callbacks[25]),
+    ('set_rethrow_exceptions', cef_v8value_t._callbacks[26]),
+    ('has_value_bykey', cef_v8value_t._callbacks[27]),
+    ('has_value_byindex', cef_v8value_t._callbacks[28]),
+    ('delete_value_bykey', cef_v8value_t._callbacks[29]),
+    ('delete_value_byindex', cef_v8value_t._callbacks[30]),
+    ('get_value_bykey', cef_v8value_t._callbacks[31]),
+    ('get_value_byindex', cef_v8value_t._callbacks[32]),
+    ('set_value_bykey', cef_v8value_t._callbacks[33]),
+    ('set_value_byindex', cef_v8value_t._callbacks[34]),
+    ('set_value_byaccessor', cef_v8value_t._callbacks[35]),
+    ('get_keys', cef_v8value_t._callbacks[36]),
+    ('set_user_data', cef_v8value_t._callbacks[37]),
+    ('get_user_data', cef_v8value_t._callbacks[38]),
+    ('get_externally_allocated_memory', cef_v8value_t._callbacks[39]),
+    ('adjust_externally_allocated_memory', cef_v8value_t._callbacks[40]),
+    ('get_array_length', cef_v8value_t._callbacks[41]),
+    ('get_array_buffer_release_callback', cef_v8value_t._callbacks[42]),
+    ('neuter_array_buffer', cef_v8value_t._callbacks[43]),
+    ('get_function_name', cef_v8value_t._callbacks[44]),
+    ('get_function_handler', cef_v8value_t._callbacks[45]),
+    ('execute_function', cef_v8value_t._callbacks[46]),
+    ('execute_function_with_context', cef_v8value_t._callbacks[47]),
+    ('resolve_promise', cef_v8value_t._callbacks[48]),
+    ('reject_promise', cef_v8value_t._callbacks[49]),
 )
 
 
