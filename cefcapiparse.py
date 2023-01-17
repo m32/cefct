@@ -364,6 +364,30 @@ def cefchecksize(name, t, size):\\n\\
             )
         fp.close()
 
+    def parseVersion(self):
+        versions = {
+            'CEF_VERSION_MAJOR': 0,
+            'CEF_VERSION_MINOR': 0,
+            'CEF_VERSION_PATCH': 0,
+            'CEF_COMMIT_NUMBER': 0,
+            'CEF_COMMIT_HASH': "",
+
+            'CHROME_VERSION_MAJOR': 0,
+            'CHROME_VERSION_MINOR': 0,
+            'CHROME_VERSION_BUILD': 0,
+            'CHROME_VERSION_PATCH': 0,
+        }
+        for line in open("cef/include/cef_version.h", 'rt').readlines():
+            line = line.split()
+            if len(line) == 3 and line[0] == '#define':
+                v = versions.get(line[1], None)
+                if v is not None:
+                    versions[line[1]] = line[2]
+        fp = open('cefct/libcefver.py', 'wt')
+        for k, v in sorted(versions.items()):
+            fp.write('{}={}\n'.format(k, v))
+        fp.close()
+
     def getfiles(self):
         fnames = os.listdir("cef/include/capi")
         for fname in sorted(fnames):
@@ -374,6 +398,7 @@ def cefchecksize(name, t, size):\\n\\
                 self.parseFile(fqname)
         self.parseDecl()
         self.parseSizes()
+        self.parseVersion()
 
     def xgetfiles(self):
         self.parseFile("cef/include/capi/cef_audio_handler_capi.h")
