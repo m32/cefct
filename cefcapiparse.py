@@ -3,7 +3,15 @@ import os
 import io
 import re
 
-
+# UWAGA
+# cef_request_context_t._base = cef_preference_manager_t
+#
+rename = {
+    "del": "xdel",
+    "from": "xfrom",
+    "reload": "xreload",
+    "self": "xself",
+}
 class Element(object):
     def parseArg(self, arg):
         arg = arg.strip()
@@ -37,10 +45,7 @@ class Element(object):
         argnames = []
         for arg in args:
             atype, aname = self.parseArg(arg)
-            if aname == "self":
-                aname = "this"
-            elif aname == "del":
-                aname = "delete"
+            aname = rename.get(aname, aname)
             argtypes.append(atype)
             argnames.append(aname)
 
@@ -89,11 +94,6 @@ class TypeDef(Element):
         self.typedata = []
         self.basename = None
 
-        rename = {
-            "del": "delete",
-            "from": "xfrom",
-            "reload": "xreload",
-        }
         lp = 0
         for elem in lines:
             line = elem.split(" ", 1)
@@ -101,6 +101,11 @@ class TypeDef(Element):
                 if self.basename is not None:
                     print('bang', self.basename, line)
                 self.basename = line[0]
+                if self.basename not in (
+                    'cef_base_ref_counted_t',
+                    'cef_base_scoped_t',
+                ):
+                    print('warning', self.typename, line)
                 continue
             elem = elem.strip()
             i = elem.find("(")
