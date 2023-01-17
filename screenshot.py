@@ -80,30 +80,13 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
 class CefRendererHandler(cef.cef_render_handler_t):
     n = 15
 
-    def _get_accessibility_handler(self, this):
-        pass
-
-    def _get_root_screen_rect(self, this, browser, rect):
-        return 0
-
     def _get_view_rect(self, this, browser, rect):
         r = rect.contents
         r.x = 0
         r.y = 0
         r.width = VIEWPORT_SIZE[0]
         r.height = VIEWPORT_SIZE[1]
-
-    def _get_screen_point(self, this, browser, viewX, viewY, screenX, screenY):
         return 0
-
-    def _get_screen_info(self, this, browser, screen_info):
-        return 0
-
-    def _on_popup_show(self, this, browser, show):
-        pass
-
-    def _on_popup_size(self, this, browser, rect):
-        pass
 
     def _on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
         if eltype == cef.PET_VIEW and loaded:
@@ -115,33 +98,6 @@ class CefRendererHandler(cef.cef_render_handler_t):
                 save_screenshot((width, height), buffer)
             finally:
                 stopbrowser(browser)
-
-    def _on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
-        pass
-
-    def _get_touch_handle_size(self, this, browser, orientation, size):
-        pass
-
-    def _on_touch_handle_state_changed(self, this, browser, state):
-        pass
-
-    def _start_dragging(self, this, browser, drag_data, allowed_ops, x, y):
-        return 0
-
-    def _update_drag_cursor(self, this, browser, operation):
-        pass
-
-    def _on_scroll_offset_changed(self, this, browser, x, y):
-        pass
-
-    def _on_ime_composition_range_changed(self, this, browser, selected_range, character_boundsCount, character_bounds):
-        pass
-
-    def _on_text_selection_changed(self, this, browser, selected_text, selected_range):
-        pass
-
-    def _on_virtual_keyboard_requested(self, this, browser, input_mode):
-        pass
 
 class Client(cef.cef_client_t):
     def __init__(self):

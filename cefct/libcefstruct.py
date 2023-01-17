@@ -24,9 +24,9 @@ class cef_accessibility_handler_t(Structure):
         self.on_accessibility_location_change = self._callbacks[1](self._on_accessibility_location_change)
 
     def _on_accessibility_tree_change(self, xself, value):
-        pass
+        return 0
     def _on_accessibility_location_change(self, xself, value):
-        pass
+        return 0
 
 
 class cef_app_t(Structure):
@@ -43,15 +43,15 @@ class cef_app_t(Structure):
         self.get_render_process_handler = self._callbacks[4](self._get_render_process_handler)
 
     def _on_before_command_line_processing(self, xself, process_type, command_line):
-        pass
+        return 0
     def _on_register_custom_schemes(self, xself, registrar):
-        pass
+        return 0
     def _get_resource_bundle_handler(self, xself):
-        pass
+        return None
     def _get_browser_process_handler(self, xself):
-        pass
+        return None
     def _get_render_process_handler(self, xself):
-        pass
+        return None
 
 
 class cef_audio_handler_t(Structure):
@@ -68,15 +68,15 @@ class cef_audio_handler_t(Structure):
         self.on_audio_stream_error = self._callbacks[4](self._on_audio_stream_error)
 
     def _get_audio_parameters(self, xself, browser, params):
-        pass
+        return 0
     def _on_audio_stream_started(self, xself, browser, params, channels):
-        pass
+        return 0
     def _on_audio_stream_packet(self, xself, browser, data, frames, pts):
-        pass
+        return 0
     def _on_audio_stream_stopped(self, xself, browser):
-        pass
+        return 0
     def _on_audio_stream_error(self, xself, browser, message):
-        pass
+        return 0
 
 
 class cef_auth_callback_t(Structure):
@@ -90,9 +90,9 @@ class cef_auth_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, username, password):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_browser_t(Structure):
@@ -125,47 +125,47 @@ class cef_browser_t(Structure):
         self.get_frame_names = self._callbacks[20](self._get_frame_names)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _get_host(self, xself):
-        pass
+        return None
     def _can_go_back(self, xself):
-        pass
+        return 0
     def _go_back(self, xself):
-        pass
+        return 0
     def _can_go_forward(self, xself):
-        pass
+        return 0
     def _go_forward(self, xself):
-        pass
+        return 0
     def _is_loading(self, xself):
-        pass
+        return 0
     def _xreload(self, xself):
-        pass
+        return 0
     def _reload_ignore_cache(self, xself):
-        pass
+        return 0
     def _stop_load(self, xself):
-        pass
+        return 0
     def _get_identifier(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _is_popup(self, xself):
-        pass
+        return 0
     def _has_document(self, xself):
-        pass
+        return 0
     def _get_main_frame(self, xself):
-        pass
+        return None
     def _get_focused_frame(self, xself):
-        pass
+        return None
     def _get_frame_byident(self, xself, identifier):
-        pass
+        return None
     def _get_frame(self, xself, name):
-        pass
+        return None
     def _get_frame_count(self, xself):
-        pass
+        return 0
     def _get_frame_identifiers(self, xself, identifiersCount, identifiers):
-        pass
+        return 0
     def _get_frame_names(self, xself, names):
-        pass
+        return 0
 
 
 class cef_run_file_dialog_callback_t(Structure):
@@ -178,7 +178,7 @@ class cef_run_file_dialog_callback_t(Structure):
         self.on_file_dialog_dismissed = self._callbacks[0](self._on_file_dialog_dismissed)
 
     def _on_file_dialog_dismissed(self, xself, file_paths):
-        pass
+        return 0
 
 
 class cef_navigation_entry_visitor_t(Structure):
@@ -191,7 +191,7 @@ class cef_navigation_entry_visitor_t(Structure):
         self.visit = self._callbacks[0](self._visit)
 
     def _visit(self, xself, entry, current, index, total):
-        pass
+        return 0
 
 
 class cef_pdf_print_callback_t(Structure):
@@ -204,7 +204,7 @@ class cef_pdf_print_callback_t(Structure):
         self.on_pdf_print_finished = self._callbacks[0](self._on_pdf_print_finished)
 
     def _on_pdf_print_finished(self, xself, path, ok):
-        pass
+        return 0
 
 
 class cef_download_image_callback_t(Structure):
@@ -217,7 +217,7 @@ class cef_download_image_callback_t(Structure):
         self.on_download_image_finished = self._callbacks[0](self._on_download_image_finished)
 
     def _on_download_image_finished(self, xself, image_url, http_status_code, image):
-        pass
+        return 0
 
 
 class cef_browser_host_t(Structure):
@@ -288,123 +288,123 @@ class cef_browser_host_t(Structure):
         self.is_audio_muted = self._callbacks[58](self._is_audio_muted)
 
     def _get_browser(self, xself):
-        pass
+        return None
     def _close_browser(self, xself, force_close):
-        pass
+        return 0
     def _try_close_browser(self, xself):
-        pass
+        return 0
     def _set_focus(self, xself, focus):
-        pass
+        return 0
     def _get_window_handle(self, xself):
-        pass
+        return 0
     def _get_opener_window_handle(self, xself):
-        pass
+        return 0
     def _has_view(self, xself):
-        pass
+        return 0
     def _get_client(self, xself):
-        pass
+        return None
     def _get_request_context(self, xself):
-        pass
+        return None
     def _get_zoom_level(self, xself):
-        pass
+        return 0
     def _set_zoom_level(self, xself, zoomLevel):
-        pass
+        return 0
     def _run_file_dialog(self, xself, mode, title, default_file_path, accept_filters, callback):
-        pass
+        return 0
     def _start_download(self, xself, url):
-        pass
+        return 0
     def _download_image(self, xself, image_url, is_favicon, max_image_size, bypass_cache, callback):
-        pass
+        return 0
     def _print(self, xself):
-        pass
+        return 0
     def _print_to_pdf(self, xself, path, settings, callback):
-        pass
+        return 0
     def _find(self, xself, searchText, forward, matchCase, findNext):
-        pass
+        return 0
     def _stop_finding(self, xself, clearSelection):
-        pass
+        return 0
     def _show_dev_tools(self, xself, windowInfo, client, settings, inspect_element_at):
-        pass
+        return 0
     def _close_dev_tools(self, xself):
-        pass
+        return 0
     def _has_dev_tools(self, xself):
-        pass
+        return 0
     def _send_dev_tools_message(self, xself, message, message_size):
-        pass
+        return 0
     def _execute_dev_tools_method(self, xself, message_id, method, params):
-        pass
+        return 0
     def _add_dev_tools_message_observer(self, xself, observer):
-        pass
+        return None
     def _get_navigation_entries(self, xself, visitor, current_only):
-        pass
+        return 0
     def _replace_misspelling(self, xself, word):
-        pass
+        return 0
     def _add_word_to_dictionary(self, xself, word):
-        pass
+        return 0
     def _is_window_rendering_disabled(self, xself):
-        pass
+        return 0
     def _was_resized(self, xself):
-        pass
+        return 0
     def _was_hidden(self, xself, hidden):
-        pass
+        return 0
     def _notify_screen_info_changed(self, xself):
-        pass
+        return 0
     def _invalidate(self, xself, type):
-        pass
+        return 0
     def _send_external_begin_frame(self, xself):
-        pass
+        return 0
     def _send_key_event(self, xself, event):
-        pass
+        return 0
     def _send_mouse_click_event(self, xself, event, type, mouseUp, clickCount):
-        pass
+        return 0
     def _send_mouse_move_event(self, xself, event, mouseLeave):
-        pass
+        return 0
     def _send_mouse_wheel_event(self, xself, event, deltaX, deltaY):
-        pass
+        return 0
     def _send_touch_event(self, xself, event):
-        pass
+        return 0
     def _send_capture_lost_event(self, xself):
-        pass
+        return 0
     def _notify_move_or_resize_started(self, xself):
-        pass
+        return 0
     def _get_windowless_frame_rate(self, xself):
-        pass
+        return 0
     def _set_windowless_frame_rate(self, xself, frame_rate):
-        pass
+        return 0
     def _ime_set_composition(self, xself, text, underlinesCount, underlines, replacement_range, selection_range):
-        pass
+        return 0
     def _ime_commit_text(self, xself, text, replacement_range, relative_cursor_pos):
-        pass
+        return 0
     def _ime_finish_composing_text(self, xself, keep_selection):
-        pass
+        return 0
     def _ime_cancel_composition(self, xself):
-        pass
+        return 0
     def _drag_target_drag_enter(self, xself, drag_data, event, allowed_ops):
-        pass
+        return 0
     def _drag_target_drag_over(self, xself, event, allowed_ops):
-        pass
+        return 0
     def _drag_target_drag_leave(self, xself):
-        pass
+        return 0
     def _drag_target_drop(self, xself, event):
-        pass
+        return 0
     def _drag_source_ended_at(self, xself, x, y, op):
-        pass
+        return 0
     def _drag_source_system_drag_ended(self, xself):
-        pass
+        return 0
     def _get_visible_navigation_entry(self, xself):
-        pass
+        return None
     def _set_accessibility_state(self, xself, accessibility_state):
-        pass
+        return 0
     def _set_auto_resize_enabled(self, xself, enabled, min_size, max_size):
-        pass
+        return 0
     def _get_extension(self, xself):
-        pass
+        return None
     def _is_background_host(self, xself):
-        pass
+        return 0
     def _set_audio_muted(self, xself, mute):
-        pass
+        return 0
     def _is_audio_muted(self, xself):
-        pass
+        return 0
 
 
 class cef_browser_process_handler_t(Structure):
@@ -421,15 +421,15 @@ class cef_browser_process_handler_t(Structure):
         self.get_default_client = self._callbacks[4](self._get_default_client)
 
     def _on_register_custom_preferences(self, xself, type, registrar):
-        pass
+        return 0
     def _on_context_initialized(self, xself):
-        pass
+        return 0
     def _on_before_child_process_launch(self, xself, command_line):
-        pass
+        return 0
     def _on_schedule_message_pump_work(self, xself, delay_ms):
-        pass
+        return 0
     def _get_default_client(self, xself):
-        pass
+        return None
 
 
 class cef_callback_t(Structure):
@@ -443,9 +443,9 @@ class cef_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_completion_callback_t(Structure):
@@ -458,7 +458,7 @@ class cef_completion_callback_t(Structure):
         self.on_complete = self._callbacks[0](self._on_complete)
 
     def _on_complete(self, xself):
-        pass
+        return 0
 
 
 class cef_client_t(Structure):
@@ -489,43 +489,43 @@ class cef_client_t(Structure):
         self.on_process_message_received = self._callbacks[18](self._on_process_message_received)
 
     def _get_audio_handler(self, xself):
-        pass
+        return None
     def _get_command_handler(self, xself):
-        pass
+        return None
     def _get_context_menu_handler(self, xself):
-        pass
+        return None
     def _get_dialog_handler(self, xself):
-        pass
+        return None
     def _get_display_handler(self, xself):
-        pass
+        return None
     def _get_download_handler(self, xself):
-        pass
+        return None
     def _get_drag_handler(self, xself):
-        pass
+        return None
     def _get_find_handler(self, xself):
-        pass
+        return None
     def _get_focus_handler(self, xself):
-        pass
+        return None
     def _get_frame_handler(self, xself):
-        pass
+        return None
     def _get_permission_handler(self, xself):
-        pass
+        return None
     def _get_jsdialog_handler(self, xself):
-        pass
+        return None
     def _get_keyboard_handler(self, xself):
-        pass
+        return None
     def _get_life_span_handler(self, xself):
-        pass
+        return None
     def _get_load_handler(self, xself):
-        pass
+        return None
     def _get_print_handler(self, xself):
-        pass
+        return None
     def _get_render_handler(self, xself):
-        pass
+        return None
     def _get_request_handler(self, xself):
-        pass
+        return None
     def _on_process_message_received(self, xself, browser, frame, source_process, message):
-        pass
+        return 0
 
 
 class cef_command_handler_t(Structure):
@@ -538,7 +538,7 @@ class cef_command_handler_t(Structure):
         self.on_chrome_command = self._callbacks[0](self._on_chrome_command)
 
     def _on_chrome_command(self, xself, browser, command_id, disposition):
-        pass
+        return 0
 
 
 class cef_command_line_t(Structure):
@@ -570,45 +570,45 @@ class cef_command_line_t(Structure):
         self.prepend_wrapper = self._callbacks[19](self._prepend_wrapper)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return None
     def _init_from_argv(self, xself, argc, argv):
-        pass
+        return 0
     def _init_from_string(self, xself, command_line):
-        pass
+        return 0
     def _reset(self, xself):
-        pass
+        return 0
     def _get_argv(self, xself, argv):
-        pass
+        return 0
     def _get_command_line_string(self, xself):
-        pass
+        return None
     def _get_program(self, xself):
-        pass
+        return None
     def _set_program(self, xself, program):
-        pass
+        return 0
     def _has_switches(self, xself):
-        pass
+        return 0
     def _has_switch(self, xself, name):
-        pass
+        return 0
     def _get_switch_value(self, xself, name):
-        pass
+        return None
     def _get_switches(self, xself, switches):
-        pass
+        return 0
     def _append_switch(self, xself, name):
-        pass
+        return 0
     def _append_switch_with_value(self, xself, name, value):
-        pass
+        return 0
     def _has_arguments(self, xself):
-        pass
+        return 0
     def _get_arguments(self, xself, arguments):
-        pass
+        return 0
     def _append_argument(self, xself, argument):
-        pass
+        return 0
     def _prepend_wrapper(self, xself, wrapper):
-        pass
+        return 0
 
 
 class cef_run_context_menu_callback_t(Structure):
@@ -622,9 +622,9 @@ class cef_run_context_menu_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, command_id, event_flags):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_run_quick_menu_callback_t(Structure):
@@ -638,9 +638,9 @@ class cef_run_quick_menu_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, command_id, event_flags):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_context_menu_handler_t(Structure):
@@ -659,19 +659,19 @@ class cef_context_menu_handler_t(Structure):
         self.on_quick_menu_dismissed = self._callbacks[6](self._on_quick_menu_dismissed)
 
     def _on_before_context_menu(self, xself, browser, frame, params, model):
-        pass
+        return 0
     def _run_context_menu(self, xself, browser, frame, params, model, callback):
-        pass
+        return 0
     def _on_context_menu_command(self, xself, browser, frame, params, command_id, event_flags):
-        pass
+        return 0
     def _on_context_menu_dismissed(self, xself, browser, frame):
-        pass
+        return 0
     def _run_quick_menu(self, xself, browser, frame, location, size, edit_state_flags, callback):
-        pass
+        return 0
     def _on_quick_menu_command(self, xself, browser, frame, command_id, event_flags):
-        pass
+        return 0
     def _on_quick_menu_dismissed(self, xself, browser, frame):
-        pass
+        return 0
 
 
 class cef_context_menu_params_t(Structure):
@@ -703,45 +703,45 @@ class cef_context_menu_params_t(Structure):
         self.is_custom_menu = self._callbacks[19](self._is_custom_menu)
 
     def _get_xcoord(self, xself):
-        pass
+        return 0
     def _get_ycoord(self, xself):
-        pass
+        return 0
     def _get_type_flags(self, xself):
-        pass
+        return 0
     def _get_link_url(self, xself):
-        pass
+        return None
     def _get_unfiltered_link_url(self, xself):
-        pass
+        return None
     def _get_source_url(self, xself):
-        pass
+        return None
     def _has_image_contents(self, xself):
-        pass
+        return 0
     def _get_title_text(self, xself):
-        pass
+        return None
     def _get_page_url(self, xself):
-        pass
+        return None
     def _get_frame_url(self, xself):
-        pass
+        return None
     def _get_frame_charset(self, xself):
-        pass
+        return None
     def _get_media_type(self, xself):
-        pass
+        return 0
     def _get_media_state_flags(self, xself):
-        pass
+        return 0
     def _get_selection_text(self, xself):
-        pass
+        return None
     def _get_misspelled_word(self, xself):
-        pass
+        return None
     def _get_dictionary_suggestions(self, xself, suggestions):
-        pass
+        return 0
     def _is_editable(self, xself):
-        pass
+        return 0
     def _is_spell_check_enabled(self, xself):
-        pass
+        return 0
     def _get_edit_state_flags(self, xself):
-        pass
+        return 0
     def _is_custom_menu(self, xself):
-        pass
+        return 0
 
 
 class cef_cookie_manager_t(Structure):
@@ -758,15 +758,15 @@ class cef_cookie_manager_t(Structure):
         self.flush_store = self._callbacks[4](self._flush_store)
 
     def _visit_all_cookies(self, xself, visitor):
-        pass
+        return 0
     def _visit_url_cookies(self, xself, url, includeHttpOnly, visitor):
-        pass
+        return 0
     def _set_cookie(self, xself, url, cookie, callback):
-        pass
+        return 0
     def _delete_cookies(self, xself, url, cookie_name, callback):
-        pass
+        return 0
     def _flush_store(self, xself, callback):
-        pass
+        return 0
 
 
 class cef_cookie_visitor_t(Structure):
@@ -779,7 +779,7 @@ class cef_cookie_visitor_t(Structure):
         self.visit = self._callbacks[0](self._visit)
 
     def _visit(self, xself, cookie, count, total, deleteCookie):
-        pass
+        return 0
 
 
 class cef_set_cookie_callback_t(Structure):
@@ -792,7 +792,7 @@ class cef_set_cookie_callback_t(Structure):
         self.on_complete = self._callbacks[0](self._on_complete)
 
     def _on_complete(self, xself, success):
-        pass
+        return 0
 
 
 class cef_delete_cookies_callback_t(Structure):
@@ -805,7 +805,7 @@ class cef_delete_cookies_callback_t(Structure):
         self.on_complete = self._callbacks[0](self._on_complete)
 
     def _on_complete(self, xself, num_deleted):
-        pass
+        return 0
 
 
 class cef_dev_tools_message_observer_t(Structure):
@@ -822,15 +822,15 @@ class cef_dev_tools_message_observer_t(Structure):
         self.on_dev_tools_agent_detached = self._callbacks[4](self._on_dev_tools_agent_detached)
 
     def _on_dev_tools_message(self, xself, browser, message, message_size):
-        pass
+        return 0
     def _on_dev_tools_method_result(self, xself, browser, message_id, success, result, result_size):
-        pass
+        return 0
     def _on_dev_tools_event(self, xself, browser, method, params, params_size):
-        pass
+        return 0
     def _on_dev_tools_agent_attached(self, xself, browser):
-        pass
+        return 0
     def _on_dev_tools_agent_detached(self, xself, browser):
-        pass
+        return 0
 
 
 class cef_file_dialog_callback_t(Structure):
@@ -844,9 +844,9 @@ class cef_file_dialog_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, file_paths):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_dialog_handler_t(Structure):
@@ -859,7 +859,7 @@ class cef_dialog_handler_t(Structure):
         self.on_file_dialog = self._callbacks[0](self._on_file_dialog)
 
     def _on_file_dialog(self, xself, browser, mode, title, default_file_path, accept_filters, callback):
-        pass
+        return 0
 
 
 class cef_display_handler_t(Structure):
@@ -882,27 +882,27 @@ class cef_display_handler_t(Structure):
         self.on_media_access_change = self._callbacks[10](self._on_media_access_change)
 
     def _on_address_change(self, xself, browser, frame, url):
-        pass
+        return 0
     def _on_title_change(self, xself, browser, title):
-        pass
+        return 0
     def _on_favicon_urlchange(self, xself, browser, icon_urls):
-        pass
+        return 0
     def _on_fullscreen_mode_change(self, xself, browser, fullscreen):
-        pass
+        return 0
     def _on_tooltip(self, xself, browser, text):
-        pass
+        return 0
     def _on_status_message(self, xself, browser, value):
-        pass
+        return 0
     def _on_console_message(self, xself, browser, level, message, source, line):
-        pass
+        return 0
     def _on_auto_resize(self, xself, browser, new_size):
-        pass
+        return 0
     def _on_loading_progress_change(self, xself, browser, progress):
-        pass
+        return 0
     def _on_cursor_change(self, xself, browser, cursor, type, custom_cursor_info):
-        pass
+        return 0
     def _on_media_access_change(self, xself, browser, has_video_access, has_audio_access):
-        pass
+        return 0
 
 
 class cef_domvisitor_t(Structure):
@@ -915,7 +915,7 @@ class cef_domvisitor_t(Structure):
         self.visit = self._callbacks[0](self._visit)
 
     def _visit(self, xself, document):
-        pass
+        return 0
 
 
 class cef_domdocument_t(Structure):
@@ -941,33 +941,33 @@ class cef_domdocument_t(Structure):
         self.get_complete_url = self._callbacks[13](self._get_complete_url)
 
     def _get_type(self, xself):
-        pass
+        return 0
     def _get_document(self, xself):
-        pass
+        return None
     def _get_body(self, xself):
-        pass
+        return None
     def _get_head(self, xself):
-        pass
+        return None
     def _get_title(self, xself):
-        pass
+        return None
     def _get_element_by_id(self, xself, id):
-        pass
+        return None
     def _get_focused_node(self, xself):
-        pass
+        return None
     def _has_selection(self, xself):
-        pass
+        return 0
     def _get_selection_start_offset(self, xself):
-        pass
+        return 0
     def _get_selection_end_offset(self, xself):
-        pass
+        return 0
     def _get_selection_as_markup(self, xself):
-        pass
+        return None
     def _get_selection_as_text(self, xself):
-        pass
+        return None
     def _get_base_url(self, xself):
-        pass
+        return None
     def _get_complete_url(self, xself, partialURL):
-        pass
+        return None
 
 
 class cef_domnode_t(Structure):
@@ -1005,57 +1005,57 @@ class cef_domnode_t(Structure):
         self.get_element_bounds = self._callbacks[25](self._get_element_bounds)
 
     def _get_type(self, xself):
-        pass
+        return 0
     def _is_text(self, xself):
-        pass
+        return 0
     def _is_element(self, xself):
-        pass
+        return 0
     def _is_editable(self, xself):
-        pass
+        return 0
     def _is_form_control_element(self, xself):
-        pass
+        return 0
     def _get_form_control_element_type(self, xself):
-        pass
+        return None
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _get_name(self, xself):
-        pass
+        return None
     def _get_value(self, xself):
-        pass
+        return None
     def _set_value(self, xself, value):
-        pass
+        return 0
     def _get_as_markup(self, xself):
-        pass
+        return None
     def _get_document(self, xself):
-        pass
+        return None
     def _get_parent(self, xself):
-        pass
+        return None
     def _get_previous_sibling(self, xself):
-        pass
+        return None
     def _get_next_sibling(self, xself):
-        pass
+        return None
     def _has_children(self, xself):
-        pass
+        return 0
     def _get_first_child(self, xself):
-        pass
+        return None
     def _get_last_child(self, xself):
-        pass
+        return None
     def _get_element_tag_name(self, xself):
-        pass
+        return None
     def _has_element_attributes(self, xself):
-        pass
+        return 0
     def _has_element_attribute(self, xself, attrName):
-        pass
+        return 0
     def _get_element_attribute(self, xself, attrName):
-        pass
+        return None
     def _get_element_attributes(self, xself, attrMap):
-        pass
+        return 0
     def _set_element_attribute(self, xself, attrName, value):
-        pass
+        return 0
     def _get_element_inner_text(self, xself):
-        pass
+        return None
     def _get_element_bounds(self, xself):
-        pass
+        return 0
 
 
 class cef_before_download_callback_t(Structure):
@@ -1068,7 +1068,7 @@ class cef_before_download_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself, download_path, show_dialog):
-        pass
+        return 0
 
 
 class cef_download_item_callback_t(Structure):
@@ -1083,11 +1083,11 @@ class cef_download_item_callback_t(Structure):
         self.resume = self._callbacks[2](self._resume)
 
     def _cancel(self, xself):
-        pass
+        return 0
     def _pause(self, xself):
-        pass
+        return 0
     def _resume(self, xself):
-        pass
+        return 0
 
 
 class cef_download_handler_t(Structure):
@@ -1102,11 +1102,11 @@ class cef_download_handler_t(Structure):
         self.on_download_updated = self._callbacks[2](self._on_download_updated)
 
     def _can_download(self, xself, browser, url, request_method):
-        pass
+        return 0
     def _on_before_download(self, xself, browser, download_item, suggested_name, callback):
-        pass
+        return 0
     def _on_download_updated(self, xself, browser, download_item, callback):
-        pass
+        return 0
 
 
 class cef_download_item_t(Structure):
@@ -1135,39 +1135,39 @@ class cef_download_item_t(Structure):
         self.get_mime_type = self._callbacks[16](self._get_mime_type)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_in_progress(self, xself):
-        pass
+        return 0
     def _is_complete(self, xself):
-        pass
+        return 0
     def _is_canceled(self, xself):
-        pass
+        return 0
     def _get_current_speed(self, xself):
-        pass
+        return 0
     def _get_percent_complete(self, xself):
-        pass
+        return 0
     def _get_total_bytes(self, xself):
-        pass
+        return 0
     def _get_received_bytes(self, xself):
-        pass
+        return 0
     def _get_start_time(self, xself):
-        pass
+        return 0
     def _get_end_time(self, xself):
-        pass
+        return 0
     def _get_full_path(self, xself):
-        pass
+        return None
     def _get_id(self, xself):
-        pass
+        return 0
     def _get_url(self, xself):
-        pass
+        return None
     def _get_original_url(self, xself):
-        pass
+        return None
     def _get_suggested_file_name(self, xself):
-        pass
+        return None
     def _get_content_disposition(self, xself):
-        pass
+        return None
     def _get_mime_type(self, xself):
-        pass
+        return None
 
 
 class cef_drag_data_t(Structure):
@@ -1205,57 +1205,57 @@ class cef_drag_data_t(Structure):
         self.has_image = self._callbacks[25](self._has_image)
 
     def _clone(self, xself):
-        pass
+        return None
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _is_link(self, xself):
-        pass
+        return 0
     def _is_fragment(self, xself):
-        pass
+        return 0
     def _is_file(self, xself):
-        pass
+        return 0
     def _get_link_url(self, xself):
-        pass
+        return None
     def _get_link_title(self, xself):
-        pass
+        return None
     def _get_link_metadata(self, xself):
-        pass
+        return None
     def _get_fragment_text(self, xself):
-        pass
+        return None
     def _get_fragment_html(self, xself):
-        pass
+        return None
     def _get_fragment_base_url(self, xself):
-        pass
+        return None
     def _get_file_name(self, xself):
-        pass
+        return None
     def _get_file_contents(self, xself, writer):
-        pass
+        return 0
     def _get_file_names(self, xself, names):
-        pass
+        return 0
     def _set_link_url(self, xself, url):
-        pass
+        return 0
     def _set_link_title(self, xself, title):
-        pass
+        return 0
     def _set_link_metadata(self, xself, data):
-        pass
+        return 0
     def _set_fragment_text(self, xself, text):
-        pass
+        return 0
     def _set_fragment_html(self, xself, html):
-        pass
+        return 0
     def _set_fragment_base_url(self, xself, base_url):
-        pass
+        return 0
     def _reset_file_contents(self, xself):
-        pass
+        return 0
     def _add_file(self, xself, path, display_name):
-        pass
+        return 0
     def _clear_filenames(self, xself):
-        pass
+        return 0
     def _get_image(self, xself):
-        pass
+        return None
     def _get_image_hotspot(self, xself):
-        pass
+        return 0
     def _has_image(self, xself):
-        pass
+        return 0
 
 
 class cef_drag_handler_t(Structure):
@@ -1269,9 +1269,9 @@ class cef_drag_handler_t(Structure):
         self.on_draggable_regions_changed = self._callbacks[1](self._on_draggable_regions_changed)
 
     def _on_drag_enter(self, xself, browser, dragData, mask):
-        pass
+        return 0
     def _on_draggable_regions_changed(self, xself, browser, frame, regionsCount, regions):
-        pass
+        return 0
 
 
 class cef_extension_t(Structure):
@@ -1291,21 +1291,21 @@ class cef_extension_t(Structure):
         self.unload = self._callbacks[7](self._unload)
 
     def _get_identifier(self, xself):
-        pass
+        return None
     def _get_path(self, xself):
-        pass
+        return None
     def _get_manifest(self, xself):
-        pass
+        return None
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _get_handler(self, xself):
-        pass
+        return None
     def _get_loader_context(self, xself):
-        pass
+        return None
     def _is_loaded(self, xself):
-        pass
+        return 0
     def _unload(self, xself):
-        pass
+        return 0
 
 
 class cef_get_extension_resource_callback_t(Structure):
@@ -1319,9 +1319,9 @@ class cef_get_extension_resource_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, stream):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_extension_handler_t(Structure):
@@ -1341,21 +1341,21 @@ class cef_extension_handler_t(Structure):
         self.get_extension_resource = self._callbacks[7](self._get_extension_resource)
 
     def _on_extension_load_failed(self, xself, result):
-        pass
+        return 0
     def _on_extension_loaded(self, xself, extension):
-        pass
+        return 0
     def _on_extension_unloaded(self, xself, extension):
-        pass
+        return 0
     def _on_before_background_browser(self, xself, extension, url, client, settings):
-        pass
+        return 0
     def _on_before_browser(self, xself, extension, browser, active_browser, index, url, active, windowInfo, client, settings):
-        pass
+        return 0
     def _get_active_browser(self, xself, extension, browser, include_incognito):
-        pass
+        return None
     def _can_access_browser(self, xself, extension, browser, include_incognito, target_browser):
-        pass
+        return 0
     def _get_extension_resource(self, xself, extension, browser, file, callback):
-        pass
+        return 0
 
 
 class cef_find_handler_t(Structure):
@@ -1368,7 +1368,7 @@ class cef_find_handler_t(Structure):
         self.on_find_result = self._callbacks[0](self._on_find_result)
 
     def _on_find_result(self, xself, browser, identifier, count, selectionRect, activeMatchOrdinal, finalUpdate):
-        pass
+        return 0
 
 
 class cef_focus_handler_t(Structure):
@@ -1383,11 +1383,11 @@ class cef_focus_handler_t(Structure):
         self.on_got_focus = self._callbacks[2](self._on_got_focus)
 
     def _on_take_focus(self, xself, browser, next):
-        pass
+        return 0
     def _on_set_focus(self, xself, browser, source):
-        pass
+        return 0
     def _on_got_focus(self, xself, browser):
-        pass
+        return 0
 
 
 class cef_frame_t(Structure):
@@ -1424,55 +1424,55 @@ class cef_frame_t(Structure):
         self.send_process_message = self._callbacks[24](self._send_process_message)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _undo(self, xself):
-        pass
+        return 0
     def _redo(self, xself):
-        pass
+        return 0
     def _cut(self, xself):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return 0
     def _paste(self, xself):
-        pass
+        return 0
     def _xdel(self, xself):
-        pass
+        return 0
     def _select_all(self, xself):
-        pass
+        return 0
     def _view_source(self, xself):
-        pass
+        return 0
     def _get_source(self, xself, visitor):
-        pass
+        return 0
     def _get_text(self, xself, visitor):
-        pass
+        return 0
     def _load_request(self, xself, request):
-        pass
+        return 0
     def _load_url(self, xself, url):
-        pass
+        return 0
     def _execute_java_script(self, xself, code, script_url, start_line):
-        pass
+        return 0
     def _is_main(self, xself):
-        pass
+        return 0
     def _is_focused(self, xself):
-        pass
+        return 0
     def _get_name(self, xself):
-        pass
+        return None
     def _get_identifier(self, xself):
-        pass
+        return 0
     def _get_parent(self, xself):
-        pass
+        return None
     def _get_url(self, xself):
-        pass
+        return None
     def _get_browser(self, xself):
-        pass
+        return None
     def _get_v8context(self, xself):
-        pass
+        return None
     def _visit_dom(self, xself, visitor):
-        pass
+        return 0
     def _create_urlrequest(self, xself, request, client):
-        pass
+        return None
     def _send_process_message(self, xself, target_process, message):
-        pass
+        return 0
 
 
 class cef_frame_handler_t(Structure):
@@ -1488,13 +1488,13 @@ class cef_frame_handler_t(Structure):
         self.on_main_frame_changed = self._callbacks[3](self._on_main_frame_changed)
 
     def _on_frame_created(self, xself, browser, frame):
-        pass
+        return 0
     def _on_frame_attached(self, xself, browser, frame, reattached):
-        pass
+        return 0
     def _on_frame_detached(self, xself, browser, frame):
-        pass
+        return 0
     def _on_main_frame_changed(self, xself, browser, old_frame, new_frame):
-        pass
+        return 0
 
 
 class cef_image_t(Structure):
@@ -1519,31 +1519,31 @@ class cef_image_t(Structure):
         self.get_as_jpeg = self._callbacks[12](self._get_as_jpeg)
 
     def _is_empty(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _add_bitmap(self, xself, scale_factor, pixel_width, pixel_height, color_type, alpha_type, pixel_data, pixel_data_size):
-        pass
+        return 0
     def _add_png(self, xself, scale_factor, png_data, png_data_size):
-        pass
+        return 0
     def _add_jpeg(self, xself, scale_factor, jpeg_data, jpeg_data_size):
-        pass
+        return 0
     def _get_width(self, xself):
-        pass
+        return 0
     def _get_height(self, xself):
-        pass
+        return 0
     def _has_representation(self, xself, scale_factor):
-        pass
+        return 0
     def _remove_representation(self, xself, scale_factor):
-        pass
+        return 0
     def _get_representation_info(self, xself, scale_factor, actual_scale_factor, pixel_width, pixel_height):
-        pass
+        return 0
     def _get_as_bitmap(self, xself, scale_factor, color_type, alpha_type, pixel_width, pixel_height):
-        pass
+        return None
     def _get_as_png(self, xself, scale_factor, with_transparency, pixel_width, pixel_height):
-        pass
+        return None
     def _get_as_jpeg(self, xself, scale_factor, quality, pixel_width, pixel_height):
-        pass
+        return None
 
 
 class cef_jsdialog_callback_t(Structure):
@@ -1556,7 +1556,7 @@ class cef_jsdialog_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself, success, user_input):
-        pass
+        return 0
 
 
 class cef_jsdialog_handler_t(Structure):
@@ -1572,13 +1572,13 @@ class cef_jsdialog_handler_t(Structure):
         self.on_dialog_closed = self._callbacks[3](self._on_dialog_closed)
 
     def _on_jsdialog(self, xself, browser, origin_url, dialog_type, message_text, default_prompt_text, callback, suppress_message):
-        pass
+        return 0
     def _on_before_unload_dialog(self, xself, browser, message_text, is_reload, callback):
-        pass
+        return 0
     def _on_reset_dialog_state(self, xself, browser):
-        pass
+        return 0
     def _on_dialog_closed(self, xself, browser):
-        pass
+        return 0
 
 
 class cef_keyboard_handler_t(Structure):
@@ -1592,9 +1592,9 @@ class cef_keyboard_handler_t(Structure):
         self.on_key_event = self._callbacks[1](self._on_key_event)
 
     def _on_pre_key_event(self, xself, browser, event, os_event, is_keyboard_shortcut):
-        pass
+        return 0
     def _on_key_event(self, xself, browser, event, os_event):
-        pass
+        return 0
 
 
 class cef_life_span_handler_t(Structure):
@@ -1610,13 +1610,13 @@ class cef_life_span_handler_t(Structure):
         self.on_before_close = self._callbacks[3](self._on_before_close)
 
     def _on_before_popup(self, xself, browser, frame, target_url, target_frame_name, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, extra_info, no_javascript_access):
-        pass
+        return 0
     def _on_after_created(self, xself, browser):
-        pass
+        return 0
     def _do_close(self, xself, browser):
-        pass
+        return 0
     def _on_before_close(self, xself, browser):
-        pass
+        return 0
 
 
 class cef_load_handler_t(Structure):
@@ -1632,13 +1632,13 @@ class cef_load_handler_t(Structure):
         self.on_load_error = self._callbacks[3](self._on_load_error)
 
     def _on_loading_state_change(self, xself, browser, isLoading, canGoBack, canGoForward):
-        pass
+        return 0
     def _on_load_start(self, xself, browser, frame, transition_type):
-        pass
+        return 0
     def _on_load_end(self, xself, browser, frame, httpStatusCode):
-        pass
+        return 0
     def _on_load_error(self, xself, browser, frame, errorCode, errorText, failedUrl):
-        pass
+        return 0
 
 
 class cef_media_router_t(Structure):
@@ -1655,15 +1655,15 @@ class cef_media_router_t(Structure):
         self.notify_current_routes = self._callbacks[4](self._notify_current_routes)
 
     def _add_observer(self, xself, observer):
-        pass
+        return None
     def _get_source(self, xself, urn):
-        pass
+        return None
     def _notify_current_sinks(self, xself):
-        pass
+        return 0
     def _create_route(self, xself, source, sink, callback):
-        pass
+        return 0
     def _notify_current_routes(self, xself):
-        pass
+        return 0
 
 
 class cef_media_observer_t(Structure):
@@ -1679,13 +1679,13 @@ class cef_media_observer_t(Structure):
         self.on_route_message_received = self._callbacks[3](self._on_route_message_received)
 
     def _on_sinks(self, xself, sinksCount, sinks):
-        pass
+        return 0
     def _on_routes(self, xself, routesCount, routes):
-        pass
+        return 0
     def _on_route_state_changed(self, xself, route, state):
-        pass
+        return 0
     def _on_route_message_received(self, xself, route, message, message_size):
-        pass
+        return 0
 
 
 class cef_media_route_t(Structure):
@@ -1702,15 +1702,15 @@ class cef_media_route_t(Structure):
         self.terminate = self._callbacks[4](self._terminate)
 
     def _get_id(self, xself):
-        pass
+        return None
     def _get_source(self, xself):
-        pass
+        return None
     def _get_sink(self, xself):
-        pass
+        return None
     def _send_route_message(self, xself, message, message_size):
-        pass
+        return 0
     def _terminate(self, xself):
-        pass
+        return 0
 
 
 class cef_media_route_create_callback_t(Structure):
@@ -1723,7 +1723,7 @@ class cef_media_route_create_callback_t(Structure):
         self.on_media_route_create_finished = self._callbacks[0](self._on_media_route_create_finished)
 
     def _on_media_route_create_finished(self, xself, result, error, route):
-        pass
+        return 0
 
 
 class cef_media_sink_t(Structure):
@@ -1743,21 +1743,21 @@ class cef_media_sink_t(Structure):
         self.is_compatible_with = self._callbacks[7](self._is_compatible_with)
 
     def _get_id(self, xself):
-        pass
+        return None
     def _get_name(self, xself):
-        pass
+        return None
     def _get_description(self, xself):
-        pass
+        return None
     def _get_icon_type(self, xself):
-        pass
+        return 0
     def _get_device_info(self, xself, callback):
-        pass
+        return 0
     def _is_cast_sink(self, xself):
-        pass
+        return 0
     def _is_dial_sink(self, xself):
-        pass
+        return 0
     def _is_compatible_with(self, xself, source):
-        pass
+        return 0
 
 
 class cef_media_sink_device_info_callback_t(Structure):
@@ -1770,7 +1770,7 @@ class cef_media_sink_device_info_callback_t(Structure):
         self.on_media_sink_device_info = self._callbacks[0](self._on_media_sink_device_info)
 
     def _on_media_sink_device_info(self, xself, device_info):
-        pass
+        return 0
 
 
 class cef_media_source_t(Structure):
@@ -1785,11 +1785,11 @@ class cef_media_source_t(Structure):
         self.is_dial_source = self._callbacks[2](self._is_dial_source)
 
     def _get_id(self, xself):
-        pass
+        return None
     def _is_cast_source(self, xself):
-        pass
+        return 0
     def _is_dial_source(self, xself):
-        pass
+        return 0
 
 
 class cef_menu_model_t(Structure):
@@ -1857,117 +1857,117 @@ class cef_menu_model_t(Structure):
         self.set_font_list_at = self._callbacks[55](self._set_font_list_at)
 
     def _is_sub_menu(self, xself):
-        pass
+        return 0
     def _clear(self, xself):
-        pass
+        return 0
     def _get_count(self, xself):
-        pass
+        return 0
     def _add_separator(self, xself):
-        pass
+        return 0
     def _add_item(self, xself, command_id, label):
-        pass
+        return 0
     def _add_check_item(self, xself, command_id, label):
-        pass
+        return 0
     def _add_radio_item(self, xself, command_id, label, group_id):
-        pass
+        return 0
     def _add_sub_menu(self, xself, command_id, label):
-        pass
+        return None
     def _insert_separator_at(self, xself, index):
-        pass
+        return 0
     def _insert_item_at(self, xself, index, command_id, label):
-        pass
+        return 0
     def _insert_check_item_at(self, xself, index, command_id, label):
-        pass
+        return 0
     def _insert_radio_item_at(self, xself, index, command_id, label, group_id):
-        pass
+        return 0
     def _insert_sub_menu_at(self, xself, index, command_id, label):
-        pass
+        return None
     def _remove(self, xself, command_id):
-        pass
+        return 0
     def _remove_at(self, xself, index):
-        pass
+        return 0
     def _get_index_of(self, xself, command_id):
-        pass
+        return 0
     def _get_command_id_at(self, xself, index):
-        pass
+        return 0
     def _set_command_id_at(self, xself, index, command_id):
-        pass
+        return 0
     def _get_label(self, xself, command_id):
-        pass
+        return None
     def _get_label_at(self, xself, index):
-        pass
+        return None
     def _set_label(self, xself, command_id, label):
-        pass
+        return 0
     def _set_label_at(self, xself, index, label):
-        pass
+        return 0
     def _get_type(self, xself, command_id):
-        pass
+        return 0
     def _get_type_at(self, xself, index):
-        pass
+        return 0
     def _get_group_id(self, xself, command_id):
-        pass
+        return 0
     def _get_group_id_at(self, xself, index):
-        pass
+        return 0
     def _set_group_id(self, xself, command_id, group_id):
-        pass
+        return 0
     def _set_group_id_at(self, xself, index, group_id):
-        pass
+        return 0
     def _get_sub_menu(self, xself, command_id):
-        pass
+        return None
     def _get_sub_menu_at(self, xself, index):
-        pass
+        return None
     def _is_visible(self, xself, command_id):
-        pass
+        return 0
     def _is_visible_at(self, xself, index):
-        pass
+        return 0
     def _set_visible(self, xself, command_id, visible):
-        pass
+        return 0
     def _set_visible_at(self, xself, index, visible):
-        pass
+        return 0
     def _is_enabled(self, xself, command_id):
-        pass
+        return 0
     def _is_enabled_at(self, xself, index):
-        pass
+        return 0
     def _set_enabled(self, xself, command_id, enabled):
-        pass
+        return 0
     def _set_enabled_at(self, xself, index, enabled):
-        pass
+        return 0
     def _is_checked(self, xself, command_id):
-        pass
+        return 0
     def _is_checked_at(self, xself, index):
-        pass
+        return 0
     def _set_checked(self, xself, command_id, checked):
-        pass
+        return 0
     def _set_checked_at(self, xself, index, checked):
-        pass
+        return 0
     def _has_accelerator(self, xself, command_id):
-        pass
+        return 0
     def _has_accelerator_at(self, xself, index):
-        pass
+        return 0
     def _set_accelerator(self, xself, command_id, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        pass
+        return 0
     def _set_accelerator_at(self, xself, index, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        pass
+        return 0
     def _remove_accelerator(self, xself, command_id):
-        pass
+        return 0
     def _remove_accelerator_at(self, xself, index):
-        pass
+        return 0
     def _get_accelerator(self, xself, command_id, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        pass
+        return 0
     def _get_accelerator_at(self, xself, index, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        pass
+        return 0
     def _set_color(self, xself, command_id, color_type, color):
-        pass
+        return 0
     def _set_color_at(self, xself, index, color_type, color):
-        pass
+        return 0
     def _get_color(self, xself, command_id, color_type, color):
-        pass
+        return 0
     def _get_color_at(self, xself, index, color_type, color):
-        pass
+        return 0
     def _set_font_list(self, xself, command_id, font_list):
-        pass
+        return 0
     def _set_font_list_at(self, xself, index, font_list):
-        pass
+        return 0
 
 
 class cef_menu_model_delegate_t(Structure):
@@ -1986,19 +1986,19 @@ class cef_menu_model_delegate_t(Structure):
         self.format_label = self._callbacks[6](self._format_label)
 
     def _execute_command(self, xself, menu_model, command_id, event_flags):
-        pass
+        return 0
     def _mouse_outside_menu(self, xself, menu_model, screen_point):
-        pass
+        return 0
     def _unhandled_open_submenu(self, xself, menu_model, is_rtl):
-        pass
+        return 0
     def _unhandled_close_submenu(self, xself, menu_model, is_rtl):
-        pass
+        return 0
     def _menu_will_show(self, xself, menu_model):
-        pass
+        return 0
     def _menu_closed(self, xself, menu_model):
-        pass
+        return 0
     def _format_label(self, xself, menu_model, label):
-        pass
+        return 0
 
 
 class cef_navigation_entry_t(Structure):
@@ -2020,25 +2020,25 @@ class cef_navigation_entry_t(Structure):
         self.get_sslstatus = self._callbacks[9](self._get_sslstatus)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _get_url(self, xself):
-        pass
+        return None
     def _get_display_url(self, xself):
-        pass
+        return None
     def _get_original_url(self, xself):
-        pass
+        return None
     def _get_title(self, xself):
-        pass
+        return None
     def _get_transition_type(self, xself):
-        pass
+        return 0
     def _has_post_data(self, xself):
-        pass
+        return 0
     def _get_completion_time(self, xself):
-        pass
+        return 0
     def _get_http_status_code(self, xself):
-        pass
+        return 0
     def _get_sslstatus(self, xself):
-        pass
+        return None
 
 
 class cef_media_access_callback_t(Structure):
@@ -2052,9 +2052,9 @@ class cef_media_access_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, allowed_permissions):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_permission_prompt_callback_t(Structure):
@@ -2067,7 +2067,7 @@ class cef_permission_prompt_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself, result):
-        pass
+        return 0
 
 
 class cef_permission_handler_t(Structure):
@@ -2082,11 +2082,11 @@ class cef_permission_handler_t(Structure):
         self.on_dismiss_permission_prompt = self._callbacks[2](self._on_dismiss_permission_prompt)
 
     def _on_request_media_access_permission(self, xself, browser, frame, requesting_origin, requested_permissions, callback):
-        pass
+        return 0
     def _on_show_permission_prompt(self, xself, browser, prompt_id, requesting_origin, requested_permissions, callback):
-        pass
+        return 0
     def _on_dismiss_permission_prompt(self, xself, browser, prompt_id, result):
-        pass
+        return 0
 
 
 class cef_preference_registrar_t(Structure):
@@ -2099,7 +2099,7 @@ class cef_preference_registrar_t(Structure):
         self.add_preference = self._callbacks[0](self._add_preference)
 
     def _add_preference(self, xself, name, default_value):
-        pass
+        return 0
 
 
 class cef_preference_manager_t(Structure):
@@ -2116,15 +2116,15 @@ class cef_preference_manager_t(Structure):
         self.set_preference = self._callbacks[4](self._set_preference)
 
     def _has_preference(self, xself, name):
-        pass
+        return 0
     def _get_preference(self, xself, name):
-        pass
+        return None
     def _get_all_preferences(self, xself, include_defaults):
-        pass
+        return None
     def _can_set_preference(self, xself, name):
-        pass
+        return 0
     def _set_preference(self, xself, name, value, error):
-        pass
+        return 0
 
 
 class cef_print_dialog_callback_t(Structure):
@@ -2138,9 +2138,9 @@ class cef_print_dialog_callback_t(Structure):
         self.cancel = self._callbacks[1](self._cancel)
 
     def _cont(self, xself, settings):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_print_job_callback_t(Structure):
@@ -2153,7 +2153,7 @@ class cef_print_job_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself):
-        pass
+        return 0
 
 
 class cef_print_handler_t(Structure):
@@ -2171,17 +2171,17 @@ class cef_print_handler_t(Structure):
         self.get_pdf_paper_size = self._callbacks[5](self._get_pdf_paper_size)
 
     def _on_print_start(self, xself, browser):
-        pass
+        return 0
     def _on_print_settings(self, xself, browser, settings, get_defaults):
-        pass
+        return 0
     def _on_print_dialog(self, xself, browser, has_selection, callback):
-        pass
+        return 0
     def _on_print_job(self, xself, browser, document_name, pdf_file_path, callback):
-        pass
+        return 0
     def _on_print_reset(self, xself, browser):
-        pass
+        return 0
     def _get_pdf_paper_size(self, xself, browser, device_units_per_inch):
-        pass
+        return 0
 
 
 class cef_print_settings_t(Structure):
@@ -2215,49 +2215,49 @@ class cef_print_settings_t(Structure):
         self.get_duplex_mode = self._callbacks[21](self._get_duplex_mode)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _set_orientation(self, xself, landscape):
-        pass
+        return 0
     def _is_landscape(self, xself):
-        pass
+        return 0
     def _set_printer_printable_area(self, xself, physical_size_device_units, printable_area_device_units, landscape_needs_flip):
-        pass
+        return 0
     def _set_device_name(self, xself, name):
-        pass
+        return 0
     def _get_device_name(self, xself):
-        pass
+        return None
     def _set_dpi(self, xself, dpi):
-        pass
+        return 0
     def _get_dpi(self, xself):
-        pass
+        return 0
     def _set_page_ranges(self, xself, rangesCount, ranges):
-        pass
+        return 0
     def _get_page_ranges_count(self, xself):
-        pass
+        return 0
     def _get_page_ranges(self, xself, rangesCount, ranges):
-        pass
+        return 0
     def _set_selection_only(self, xself, selection_only):
-        pass
+        return 0
     def _is_selection_only(self, xself):
-        pass
+        return 0
     def _set_collate(self, xself, collate):
-        pass
+        return 0
     def _will_collate(self, xself):
-        pass
+        return 0
     def _set_color_model(self, xself, model):
-        pass
+        return 0
     def _get_color_model(self, xself):
-        pass
+        return 0
     def _set_copies(self, xself, copies):
-        pass
+        return 0
     def _get_copies(self, xself):
-        pass
+        return 0
     def _set_duplex_mode(self, xself, mode):
-        pass
+        return 0
     def _get_duplex_mode(self, xself):
-        pass
+        return 0
 
 
 class cef_process_message_t(Structure):
@@ -2275,17 +2275,17 @@ class cef_process_message_t(Structure):
         self.get_shared_memory_region = self._callbacks[5](self._get_shared_memory_region)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return None
     def _get_name(self, xself):
-        pass
+        return None
     def _get_argument_list(self, xself):
-        pass
+        return None
     def _get_shared_memory_region(self, xself):
-        pass
+        return None
 
 
 class cef_registration_t(Structure):
@@ -2324,39 +2324,39 @@ class cef_render_handler_t(Structure):
         self.on_virtual_keyboard_requested = self._callbacks[16](self._on_virtual_keyboard_requested)
 
     def _get_accessibility_handler(self, xself):
-        pass
+        return None
     def _get_root_screen_rect(self, xself, browser, rect):
-        pass
+        return 0
     def _get_view_rect(self, xself, browser, rect):
-        pass
+        return 0
     def _get_screen_point(self, xself, browser, viewX, viewY, screenX, screenY):
-        pass
+        return 0
     def _get_screen_info(self, xself, browser, screen_info):
-        pass
+        return 0
     def _on_popup_show(self, xself, browser, show):
-        pass
+        return 0
     def _on_popup_size(self, xself, browser, rect):
-        pass
+        return 0
     def _on_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, buffer, width, height):
-        pass
+        return 0
     def _on_accelerated_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
-        pass
+        return 0
     def _get_touch_handle_size(self, xself, browser, orientation, size):
-        pass
+        return 0
     def _on_touch_handle_state_changed(self, xself, browser, state):
-        pass
+        return 0
     def _start_dragging(self, xself, browser, drag_data, allowed_ops, x, y):
-        pass
+        return 0
     def _update_drag_cursor(self, xself, browser, operation):
-        pass
+        return 0
     def _on_scroll_offset_changed(self, xself, browser, x, y):
-        pass
+        return 0
     def _on_ime_composition_range_changed(self, xself, browser, selected_range, character_boundsCount, character_bounds):
-        pass
+        return 0
     def _on_text_selection_changed(self, xself, browser, selected_text, selected_range):
-        pass
+        return 0
     def _on_virtual_keyboard_requested(self, xself, browser, input_mode):
-        pass
+        return 0
 
 
 class cef_render_process_handler_t(Structure):
@@ -2377,23 +2377,23 @@ class cef_render_process_handler_t(Structure):
         self.on_process_message_received = self._callbacks[8](self._on_process_message_received)
 
     def _on_web_kit_initialized(self, xself):
-        pass
+        return 0
     def _on_browser_created(self, xself, browser, extra_info):
-        pass
+        return 0
     def _on_browser_destroyed(self, xself, browser):
-        pass
+        return 0
     def _get_load_handler(self, xself):
-        pass
+        return None
     def _on_context_created(self, xself, browser, frame, context):
-        pass
+        return 0
     def _on_context_released(self, xself, browser, frame, context):
-        pass
+        return 0
     def _on_uncaught_exception(self, xself, browser, frame, context, exception, stackTrace):
-        pass
+        return 0
     def _on_focused_node_changed(self, xself, browser, frame, node):
-        pass
+        return 0
     def _on_process_message_received(self, xself, browser, frame, source_process, message):
-        pass
+        return 0
 
 
 class cef_request_t(Structure):
@@ -2427,49 +2427,49 @@ class cef_request_t(Structure):
         self.get_identifier = self._callbacks[21](self._get_identifier)
 
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _get_url(self, xself):
-        pass
+        return None
     def _set_url(self, xself, url):
-        pass
+        return 0
     def _get_method(self, xself):
-        pass
+        return None
     def _set_method(self, xself, method):
-        pass
+        return 0
     def _set_referrer(self, xself, referrer_url, policy):
-        pass
+        return 0
     def _get_referrer_url(self, xself):
-        pass
+        return None
     def _get_referrer_policy(self, xself):
-        pass
+        return 0
     def _get_post_data(self, xself):
-        pass
+        return None
     def _set_post_data(self, xself, postData):
-        pass
+        return 0
     def _get_header_map(self, xself, headerMap):
-        pass
+        return 0
     def _set_header_map(self, xself, headerMap):
-        pass
+        return 0
     def _get_header_by_name(self, xself, name):
-        pass
+        return None
     def _set_header_by_name(self, xself, name, value, overwrite):
-        pass
+        return 0
     def _set(self, xself, url, method, postData, headerMap):
-        pass
+        return 0
     def _get_flags(self, xself):
-        pass
+        return 0
     def _set_flags(self, xself, flags):
-        pass
+        return 0
     def _get_first_party_for_cookies(self, xself):
-        pass
+        return None
     def _set_first_party_for_cookies(self, xself, url):
-        pass
+        return 0
     def _get_resource_type(self, xself):
-        pass
+        return 0
     def _get_transition_type(self, xself):
-        pass
+        return 0
     def _get_identifier(self, xself):
-        pass
+        return 0
 
 
 class cef_post_data_t(Structure):
@@ -2488,19 +2488,19 @@ class cef_post_data_t(Structure):
         self.remove_elements = self._callbacks[6](self._remove_elements)
 
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _has_excluded_elements(self, xself):
-        pass
+        return 0
     def _get_element_count(self, xself):
-        pass
+        return 0
     def _get_elements(self, xself, elementsCount, elements):
-        pass
+        return 0
     def _remove_element(self, xself, element):
-        pass
+        return 0
     def _add_element(self, xself, element):
-        pass
+        return 0
     def _remove_elements(self, xself):
-        pass
+        return 0
 
 
 class cef_post_data_element_t(Structure):
@@ -2520,21 +2520,21 @@ class cef_post_data_element_t(Structure):
         self.get_bytes = self._callbacks[7](self._get_bytes)
 
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _set_to_empty(self, xself):
-        pass
+        return 0
     def _set_to_file(self, xself, fileName):
-        pass
+        return 0
     def _set_to_bytes(self, xself, size, bytes):
-        pass
+        return 0
     def _get_type(self, xself):
-        pass
+        return 0
     def _get_file(self, xself):
-        pass
+        return None
     def _get_bytes_count(self, xself):
-        pass
+        return 0
     def _get_bytes(self, xself, size, bytes):
-        pass
+        return 0
 
 
 class cef_resolve_callback_t(Structure):
@@ -2547,7 +2547,7 @@ class cef_resolve_callback_t(Structure):
         self.on_resolve_completed = self._callbacks[0](self._on_resolve_completed)
 
     def _on_resolve_completed(self, xself, result, resolved_ips):
-        pass
+        return 0
 
 
 class cef_request_context_t(Structure):
@@ -2577,41 +2577,41 @@ class cef_request_context_t(Structure):
         self.get_media_router = self._callbacks[17](self._get_media_router)
 
     def _is_same(self, xself, other):
-        pass
+        return 0
     def _is_sharing_with(self, xself, other):
-        pass
+        return 0
     def _is_global(self, xself):
-        pass
+        return 0
     def _get_handler(self, xself):
-        pass
+        return None
     def _get_cache_path(self, xself):
-        pass
+        return None
     def _get_cookie_manager(self, xself, callback):
-        pass
+        return None
     def _register_scheme_handler_factory(self, xself, scheme_name, domain_name, factory):
-        pass
+        return 0
     def _clear_scheme_handler_factories(self, xself):
-        pass
+        return 0
     def _clear_certificate_exceptions(self, xself, callback):
-        pass
+        return 0
     def _clear_http_auth_credentials(self, xself, callback):
-        pass
+        return 0
     def _close_all_connections(self, xself, callback):
-        pass
+        return 0
     def _resolve_host(self, xself, origin, callback):
-        pass
+        return 0
     def _load_extension(self, xself, root_directory, manifest, handler):
-        pass
+        return 0
     def _did_load_extension(self, xself, extension_id):
-        pass
+        return 0
     def _has_extension(self, xself, extension_id):
-        pass
+        return 0
     def _get_extensions(self, xself, extension_ids):
-        pass
+        return 0
     def _get_extension(self, xself, extension_id):
-        pass
+        return None
     def _get_media_router(self, xself, callback):
-        pass
+        return None
 
 
 class cef_request_context_handler_t(Structure):
@@ -2625,9 +2625,9 @@ class cef_request_context_handler_t(Structure):
         self.get_resource_request_handler = self._callbacks[1](self._get_resource_request_handler)
 
     def _on_request_context_initialized(self, xself, request_context):
-        pass
+        return 0
     def _get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
-        pass
+        return None
 
 
 class cef_select_client_certificate_callback_t(Structure):
@@ -2640,7 +2640,7 @@ class cef_select_client_certificate_callback_t(Structure):
         self.select = self._callbacks[0](self._select)
 
     def _select(self, xself, cert):
-        pass
+        return 0
 
 
 class cef_request_handler_t(Structure):
@@ -2661,23 +2661,23 @@ class cef_request_handler_t(Structure):
         self.on_document_available_in_main_frame = self._callbacks[8](self._on_document_available_in_main_frame)
 
     def _on_before_browse(self, xself, browser, frame, request, user_gesture, is_redirect):
-        pass
+        return 0
     def _on_open_urlfrom_tab(self, xself, browser, frame, target_url, target_disposition, user_gesture):
-        pass
+        return 0
     def _get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
-        pass
+        return None
     def _get_auth_credentials(self, xself, browser, origin_url, isProxy, host, port, realm, scheme, callback):
-        pass
+        return 0
     def _on_certificate_error(self, xself, browser, cert_error, request_url, ssl_info, callback):
-        pass
+        return 0
     def _on_select_client_certificate(self, xself, browser, isProxy, host, port, certificatesCount, certificates, callback):
-        pass
+        return 0
     def _on_render_view_ready(self, xself, browser):
-        pass
+        return 0
     def _on_render_process_terminated(self, xself, browser, status):
-        pass
+        return 0
     def _on_document_available_in_main_frame(self, xself, browser):
-        pass
+        return 0
 
 
 class cef_resource_bundle_t(Structure):
@@ -2692,11 +2692,11 @@ class cef_resource_bundle_t(Structure):
         self.get_data_resource_for_scale = self._callbacks[2](self._get_data_resource_for_scale)
 
     def _get_localized_string(self, xself, string_id):
-        pass
+        return None
     def _get_data_resource(self, xself, resource_id):
-        pass
+        return None
     def _get_data_resource_for_scale(self, xself, resource_id, scale_factor):
-        pass
+        return None
 
 
 class cef_resource_bundle_handler_t(Structure):
@@ -2711,11 +2711,11 @@ class cef_resource_bundle_handler_t(Structure):
         self.get_data_resource_for_scale = self._callbacks[2](self._get_data_resource_for_scale)
 
     def _get_localized_string(self, xself, string_id, string):
-        pass
+        return 0
     def _get_data_resource(self, xself, resource_id, data, data_size):
-        pass
+        return 0
     def _get_data_resource_for_scale(self, xself, resource_id, scale_factor, data, data_size):
-        pass
+        return 0
 
 
 class cef_resource_skip_callback_t(Structure):
@@ -2728,7 +2728,7 @@ class cef_resource_skip_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself, bytes_skipped):
-        pass
+        return 0
 
 
 class cef_resource_read_callback_t(Structure):
@@ -2741,7 +2741,7 @@ class cef_resource_read_callback_t(Structure):
         self.cont = self._callbacks[0](self._cont)
 
     def _cont(self, xself, bytes_read):
-        pass
+        return 0
 
 
 class cef_resource_handler_t(Structure):
@@ -2760,19 +2760,19 @@ class cef_resource_handler_t(Structure):
         self.cancel = self._callbacks[6](self._cancel)
 
     def _open(self, xself, request, handle_request, callback):
-        pass
+        return 0
     def _process_request(self, xself, request, callback):
-        pass
+        return 0
     def _get_response_headers(self, xself, response, response_length, redirectUrl):
-        pass
+        return 0
     def _skip(self, xself, bytes_to_skip, bytes_skipped, callback):
-        pass
+        return 0
     def _read(self, xself, data_out, bytes_to_read, bytes_read, callback):
-        pass
+        return 0
     def _read_response(self, xself, data_out, bytes_to_read, bytes_read, callback):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_resource_request_handler_t(Structure):
@@ -2792,21 +2792,21 @@ class cef_resource_request_handler_t(Structure):
         self.on_protocol_execution = self._callbacks[7](self._on_protocol_execution)
 
     def _get_cookie_access_filter(self, xself, browser, frame, request):
-        pass
+        return None
     def _on_before_resource_load(self, xself, browser, frame, request, callback):
-        pass
+        return 0
     def _get_resource_handler(self, xself, browser, frame, request):
-        pass
+        return None
     def _on_resource_redirect(self, xself, browser, frame, request, response, new_url):
-        pass
+        return 0
     def _on_resource_response(self, xself, browser, frame, request, response):
-        pass
+        return 0
     def _get_resource_response_filter(self, xself, browser, frame, request, response):
-        pass
+        return None
     def _on_resource_load_complete(self, xself, browser, frame, request, response, status, received_content_length):
-        pass
+        return 0
     def _on_protocol_execution(self, xself, browser, frame, request, allow_os_execution):
-        pass
+        return 0
 
 
 class cef_cookie_access_filter_t(Structure):
@@ -2820,9 +2820,9 @@ class cef_cookie_access_filter_t(Structure):
         self.can_save_cookie = self._callbacks[1](self._can_save_cookie)
 
     def _can_send_cookie(self, xself, browser, frame, request, cookie):
-        pass
+        return 0
     def _can_save_cookie(self, xself, browser, frame, request, response, cookie):
-        pass
+        return 0
 
 
 class cef_response_t(Structure):
@@ -2851,39 +2851,39 @@ class cef_response_t(Structure):
         self.set_url = self._callbacks[16](self._set_url)
 
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _get_error(self, xself):
-        pass
+        return 0
     def _set_error(self, xself, error):
-        pass
+        return 0
     def _get_status(self, xself):
-        pass
+        return 0
     def _set_status(self, xself, status):
-        pass
+        return 0
     def _get_status_text(self, xself):
-        pass
+        return None
     def _set_status_text(self, xself, statusText):
-        pass
+        return 0
     def _get_mime_type(self, xself):
-        pass
+        return None
     def _set_mime_type(self, xself, mimeType):
-        pass
+        return 0
     def _get_charset(self, xself):
-        pass
+        return None
     def _set_charset(self, xself, charset):
-        pass
+        return 0
     def _get_header_by_name(self, xself, name):
-        pass
+        return None
     def _set_header_by_name(self, xself, name, value, overwrite):
-        pass
+        return 0
     def _get_header_map(self, xself, headerMap):
-        pass
+        return 0
     def _set_header_map(self, xself, headerMap):
-        pass
+        return 0
     def _get_url(self, xself):
-        pass
+        return None
     def _set_url(self, xself, url):
-        pass
+        return 0
 
 
 class cef_response_filter_t(Structure):
@@ -2897,9 +2897,9 @@ class cef_response_filter_t(Structure):
         self.filter = self._callbacks[1](self._filter)
 
     def _init_filter(self, xself):
-        pass
+        return 0
     def _filter(self, xself, data_in, data_in_size, data_in_read, data_out, data_out_size, data_out_written):
-        pass
+        return 0
 
 
 class cef_scheme_registrar_t(Structure):
@@ -2912,7 +2912,7 @@ class cef_scheme_registrar_t(Structure):
         self.add_custom_scheme = self._callbacks[0](self._add_custom_scheme)
 
     def _add_custom_scheme(self, xself, scheme_name, options):
-        pass
+        return 0
 
 
 class cef_scheme_handler_factory_t(Structure):
@@ -2925,7 +2925,7 @@ class cef_scheme_handler_factory_t(Structure):
         self.create = self._callbacks[0](self._create)
 
     def _create(self, xself, browser, frame, scheme_name, request):
-        pass
+        return None
 
 
 class cef_server_t(Structure):
@@ -2950,31 +2950,31 @@ class cef_server_t(Structure):
         self.send_web_socket_message = self._callbacks[12](self._send_web_socket_message)
 
     def _get_task_runner(self, xself):
-        pass
+        return None
     def _shutdown(self, xself):
-        pass
+        return 0
     def _is_running(self, xself):
-        pass
+        return 0
     def _get_address(self, xself):
-        pass
+        return None
     def _has_connection(self, xself):
-        pass
+        return 0
     def _is_valid_connection(self, xself, connection_id):
-        pass
+        return 0
     def _send_http200response(self, xself, connection_id, content_type, data, data_size):
-        pass
+        return 0
     def _send_http404response(self, xself, connection_id):
-        pass
+        return 0
     def _send_http500response(self, xself, connection_id, error_message):
-        pass
+        return 0
     def _send_http_response(self, xself, connection_id, response_code, content_type, content_length, extra_headers):
-        pass
+        return 0
     def _send_raw_data(self, xself, connection_id, data, data_size):
-        pass
+        return 0
     def _close_connection(self, xself, connection_id):
-        pass
+        return 0
     def _send_web_socket_message(self, xself, connection_id, data, data_size):
-        pass
+        return 0
 
 
 class cef_server_handler_t(Structure):
@@ -2994,21 +2994,21 @@ class cef_server_handler_t(Structure):
         self.on_web_socket_message = self._callbacks[7](self._on_web_socket_message)
 
     def _on_server_created(self, xself, server):
-        pass
+        return 0
     def _on_server_destroyed(self, xself, server):
-        pass
+        return 0
     def _on_client_connected(self, xself, server, connection_id):
-        pass
+        return 0
     def _on_client_disconnected(self, xself, server, connection_id):
-        pass
+        return 0
     def _on_http_request(self, xself, server, connection_id, client_address, request):
-        pass
+        return 0
     def _on_web_socket_request(self, xself, server, connection_id, client_address, request, callback):
-        pass
+        return 0
     def _on_web_socket_connected(self, xself, server, connection_id):
-        pass
+        return 0
     def _on_web_socket_message(self, xself, server, connection_id, data, data_size):
-        pass
+        return 0
 
 
 class cef_shared_memory_region_t(Structure):
@@ -3023,11 +3023,11 @@ class cef_shared_memory_region_t(Structure):
         self.memory = self._callbacks[2](self._memory)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _size(self, xself):
-        pass
+        return 0
     def _memory(self, xself):
-        pass
+        return None
 
 
 class cef_shared_process_message_builder_t(Structure):
@@ -3043,13 +3043,13 @@ class cef_shared_process_message_builder_t(Structure):
         self.build = self._callbacks[3](self._build)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _size(self, xself):
-        pass
+        return 0
     def _memory(self, xself):
-        pass
+        return None
     def _build(self, xself):
-        pass
+        return None
 
 
 class cef_sslinfo_t(Structure):
@@ -3063,9 +3063,9 @@ class cef_sslinfo_t(Structure):
         self.get_x509certificate = self._callbacks[1](self._get_x509certificate)
 
     def _get_cert_status(self, xself):
-        pass
+        return 0
     def _get_x509certificate(self, xself):
-        pass
+        return None
 
 
 class cef_sslstatus_t(Structure):
@@ -3082,15 +3082,15 @@ class cef_sslstatus_t(Structure):
         self.get_x509certificate = self._callbacks[4](self._get_x509certificate)
 
     def _is_secure_connection(self, xself):
-        pass
+        return 0
     def _get_cert_status(self, xself):
-        pass
+        return 0
     def _get_sslversion(self, xself):
-        pass
+        return 0
     def _get_content_status(self, xself):
-        pass
+        return 0
     def _get_x509certificate(self, xself):
-        pass
+        return None
 
 
 class cef_read_handler_t(Structure):
@@ -3107,15 +3107,15 @@ class cef_read_handler_t(Structure):
         self.may_block = self._callbacks[4](self._may_block)
 
     def _read(self, xself, ptr, size, n):
-        pass
+        return 0
     def _seek(self, xself, offset, whence):
-        pass
+        return 0
     def _tell(self, xself):
-        pass
+        return 0
     def _eof(self, xself):
-        pass
+        return 0
     def _may_block(self, xself):
-        pass
+        return 0
 
 
 class cef_stream_reader_t(Structure):
@@ -3132,15 +3132,15 @@ class cef_stream_reader_t(Structure):
         self.may_block = self._callbacks[4](self._may_block)
 
     def _read(self, xself, ptr, size, n):
-        pass
+        return 0
     def _seek(self, xself, offset, whence):
-        pass
+        return 0
     def _tell(self, xself):
-        pass
+        return 0
     def _eof(self, xself):
-        pass
+        return 0
     def _may_block(self, xself):
-        pass
+        return 0
 
 
 class cef_write_handler_t(Structure):
@@ -3157,15 +3157,15 @@ class cef_write_handler_t(Structure):
         self.may_block = self._callbacks[4](self._may_block)
 
     def _write(self, xself, ptr, size, n):
-        pass
+        return 0
     def _seek(self, xself, offset, whence):
-        pass
+        return 0
     def _tell(self, xself):
-        pass
+        return 0
     def _flush(self, xself):
-        pass
+        return 0
     def _may_block(self, xself):
-        pass
+        return 0
 
 
 class cef_stream_writer_t(Structure):
@@ -3182,15 +3182,15 @@ class cef_stream_writer_t(Structure):
         self.may_block = self._callbacks[4](self._may_block)
 
     def _write(self, xself, ptr, size, n):
-        pass
+        return 0
     def _seek(self, xself, offset, whence):
-        pass
+        return 0
     def _tell(self, xself):
-        pass
+        return 0
     def _flush(self, xself):
-        pass
+        return 0
     def _may_block(self, xself):
-        pass
+        return 0
 
 
 class cef_string_visitor_t(Structure):
@@ -3203,7 +3203,7 @@ class cef_string_visitor_t(Structure):
         self.visit = self._callbacks[0](self._visit)
 
     def _visit(self, xself, string):
-        pass
+        return 0
 
 
 class cef_task_t(Structure):
@@ -3216,7 +3216,7 @@ class cef_task_t(Structure):
         self.execute = self._callbacks[0](self._execute)
 
     def _execute(self, xself):
-        pass
+        return 0
 
 
 class cef_task_runner_t(Structure):
@@ -3233,15 +3233,15 @@ class cef_task_runner_t(Structure):
         self.post_delayed_task = self._callbacks[4](self._post_delayed_task)
 
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _belongs_to_current_thread(self, xself):
-        pass
+        return 0
     def _belongs_to_thread(self, xself, threadId):
-        pass
+        return 0
     def _post_task(self, xself, task):
-        pass
+        return 0
     def _post_delayed_task(self, xself, task, delay_ms):
-        pass
+        return 0
 
 
 class cef_thread_t(Structure):
@@ -3257,13 +3257,13 @@ class cef_thread_t(Structure):
         self.is_running = self._callbacks[3](self._is_running)
 
     def _get_task_runner(self, xself):
-        pass
+        return None
     def _get_platform_thread_id(self, xself):
-        pass
+        return 0
     def _stop(self, xself):
-        pass
+        return 0
     def _is_running(self, xself):
-        pass
+        return 0
 
 
 class cef_end_tracing_callback_t(Structure):
@@ -3276,7 +3276,7 @@ class cef_end_tracing_callback_t(Structure):
         self.on_end_tracing_complete = self._callbacks[0](self._on_end_tracing_complete)
 
     def _on_end_tracing_complete(self, xself, tracing_file):
-        pass
+        return 0
 
 
 class cef_urlrequest_t(Structure):
@@ -3295,19 +3295,19 @@ class cef_urlrequest_t(Structure):
         self.cancel = self._callbacks[6](self._cancel)
 
     def _get_request(self, xself):
-        pass
+        return None
     def _get_client(self, xself):
-        pass
+        return None
     def _get_request_status(self, xself):
-        pass
+        return 0
     def _get_request_error(self, xself):
-        pass
+        return 0
     def _get_response(self, xself):
-        pass
+        return None
     def _response_was_cached(self, xself):
-        pass
+        return 0
     def _cancel(self, xself):
-        pass
+        return 0
 
 
 class cef_urlrequest_client_t(Structure):
@@ -3324,15 +3324,15 @@ class cef_urlrequest_client_t(Structure):
         self.get_auth_credentials = self._callbacks[4](self._get_auth_credentials)
 
     def _on_request_complete(self, xself, request):
-        pass
+        return 0
     def _on_upload_progress(self, xself, request, current, total):
-        pass
+        return 0
     def _on_download_progress(self, xself, request, current, total):
-        pass
+        return 0
     def _on_download_data(self, xself, request, data, data_length):
-        pass
+        return 0
     def _get_auth_credentials(self, xself, isProxy, host, port, realm, scheme, callback):
-        pass
+        return 0
 
 
 class cef_v8context_t(Structure):
@@ -3353,23 +3353,23 @@ class cef_v8context_t(Structure):
         self.eval = self._callbacks[8](self._eval)
 
     def _get_task_runner(self, xself):
-        pass
+        return None
     def _is_valid(self, xself):
-        pass
+        return 0
     def _get_browser(self, xself):
-        pass
+        return None
     def _get_frame(self, xself):
-        pass
+        return None
     def _get_global(self, xself):
-        pass
+        return None
     def _enter(self, xself):
-        pass
+        return 0
     def _exit(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _eval(self, xself, code, script_url, start_line, retval, exception):
-        pass
+        return 0
 
 
 class cef_v8handler_t(Structure):
@@ -3382,7 +3382,7 @@ class cef_v8handler_t(Structure):
         self.execute = self._callbacks[0](self._execute)
 
     def _execute(self, xself, name, object, argumentsCount, arguments, retval, exception):
-        pass
+        return 0
 
 
 class cef_v8accessor_t(Structure):
@@ -3396,9 +3396,9 @@ class cef_v8accessor_t(Structure):
         self.set = self._callbacks[1](self._set)
 
     def _get(self, xself, name, object, retval, exception):
-        pass
+        return 0
     def _set(self, xself, name, object, value, exception):
-        pass
+        return 0
 
 
 class cef_v8interceptor_t(Structure):
@@ -3414,13 +3414,13 @@ class cef_v8interceptor_t(Structure):
         self.set_byindex = self._callbacks[3](self._set_byindex)
 
     def _get_byname(self, xself, name, object, retval, exception):
-        pass
+        return 0
     def _get_byindex(self, xself, index, object, retval, exception):
-        pass
+        return 0
     def _set_byname(self, xself, name, object, value, exception):
-        pass
+        return 0
     def _set_byindex(self, xself, index, object, value, exception):
-        pass
+        return 0
 
 
 class cef_v8exception_t(Structure):
@@ -3440,21 +3440,21 @@ class cef_v8exception_t(Structure):
         self.get_end_column = self._callbacks[7](self._get_end_column)
 
     def _get_message(self, xself):
-        pass
+        return None
     def _get_source_line(self, xself):
-        pass
+        return None
     def _get_script_resource_name(self, xself):
-        pass
+        return None
     def _get_line_number(self, xself):
-        pass
+        return 0
     def _get_start_position(self, xself):
-        pass
+        return 0
     def _get_end_position(self, xself):
-        pass
+        return 0
     def _get_start_column(self, xself):
-        pass
+        return 0
     def _get_end_column(self, xself):
-        pass
+        return 0
 
 
 class cef_v8array_buffer_release_callback_t(Structure):
@@ -3467,7 +3467,7 @@ class cef_v8array_buffer_release_callback_t(Structure):
         self.release_buffer = self._callbacks[0](self._release_buffer)
 
     def _release_buffer(self, xself, buffer):
-        pass
+        return 0
 
 
 class cef_v8value_t(Structure):
@@ -3529,105 +3529,105 @@ class cef_v8value_t(Structure):
         self.reject_promise = self._callbacks[49](self._reject_promise)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_undefined(self, xself):
-        pass
+        return 0
     def _is_null(self, xself):
-        pass
+        return 0
     def _is_bool(self, xself):
-        pass
+        return 0
     def _is_int(self, xself):
-        pass
+        return 0
     def _is_uint(self, xself):
-        pass
+        return 0
     def _is_double(self, xself):
-        pass
+        return 0
     def _is_date(self, xself):
-        pass
+        return 0
     def _is_string(self, xself):
-        pass
+        return 0
     def _is_object(self, xself):
-        pass
+        return 0
     def _is_array(self, xself):
-        pass
+        return 0
     def _is_array_buffer(self, xself):
-        pass
+        return 0
     def _is_function(self, xself):
-        pass
+        return 0
     def _is_promise(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _get_bool_value(self, xself):
-        pass
+        return 0
     def _get_int_value(self, xself):
-        pass
+        return 0
     def _get_uint_value(self, xself):
-        pass
+        return 0
     def _get_double_value(self, xself):
-        pass
+        return 0
     def _get_date_value(self, xself):
-        pass
+        return 0
     def _get_string_value(self, xself):
-        pass
+        return None
     def _is_user_created(self, xself):
-        pass
+        return 0
     def _has_exception(self, xself):
-        pass
+        return 0
     def _get_exception(self, xself):
-        pass
+        return None
     def _clear_exception(self, xself):
-        pass
+        return 0
     def _will_rethrow_exceptions(self, xself):
-        pass
+        return 0
     def _set_rethrow_exceptions(self, xself, rethrow):
-        pass
+        return 0
     def _has_value_bykey(self, xself, key):
-        pass
+        return 0
     def _has_value_byindex(self, xself, index):
-        pass
+        return 0
     def _delete_value_bykey(self, xself, key):
-        pass
+        return 0
     def _delete_value_byindex(self, xself, index):
-        pass
+        return 0
     def _get_value_bykey(self, xself, key):
-        pass
+        return None
     def _get_value_byindex(self, xself, index):
-        pass
+        return None
     def _set_value_bykey(self, xself, key, value, attribute):
-        pass
+        return 0
     def _set_value_byindex(self, xself, index, value):
-        pass
+        return 0
     def _set_value_byaccessor(self, xself, key, settings, attribute):
-        pass
+        return 0
     def _get_keys(self, xself, keys):
-        pass
+        return 0
     def _set_user_data(self, xself, user_data):
-        pass
+        return 0
     def _get_user_data(self, xself):
-        pass
+        return None
     def _get_externally_allocated_memory(self, xself):
-        pass
+        return 0
     def _adjust_externally_allocated_memory(self, xself, change_in_bytes):
-        pass
+        return 0
     def _get_array_length(self, xself):
-        pass
+        return 0
     def _get_array_buffer_release_callback(self, xself):
-        pass
+        return None
     def _neuter_array_buffer(self, xself):
-        pass
+        return 0
     def _get_function_name(self, xself):
-        pass
+        return None
     def _get_function_handler(self, xself):
-        pass
+        return None
     def _execute_function(self, xself, object, argumentsCount, arguments):
-        pass
+        return None
     def _execute_function_with_context(self, xself, context, object, argumentsCount, arguments):
-        pass
+        return None
     def _resolve_promise(self, xself, arg):
-        pass
+        return 0
     def _reject_promise(self, xself, errorMsg):
-        pass
+        return 0
 
 
 class cef_v8stack_trace_t(Structure):
@@ -3642,11 +3642,11 @@ class cef_v8stack_trace_t(Structure):
         self.get_frame = self._callbacks[2](self._get_frame)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _get_frame_count(self, xself):
-        pass
+        return 0
     def _get_frame(self, xself, index):
-        pass
+        return None
 
 
 class cef_v8stack_frame_t(Structure):
@@ -3666,21 +3666,21 @@ class cef_v8stack_frame_t(Structure):
         self.is_constructor = self._callbacks[7](self._is_constructor)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _get_script_name(self, xself):
-        pass
+        return None
     def _get_script_name_or_source_url(self, xself):
-        pass
+        return None
     def _get_function_name(self, xself):
-        pass
+        return None
     def _get_line_number(self, xself):
-        pass
+        return 0
     def _get_column(self, xself):
-        pass
+        return 0
     def _is_eval(self, xself):
-        pass
+        return 0
     def _is_constructor(self, xself):
-        pass
+        return 0
 
 
 class cef_value_t(Structure):
@@ -3714,49 +3714,49 @@ class cef_value_t(Structure):
         self.set_list = self._callbacks[21](self._set_list)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_owned(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _is_equal(self, xself, that):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return None
     def _get_type(self, xself):
-        pass
+        return 0
     def _get_bool(self, xself):
-        pass
+        return 0
     def _get_int(self, xself):
-        pass
+        return 0
     def _get_double(self, xself):
-        pass
+        return 0
     def _get_string(self, xself):
-        pass
+        return None
     def _get_binary(self, xself):
-        pass
+        return None
     def _get_dictionary(self, xself):
-        pass
+        return None
     def _get_list(self, xself):
-        pass
+        return None
     def _set_null(self, xself):
-        pass
+        return 0
     def _set_bool(self, xself, value):
-        pass
+        return 0
     def _set_int(self, xself, value):
-        pass
+        return 0
     def _set_double(self, xself, value):
-        pass
+        return 0
     def _set_string(self, xself, value):
-        pass
+        return 0
     def _set_binary(self, xself, value):
-        pass
+        return 0
     def _set_dictionary(self, xself, value):
-        pass
+        return 0
     def _set_list(self, xself, value):
-        pass
+        return 0
 
 
 class cef_binary_value_t(Structure):
@@ -3775,19 +3775,19 @@ class cef_binary_value_t(Structure):
         self.get_data = self._callbacks[6](self._get_data)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_owned(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _is_equal(self, xself, that):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return None
     def _get_size(self, xself):
-        pass
+        return 0
     def _get_data(self, xself, buffer, buffer_size, data_offset):
-        pass
+        return 0
 
 
 class cef_dictionary_value_t(Structure):
@@ -3828,63 +3828,63 @@ class cef_dictionary_value_t(Structure):
         self.set_list = self._callbacks[28](self._set_list)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_owned(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _is_equal(self, xself, that):
-        pass
+        return 0
     def _copy(self, xself, exclude_empty_children):
-        pass
+        return None
     def _get_size(self, xself):
-        pass
+        return 0
     def _clear(self, xself):
-        pass
+        return 0
     def _has_key(self, xself, key):
-        pass
+        return 0
     def _get_keys(self, xself, keys):
-        pass
+        return 0
     def _remove(self, xself, key):
-        pass
+        return 0
     def _get_type(self, xself, key):
-        pass
+        return 0
     def _get_value(self, xself, key):
-        pass
+        return None
     def _get_bool(self, xself, key):
-        pass
+        return 0
     def _get_int(self, xself, key):
-        pass
+        return 0
     def _get_double(self, xself, key):
-        pass
+        return 0
     def _get_string(self, xself, key):
-        pass
+        return None
     def _get_binary(self, xself, key):
-        pass
+        return None
     def _get_dictionary(self, xself, key):
-        pass
+        return None
     def _get_list(self, xself, key):
-        pass
+        return None
     def _set_value(self, xself, key, value):
-        pass
+        return 0
     def _set_null(self, xself, key):
-        pass
+        return 0
     def _set_bool(self, xself, key, value):
-        pass
+        return 0
     def _set_int(self, xself, key, value):
-        pass
+        return 0
     def _set_double(self, xself, key, value):
-        pass
+        return 0
     def _set_string(self, xself, key, value):
-        pass
+        return 0
     def _set_binary(self, xself, key, value):
-        pass
+        return 0
     def _set_dictionary(self, xself, key, value):
-        pass
+        return 0
     def _set_list(self, xself, key, value):
-        pass
+        return 0
 
 
 class cef_list_value_t(Structure):
@@ -3924,61 +3924,61 @@ class cef_list_value_t(Structure):
         self.set_list = self._callbacks[27](self._set_list)
 
     def _is_valid(self, xself):
-        pass
+        return 0
     def _is_owned(self, xself):
-        pass
+        return 0
     def _is_read_only(self, xself):
-        pass
+        return 0
     def _is_same(self, xself, that):
-        pass
+        return 0
     def _is_equal(self, xself, that):
-        pass
+        return 0
     def _copy(self, xself):
-        pass
+        return None
     def _set_size(self, xself, size):
-        pass
+        return 0
     def _get_size(self, xself):
-        pass
+        return 0
     def _clear(self, xself):
-        pass
+        return 0
     def _remove(self, xself, index):
-        pass
+        return 0
     def _get_type(self, xself, index):
-        pass
+        return 0
     def _get_value(self, xself, index):
-        pass
+        return None
     def _get_bool(self, xself, index):
-        pass
+        return 0
     def _get_int(self, xself, index):
-        pass
+        return 0
     def _get_double(self, xself, index):
-        pass
+        return 0
     def _get_string(self, xself, index):
-        pass
+        return None
     def _get_binary(self, xself, index):
-        pass
+        return None
     def _get_dictionary(self, xself, index):
-        pass
+        return None
     def _get_list(self, xself, index):
-        pass
+        return None
     def _set_value(self, xself, index, value):
-        pass
+        return 0
     def _set_null(self, xself, index):
-        pass
+        return 0
     def _set_bool(self, xself, index, value):
-        pass
+        return 0
     def _set_int(self, xself, index, value):
-        pass
+        return 0
     def _set_double(self, xself, index, value):
-        pass
+        return 0
     def _set_string(self, xself, index, value):
-        pass
+        return 0
     def _set_binary(self, xself, index, value):
-        pass
+        return 0
     def _set_dictionary(self, xself, index, value):
-        pass
+        return 0
     def _set_list(self, xself, index, value):
-        pass
+        return 0
 
 
 class cef_waitable_event_t(Structure):
@@ -3995,15 +3995,15 @@ class cef_waitable_event_t(Structure):
         self.timed_wait = self._callbacks[4](self._timed_wait)
 
     def _reset(self, xself):
-        pass
+        return 0
     def _signal(self, xself):
-        pass
+        return 0
     def _is_signaled(self, xself):
-        pass
+        return 0
     def _wait(self, xself):
-        pass
+        return 0
     def _timed_wait(self, xself, max_ms):
-        pass
+        return 0
 
 
 class cef_x509cert_principal_t(Structure):
@@ -4024,23 +4024,23 @@ class cef_x509cert_principal_t(Structure):
         self.get_domain_components = self._callbacks[8](self._get_domain_components)
 
     def _get_display_name(self, xself):
-        pass
+        return None
     def _get_common_name(self, xself):
-        pass
+        return None
     def _get_locality_name(self, xself):
-        pass
+        return None
     def _get_state_or_province_name(self, xself):
-        pass
+        return None
     def _get_country_name(self, xself):
-        pass
+        return None
     def _get_street_addresses(self, xself, addresses):
-        pass
+        return 0
     def _get_organization_names(self, xself, names):
-        pass
+        return 0
     def _get_organization_unit_names(self, xself, names):
-        pass
+        return 0
     def _get_domain_components(self, xself, components):
-        pass
+        return 0
 
 
 class cef_x509certificate_t(Structure):
@@ -4062,25 +4062,25 @@ class cef_x509certificate_t(Structure):
         self.get_pemencoded_issuer_chain = self._callbacks[9](self._get_pemencoded_issuer_chain)
 
     def _get_subject(self, xself):
-        pass
+        return None
     def _get_issuer(self, xself):
-        pass
+        return None
     def _get_serial_number(self, xself):
-        pass
+        return None
     def _get_valid_start(self, xself):
-        pass
+        return 0
     def _get_valid_expiry(self, xself):
-        pass
+        return 0
     def _get_derencoded(self, xself):
-        pass
+        return None
     def _get_pemencoded(self, xself):
-        pass
+        return None
     def _get_issuer_chain_size(self, xself):
-        pass
+        return 0
     def _get_derencoded_issuer_chain(self, xself, chainCount, chain):
-        pass
+        return 0
     def _get_pemencoded_issuer_chain(self, xself, chainCount, chain):
-        pass
+        return 0
 
 
 class cef_xml_reader_t(Structure):
@@ -4121,63 +4121,63 @@ class cef_xml_reader_t(Structure):
         self.move_to_carrying_element = self._callbacks[28](self._move_to_carrying_element)
 
     def _move_to_next_node(self, xself):
-        pass
+        return 0
     def _close(self, xself):
-        pass
+        return 0
     def _has_error(self, xself):
-        pass
+        return 0
     def _get_error(self, xself):
-        pass
+        return None
     def _get_type(self, xself):
-        pass
+        return 0
     def _get_depth(self, xself):
-        pass
+        return 0
     def _get_local_name(self, xself):
-        pass
+        return None
     def _get_prefix(self, xself):
-        pass
+        return None
     def _get_qualified_name(self, xself):
-        pass
+        return None
     def _get_namespace_uri(self, xself):
-        pass
+        return None
     def _get_base_uri(self, xself):
-        pass
+        return None
     def _get_xml_lang(self, xself):
-        pass
+        return None
     def _is_empty_element(self, xself):
-        pass
+        return 0
     def _has_value(self, xself):
-        pass
+        return 0
     def _get_value(self, xself):
-        pass
+        return None
     def _has_attributes(self, xself):
-        pass
+        return 0
     def _get_attribute_count(self, xself):
-        pass
+        return 0
     def _get_attribute_byindex(self, xself, index):
-        pass
+        return None
     def _get_attribute_byqname(self, xself, qualifiedName):
-        pass
+        return None
     def _get_attribute_bylname(self, xself, localName, namespaceURI):
-        pass
+        return None
     def _get_inner_xml(self, xself):
-        pass
+        return None
     def _get_outer_xml(self, xself):
-        pass
+        return None
     def _get_line_number(self, xself):
-        pass
+        return 0
     def _move_to_attribute_byindex(self, xself, index):
-        pass
+        return 0
     def _move_to_attribute_byqname(self, xself, qualifiedName):
-        pass
+        return 0
     def _move_to_attribute_bylname(self, xself, localName, namespaceURI):
-        pass
+        return 0
     def _move_to_first_attribute(self, xself):
-        pass
+        return 0
     def _move_to_next_attribute(self, xself):
-        pass
+        return 0
     def _move_to_carrying_element(self, xself):
-        pass
+        return 0
 
 
 class cef_zip_reader_t(Structure):
@@ -4201,29 +4201,29 @@ class cef_zip_reader_t(Structure):
         self.eof = self._callbacks[11](self._eof)
 
     def _move_to_first_file(self, xself):
-        pass
+        return 0
     def _move_to_next_file(self, xself):
-        pass
+        return 0
     def _move_to_file(self, xself, fileName, caseSensitive):
-        pass
+        return 0
     def _close(self, xself):
-        pass
+        return 0
     def _get_file_name(self, xself):
-        pass
+        return None
     def _get_file_size(self, xself):
-        pass
+        return 0
     def _get_file_last_modified(self, xself):
-        pass
+        return 0
     def _open_file(self, xself, password):
-        pass
+        return 0
     def _close_file(self, xself):
-        pass
+        return 0
     def _read_file(self, xself, buffer, bufferSize):
-        pass
+        return 0
     def _tell(self, xself):
-        pass
+        return 0
     def _eof(self, xself):
-        pass
+        return 0
 
 
 cef_accessibility_handler_t._callbacks = (

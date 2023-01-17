@@ -222,12 +222,17 @@ class {}(Structure):
 
             fp.write("\n")
             for typedata in typedef.typedata:
+                result = typedata.result
+                if result.split("(")[0] == "POINTER":
+                    result = None
+                else:
+                    result = 0
                 fp.write(
                     """\
     def _{}(self{}):
-        pass
+        return {}
 """.format(
-                        typedata.name, typedata.sargnames
+                        typedata.name, typedata.sargnames, result
                     )
                 )
 
