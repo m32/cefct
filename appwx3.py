@@ -10,9 +10,9 @@ from cefct import libcef
 from cefappcommon import Client
 if libcef.win:
     import win32con
-
-libX11 = ctypes.CDLL("libX11.so.6")
-linuxhelper = ctypes.CDLL("./linuxhelper.so")
+else:
+    libX11 = ctypes.CDLL("libX11.so.6")
+    linuxhelper = ctypes.CDLL("./linuxhelper.so")
 
 useTimer = False
 #useTimer = True
