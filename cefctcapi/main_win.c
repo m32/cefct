@@ -20,20 +20,20 @@
 // Globals
 cef_life_span_handler_t g_life_span_handler;
 
+void cef_str(char *s, cef_string_t *t)
+{
+    cef_string_utf8_to_utf16(s, strlen(s), t);
+}
 
 int main(int argc, char** argv) {
     cef_main_args_t main_args;
     cef_app_t app;
     cef_settings_t settings;
     cef_window_info_t window_info;
-    char window_name[] = "cefcapi example";
-    cef_string_t cef_window_name;
-    char url[] = "http://html5test.com/";
     cef_string_t cef_url;
+    char url[] = "http://html5test.com/";
     cef_client_t client;
     cef_browser_settings_t browser_settings;
-    char browser_subprocess_path[] = "W:\\trisoft\\cefct\\bin\\cefclient.exe";
-    cef_string_t cef_browser_subprocess_path;
     int code;
 
 #define ZERO(s) memset(&s, 0, sizeof(s))
@@ -42,11 +42,9 @@ int main(int argc, char** argv) {
     ZERO(app);
     ZERO(settings);
     ZERO(window_info);
-    ZERO(cef_window_name);
     ZERO(cef_url);
     ZERO(client);
     ZERO(browser_settings);
-    ZERO(cef_browser_subprocess_path);
 
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
@@ -96,17 +94,18 @@ int main(int argc, char** argv) {
     settings.size = sizeof(cef_settings_t);
     settings.log_severity = LOGSEVERITY_WARNING; // Show only warnings/errors
     settings.no_sandbox = 1;
-    cef_string_utf8_to_utf16(window_name, strlen(window_name),
-                             &cef_window_name);
-    cef_string_utf8_to_utf16(browser_subprocess_path, strlen(browser_subprocess_path),
-                             &cef_browser_subprocess_path);
-    settings.browser_subprocess_path = cef_browser_subprocess_path;
+    cef_str("W:\\trisoft\\cefct\\bin\\cefclient.exe", &settings.browser_subprocess_path);
+    cef_str("w:\\trisoft\\cefct\\bin-cefdata\\root", &settings.root_cache_path);
+    cef_str("w:\\trisoft\\cefct\\bin-cefdata\\root\\cache", &settings.cache_path);
+    cef_str("w:\\trisoft\\cefct\\bin-cefdata\\user-data", &settings.user_data_path);
+    cef_str("w:\\trisoft\\cefct\\bin-cefdata\\cef.log", &settings.log_file);
 
     // Initialize CEF
     printf("cef_initialize\n");
     cef_initialize(&main_args, &settings, &app, NULL);
 
     // Window info
+    cef_str("cef window", &window_info.window_name);
     window_info.style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN \
             | WS_CLIPSIBLINGS | WS_VISIBLE;
     window_info.parent_window = NULL;
@@ -115,13 +114,8 @@ int main(int argc, char** argv) {
     window_info.bounds.width = CW_USEDEFAULT;
     window_info.bounds.height = CW_USEDEFAULT;
 
-    // Window info - window title
-    cef_string_utf8_to_utf16(window_name, strlen(window_name),
-                             &cef_window_name);
-    window_info.window_name = cef_window_name;
-
     // Initial url
-    cef_string_utf8_to_utf16(url, strlen(url), &cef_url);
+    cef_str(url, &cef_url);
 
     // Browser settings. It is mandatory to set the
     // "size" member.
@@ -134,7 +128,7 @@ int main(int argc, char** argv) {
     // Create browser asynchronously. There is also a
     // synchronous version of this function available.
     printf("cef_browser_host_create_browser\n");
-    cef_browser_host_create_browser(
+    cef_browser_t *browser = cef_browser_host_create_browser_sync(
         &window_info,
         &client,
         &cef_url,
@@ -153,6 +147,14 @@ int main(int argc, char** argv) {
     // for running tasks on CEF UI thread.
     printf("cef_run_message_loop\n");
     cef_run_message_loop();
+
+    printf("release browser\n");
+    browser->base.release(&browser->base);
+#if 0
+    cef_request_context_t *ctx = cef_request_context_get_global_context();
+    ctx->base.base.add_ref(&ctx->base.base);
+    ctx->base.base.release(&ctx->base.base);
+#endif
 
     // Shutdown CEF
     printf("cef_shutdown\n");
