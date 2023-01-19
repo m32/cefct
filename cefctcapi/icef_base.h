@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <unistd.h>
 #include "include/capi/cef_base_capi.h"
 
 // Set to 1 to check if add_ref() and release()
