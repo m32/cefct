@@ -1,5 +1,5 @@
 gcc -std=c99 -Wall -Werror -o cefcapi-gtk3 \
--I. -I../cef -Wl,-rpath,. \
+-I. -I../cef -Wl,-rpath,../bin \
 -L ../bin \
 main_linux.c \
 -lX11 -lcef \

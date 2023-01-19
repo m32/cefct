@@ -122,7 +122,8 @@ int main(int argc, char** argv) {
     XSetIOErrorHandler(x11_io_error_handler);
 
     // Initial url
-    char url[] = "https://google.com/";
+//    char url[] = "https://google.com/";
+    char url[] = "http://html5test.com/";
     cef_string_t cef_url = {};
     cef_string_utf8_to_utf16(url, strlen(url), &cef_url);
 
