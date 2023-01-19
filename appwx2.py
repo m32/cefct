@@ -7,6 +7,7 @@ import time
 import wx
 import ctypes as ct
 from cefct import libcef
+import cefappcommon
 from cefappcommon import Client
 if libcef.win:
     import win32con
@@ -35,7 +36,6 @@ useTimer = False
 #useTimer = True
 URL = "https://www.trisoft.com.pl/"
 URL = "http://html5test.com/"
-browser = None
 
 class Main(wx.Frame):
     def __init__(self, parent):
@@ -84,12 +84,11 @@ class Main(wx.Frame):
         libcef.cef_do_message_loop_work()
 
     def OnClose(self, event):
-        global browser
         if self.timer:
             self.timer.Stop()
             self.timer = None
             time.sleep(1)
-        if browser is None:
+        if cefappcommon.browser is None:
             if not useTimer:
                 libcef.cef_quit_message_loop()
             event.Skip()
@@ -98,15 +97,15 @@ class Main(wx.Frame):
             return
 
         #self.client.life_span_handler.OnBeforeClose()
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         hwnd = host.contents.get_window_handle(host)
         #if libcef.win:
         #    hwnd = ct.windll.user32.GetAncestor(hwnd, win32con.GA_ROOT)
         #    ct.windll.user32.PostMessageW(hwnd, win32con.WM_CLOSE, 0, 0)
-        browser.contents.stop_load(browser, 1)
+        cefappcommon.browser.contents.stop_load(cefappcommon.browser, 1)
         host.contents.close_browser(host, 1)
-        browser = None
+        cefappcommon.browser = None
         event.Skip()
         #gc.collect()
         print('wx.Destroy.1')
@@ -150,8 +149,7 @@ class Main(wx.Frame):
         extra_info = None
         request_context = None
 
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
+        cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
             window_info,
             client,
             cef_url,
@@ -195,8 +193,7 @@ class Main(wx.Frame):
         #cef_request_context_create_context(settings, handler)
         #cef_create_context_shared
 
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
+        cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
             window_info,
             client,
             cef_url,
@@ -206,7 +203,7 @@ class Main(wx.Frame):
         )
 
     def OnBrowser(self, event):
-        if browser is None:
+        if cefappcommon.browser is None:
             self.addBrowserWindow()
             if libcef.win:
                 self.embed_browser_windows()
@@ -215,9 +212,9 @@ class Main(wx.Frame):
 
     zoom = 1
     def OnZoom(self, event):
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         zoom = host.contents.get_zoom_level(host)
         if zoom == 5:
@@ -230,20 +227,20 @@ class Main(wx.Frame):
 
     def OnBrowserWindowSetFocus(self, event):
         print('OnBrowserWindowSetFocus')
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         host.contents.set_focus(host, 1)
         # browser.SetFocus(True)
 
     def OnBrowserWindowSize(self, evt):
         evt.Skip()
-        if browser is None:
+        if cefappcommon.browser is None:
             return
         size = self.browserWindow.GetClientSize()
         # browser.SetBounds(x, y, width, height)
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         hwnd = host.contents.get_window_handle(host)
 

@@ -152,6 +152,7 @@ class AppSetup:
         settings.user_data_path = cef.cef_string_t(os.path.join(cefdataroot, "user-data"))
         settings.log_file = cef.cef_string_t(os.path.join(cefdataroot, "cef.log"))
         settings.log_severity = cef.LOGSEVERITY_DEBUG
+        settings.log_severity = cef.LOGSEVERITY_DEFAULT
         settings.uncaught_exception_stack_size = 200
 
         self.mainArgs = mainArgs
