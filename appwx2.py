@@ -131,14 +131,17 @@ class Main(wx.Frame):
         xid = self.browserWindow.GetHandle()
         assert xid, "Window handle not available"
         (width, height) = self.browserWindow.GetClientSize().Get()
-        global window_info, cef_url, client, browser_settings
 
+        global window_name, window_info, cef_url, client, browser_settings
+
+        window_name = libcef.cef_string_t("cef window xx")
         window_info = libcef.cef_window_info_t()
+        window_info.window_name = window_name
         window_info.parent_window = xid
-        window_info.x = 0
-        window_info.y = 0
-        window_info.width = width
-        window_info.height = height
+        window_info.bounds.x = 0
+        window_info.bounds.y = 0
+        window_info.bounds.width = width
+        window_info.bounds.height = height
 
         cef_url = libcef.cef_string_t(URL)
         client = Client()
@@ -162,7 +165,11 @@ class Main(wx.Frame):
         assert handle_to_use, "Window handle not available"
         (width, height) = self.browserWindow.GetClientSize().Get()
 
+        global window_name, window_info, cef_url, client, browser_settings
+
+        window_name = libcef.cef_string_t("cef window xx")
         window_info = libcef.cef_window_info_t()
+        window_info.window_name = window_name
         window_info.style = (
             win32con.WS_CHILD |
             win32con.WS_CLIPCHILDREN |

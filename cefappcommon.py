@@ -1,6 +1,8 @@
 import ctypes as ct
 from cefct import libcef as cef
 
+browser = None
+
 class CefLoadHandler(cef.cef_load_handler_t):
     def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
         print('CefLoadHandler.on_loading_state_change(browser, {}, {}, {})'.format(
@@ -20,6 +22,9 @@ class CefLoadHandler(cef.cef_load_handler_t):
         ), flush=True)
 
 class CefBrowserProcessHandler(cef.cef_browser_process_handler_t):
+    def _on_register_custom_preferences(self, this, type, registar):
+        print('CefBrowserProcessHandler.on_register_custom_preferences', flush=True)
+
     def _on_context_initialized(self, this):
         print('CefBrowserProcessHandler.on_context_initialized', flush=True)
 
@@ -31,9 +36,11 @@ class CefBrowserProcessHandler(cef.cef_browser_process_handler_t):
             s = cl.get_command_line_string(command_line)
             print('\tcl.string', s)
 
+    def _on_context_initialized(self, this):
+        print('CefBrowserProcessHandler.on_context_initialized', flush=True)
+
     def _on_schedule_message_pump_work(self, this, delay_ms):
-        pass
-        #print('CefBrowserProcessHandler.on_before_child_process_launch', Flush=True)
+        print('CefBrowserProcessHandler.on_schedule_message_pump_work', Flush=True)
 
     def _get_default_client(self, this):
         print('CefBrowserProcessHandler.get_default_client', flush=True)
