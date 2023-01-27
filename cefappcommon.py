@@ -46,16 +46,19 @@ class CefBrowserProcessHandler(cef.cef_browser_process_handler_t):
         print('CefBrowserProcessHandler.get_default_client', flush=True)
 
 class CefLifeSpanHandler(cef.cef_life_span_handler_t):
-    def _on_before_popup(self, *args):
+    def _on_before_popup(self,
+        this, browser, frame, target_url, target_frame_name, target_disposition, user_gesture, poupFeatures,
+        windowsInfo, client, settings, extra_info, no_javascript_access
+    ):
         print('LifeSpanHandler.OnBeforePopup')
         return 0
-    def _on_after_created(self, *args):
+    def _on_after_created(self, this, browser):
         print('LifeSpanHandler.OnAfterCreated')
         pass
-    def _do_close(self, *args):
+    def _do_close(self, this, browser):
         print('LifeSpanHandler.DoClose')
         return 0
-    def _on_before_close(self, *args):
+    def _on_before_close(self, this, browser):
         print('LifeSpanHandler.OnBeforeClose')
         cef.cef_quit_message_loop()
 
