@@ -78,6 +78,7 @@ class Main(wx.Frame):
             event.Skip()
             print('wx.Destroy.0')
             self.Destroy()
+            libcef.cef_quit_message_loop()
             return
 
         host = self.browser.contents.get_host(self.browser)
@@ -93,12 +94,11 @@ class Main(wx.Frame):
             return
         self.browser = None
         self.Destroy()
-        time.sleep(2)
         if self.timer:
             self.timer.Stop()
             self.timer = None
-        if not useTimer:
-            libcef.cef_quit_message_loop()
+        #if not useTimer:
+        #    libcef.cef_quit_message_loop()
         print('/OnClose')
 
     def addBrowserWindow(self):
@@ -191,7 +191,7 @@ class Main(wx.Frame):
 
     zoom = 1
     def OnZoom(self, event):
-        if browser is None:
+        if self.browser is None:
             return
         host = self.browser.contents.get_host(self.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
@@ -206,7 +206,7 @@ class Main(wx.Frame):
 
     def OnBrowserWindowSetFocus(self, event):
         print('OnBrowserWindowSetFocus')
-        if browser is None:
+        if self.browser is None:
             return
         host = self.browser.contents.get_host(self.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
