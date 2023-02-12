@@ -9,6 +9,7 @@ from cefappcommon import Client
 def appmain():
     args = [
         '/devel/bin/python3/bin/python3',
+        '/devel/00mirror-cvs/00-m32/cefct/app0.py',
     ]
     c = cefapp.App()
     print('AppStartup')

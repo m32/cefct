@@ -1,5 +1,6 @@
 #!/usr/bin/env vpython3
 import os
+import sys
 import io
 import re
 
@@ -134,7 +135,8 @@ class TypeDef(Element):
 
 
 class Parser(object):
-    def __init__(self):
+    def __init__(self, ceftop):
+        self.ceftop = ceftop
         self.typedef = {}
         self.export = []
 
@@ -379,7 +381,7 @@ def {}({}):
 """
         )
 
-        fnames = os.listdir("cef/include/capi")
+        fnames = os.listdir(os.path.join(self.ceftop, "include/capi"))
         for fname in sorted(fnames):
             if fname.find("_capi.h") > 0:
                 fp.write(
@@ -389,7 +391,7 @@ def {}({}):
                         fname
                     )
                 )
-        fnames = os.listdir("cef/include/capi/views")
+        fnames = os.listdir(os.path.join(self.ceftop, "include/capi/views"))
         for fname in sorted(fnames):
             if fname.find("_capi.h") > 0:
                 fp.write(
@@ -441,7 +443,7 @@ def cefchecksize(name, t, size):\\n\\
             'CHROME_VERSION_BUILD': 0,
             'CHROME_VERSION_PATCH': 0,
         }
-        for line in open("cef/include/cef_version.h", 'rt').readlines():
+        for line in open(os.path.join(self.ceftop, "include", "cef_version.h"), 'rt').readlines():
             line = line.split()
             if len(line) == 3 and line[0] == '#define':
                 v = versions.get(line[1], None)
@@ -453,30 +455,30 @@ def cefchecksize(name, t, size):\\n\\
         fp.close()
 
     def getfiles(self):
-        fnames = os.listdir("cef/include/capi")
+        fnames = os.listdir(os.path.join(self.ceftop, "include", "capi"))
         for fname in sorted(fnames):
             if fname in ("cef_base_capi.h",):
                 continue
             if fname.split("_")[-1] == "capi.h":
-                fqname = "cef/include/capi/" + fname
+                fqname = os.path.join(self.ceftop, "include", "capi", fname)
                 self.parseFile(fqname)
-        fnames = os.listdir("cef/include/capi/views")
+        fnames = os.listdir(os.path.join(self.ceftop, "include", "capi", "views"))
         for fname in sorted(fnames):
             if fname.split("_")[-1] == "capi.h":
-                fqname = "cef/include/capi/views/" + fname
+                fqname = os.path.join(self.ceftop, "include", "capi", "views", fname)
                 self.parseFile(fqname)
         self.genCefStruct()
         self.genCefSizes()
         self.genCefVersion()
 
     def xgetfiles(self):
-        self.parseFile("cef/include/capi/cef_audio_handler_capi.h")
+        self.parseFile(os.path.join(self.ceftop, "include", "capi", "cef_audio_handler_capi.h"))
         self.genCefStruct()
         self.genCefSizes()
 
 
 def main():
-    cls = Parser()
+    cls = Parser(sys.argv[1])
     cls.getfiles()
 
 

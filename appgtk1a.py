@@ -12,7 +12,7 @@ useTimer = True
 useTimer = False
 
 
-def main():
+def gtkmain():
     app = Example()
     if useTimer:
         Gtk.main()
@@ -124,4 +124,4 @@ class Example():
             host.contents._was_resized(host)
 
 if __name__ == '__main__':
-    main()
+    gtkmain()

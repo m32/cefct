@@ -1,5 +1,6 @@
 #!/usr/bin/env vpython3
 import os
+import sys
 import io
 import re
 import string
@@ -111,10 +112,11 @@ class Enum(Element):
 
 
 class Parser(object):
-    def __init__(self):
+    def __init__(self, ceftop):
         self.typedef = []
         self.export = []
         self.enum = []
+        self.ceftop = ceftop
 
     def parseFile(self, fqname, sysname=None):
         if not os.path.isfile(fqname):
@@ -388,7 +390,7 @@ if 1:
             "cef_types.h",
         ]
         for fname in sorted(fnames):
-            fqname = "cef/include/internal/" + fname
+            fqname = os.path.join(self.ceftop, "include/internal/" + fname)
             self.parseFile(fqname)
         fnames = [
             "cef_types_linux.h",
@@ -397,7 +399,7 @@ if 1:
         ]
         for fname in sorted(fnames):
             sysname = fname.split(".")[0].split("_")[-1]
-            fqname = "cef/include/internal/" + fname
+            fqname = os.path.join(self.ceftop, "include/internal/" + fname)
             self.parseFile(fqname, sysname)
         fnames = [
             "cef_api_hash.h",
@@ -411,7 +413,7 @@ if 1:
 
 
 def main():
-    cls = Parser()
+    cls = Parser(sys.argv[1])
     cls.getfiles()
 
 

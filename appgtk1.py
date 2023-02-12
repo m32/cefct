@@ -3,17 +3,13 @@ import cefapp
 from cefct import libcef
 from cefappcommon import Client
 
-useTimer = True
-useTimer = False
-
-
 def main():
     c = cefapp.App()
     cls = cefapp.AppSetup(c)
     cls.Execute()
 
     print('loop', flush=True)
-    from appgtk1a import main as gtkmain
+    from appgtk1a import gtkmain
     gtkmain()
 
     cls.Cleanup()

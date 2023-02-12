@@ -136,6 +136,7 @@ class AppSetup:
         # settings.no_sandbox = 1
         settings.browser_subprocess_path = cef.cef_string_t(
             os.path.normpath(os.path.join(top, "cefclient"))
+#            os.path.normpath(os.path.join(os.getcwd(), "build", "pyhelper"))
         )
         # settings.framework_dir_path = 
         settings.chrome_runtime = 0

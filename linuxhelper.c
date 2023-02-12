@@ -3,6 +3,8 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 
+#include "include/capi/cef_app_capi.h"
+
 static void fix_default_x11_visual(GtkWidget* widget) {
     #if GTK_CHECK_VERSION(3,15,1)
     // GTK+ > 3.15.1 uses an X11 visual optimized for GTK+'s OpenGL stuff
@@ -19,6 +21,7 @@ static void fix_default_x11_visual(GtkWidget* widget) {
         GdkVisual* visual = GDK_X11_VISUAL(cursor->data);
         if (default_xvisual->visualid == gdk_x11_visual_get_xvisual(visual)->visualid) {
             gtk_widget_set_visual(widget, visual);
+            printf("gtk visual fixed\n");
             break; 
         }
         cursor = cursor->next;
@@ -27,9 +30,25 @@ static void fix_default_x11_visual(GtkWidget* widget) {
     #endif
 }
 
+void FillWindowInfo(cef_window_info_t *wi, int xid, int x, int y, int width, int height)
+{
+#if 0
+    //GtkWidget *widget = GTK_WIDGET(w);
+    GtkWidget *widget = GTK_WIDGET(w);
+    GdkWindow *window = gtk_widget_get_window(widget);
+    Window xid = GDK_WINDOW_XID(window);
+#endif
+    wi->parent_window = xid;
+    wi->bounds.x = x;
+    wi->bounds.y = y;
+    wi->bounds.width = width;
+    wi->bounds.height = height;
+}
+
 void FixGtk(void *window)
 {
-    fix_default_x11_visual(GTK_WIDGET(window));
+    GtkWidget *widget = GTK_WIDGET(window);
+    fix_default_x11_visual(widget);
 }
 
 void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int width, int height)
