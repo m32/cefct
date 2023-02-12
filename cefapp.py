@@ -183,7 +183,7 @@ class AppSetup:
     def Cleanup(self):
         print("finish")
         gc.collect()
-        #print("libcef.shutdown")
-        #cef.cef_shutdown()
+        print("libcef.shutdown")
+        cef.cef_shutdown()
         #time.sleep(2)
         print("done")
