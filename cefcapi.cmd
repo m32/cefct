@@ -1,4 +1,4 @@
-python cefcapiparse.py
-python cefcapiparseinternal.py
-cl -Icef -Fecefsizes.exe cefsizes.c
+python cefcapiparse.py bin
+python cefcapiparseinternal.py bin
+cl -Ibin -Fecefsizes.exe cefsizes.c
 cefsizes
