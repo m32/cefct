@@ -52,7 +52,7 @@ def main():
 
 class exit_app(cef.cef_task_t):
     browser = None
-    def _execute(self, this):
+    def py_execute(self, this):
         print('exit_app', self.browser)
         browser = self.browser
         host = browser.contents.get_host(browser)
@@ -69,13 +69,13 @@ texit._base.AddRef(texit)
 loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
-    def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
+    def py_on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
         print('_on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
         if not isLoading:
             global loaded
             loaded = True
 
-    def _on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
+    def py_on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
         print("ERROR: Failed to load url: {url}, Error code: {code}".format(
             url=failedurl,
             code=errorCode
@@ -89,32 +89,32 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
 class CefRendererHandler(cef.cef_render_handler_t):
     n = 15
 
-    def _get_accessibility_handler(self, this):
+    def py_get_accessibility_handler(self, this):
         pass
 
-    def _get_root_screen_rect(self, this, browser, rect):
+    def py_get_root_screen_rect(self, this, browser, rect):
         return 0
 
-    def _get_view_rect(self, this, browser, rect):
+    def py_get_view_rect(self, this, browser, rect):
         r = rect.contents
         r.x = 0
         r.y = 0
         r.width = VIEWPORT_SIZE[0]
         r.height = VIEWPORT_SIZE[1]
 
-    def _get_screen_point(self, this, browser, viewX, viewY, screenX, screenY):
+    def py_get_screen_point(self, this, browser, viewX, viewY, screenX, screenY):
         return 0
 
-    def _get_screen_info(self, this, browser, screen_info):
+    def py_get_screen_info(self, this, browser, screen_info):
         return 0
 
-    def _on_popup_show(self, this, browser, show):
+    def py_on_popup_show(self, this, browser, show):
         pass
 
-    def _on_popup_size(self, this, browser, rect):
+    def py_on_popup_size(self, this, browser, rect):
         pass
 
-    def _on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
+    def py_on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
         if eltype == cef.PET_VIEW and loaded:
             self.n -= 1
             if self.n != 0:
@@ -130,31 +130,31 @@ class CefRendererHandler(cef.cef_render_handler_t):
                 cef.cef_post_task(cef.TID_UI, texit)
                 print('/cef.cef_post_task')
 
-    def _on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
+    def py_on_accelerated_paint(self, this, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
         pass
 
-    def _get_touch_handle_size(self, this, browser, orientation, size):
+    def py_get_touch_handle_size(self, this, browser, orientation, size):
         pass
 
-    def _on_touch_handle_state_changed(self, this, browser, state):
+    def py_on_touch_handle_state_changed(self, this, browser, state):
         pass
 
-    def _start_dragging(self, this, browser, drag_data, allowed_ops, x, y):
+    def py_start_dragging(self, this, browser, drag_data, allowed_ops, x, y):
         return 0
 
-    def _update_drag_cursor(self, this, browser, operation):
+    def py_update_drag_cursor(self, this, browser, operation):
         pass
 
-    def _on_scroll_offset_changed(self, this, browser, x, y):
+    def py_on_scroll_offset_changed(self, this, browser, x, y):
         pass
 
-    def _on_ime_composition_range_changed(self, this, browser, selected_range, character_boundsCount, character_bounds):
+    def py_on_ime_composition_range_changed(self, this, browser, selected_range, character_boundsCount, character_bounds):
         pass
 
-    def _on_text_selection_changed(self, this, browser, selected_text, selected_range):
+    def py_on_text_selection_changed(self, this, browser, selected_text, selected_range):
         pass
 
-    def _on_virtual_keyboard_requested(self, this, browser, input_mode):
+    def py_on_virtual_keyboard_requested(self, this, browser, input_mode):
         pass
 
 class Client(cef.cef_client_t):
@@ -164,15 +164,15 @@ class Client(cef.cef_client_t):
         self.load_handler = CefLoadHandler()
         self.render_handler = CefRendererHandler()
 
-    def _get_life_span_handler(self, *args):
+    def py_get_life_span_handler(self, *args):
         ret = ct.addressof(self.life_span_handler)
         return ret
 
-    def _get_load_handler(self, *args):
+    def py_get_load_handler(self, *args):
         ret = ct.addressof(self.load_handler)
         return ret
 
-    def _get_render_handler(self, *args):
+    def py_get_render_handler(self, *args):
         ret = ct.addressof(self.render_handler)
         return ret
 

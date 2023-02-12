@@ -268,8 +268,8 @@ class Main(wx.Frame):
             window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)
             #self.sw.get_window().move_resize(0, 0, size.width, size.height)
-        #host.contents._notify_move_or_resize_started(host)
-        host.contents._was_resized(host)
+        #host.contents.notify_move_or_resize_started(host)
+        host.contents.was_resized(host)
 
 
 class App(wx.App):

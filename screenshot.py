@@ -62,13 +62,13 @@ def stopbrowser(browser):
 loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
-    def _on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
+    def py_on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
         print('CefLoadHandler._on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
         if not isLoading:
             global loaded
             loaded = True
 
-    def _on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
+    def py_on_load_error(self, this, browser, frame, errorCode, errorText, failedUrl):
         print("CefLoadHandler._on_load_error: Failed to load url: {url}, Error code: {code}".format(
             url=failedurl,
             code=errorCode
@@ -80,7 +80,7 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
 class CefRendererHandler(cef.cef_render_handler_t):
     n = 15
 
-    def _get_view_rect(self, this, browser, rect):
+    def py_get_view_rect(self, this, browser, rect):
         r = rect.contents
         r.x = 0
         r.y = 0
@@ -88,7 +88,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
         r.height = VIEWPORT_SIZE[1]
         return 0
 
-    def _on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
+    def py_on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
         if eltype == cef.PET_VIEW and loaded:
             self.n -= 1
             if self.n != 0:
@@ -106,15 +106,15 @@ class Client(cef.cef_client_t):
         self.load_handler = CefLoadHandler()
         self.render_handler = CefRendererHandler()
 
-    def _get_life_span_handler(self, *args):
+    def py_get_life_span_handler(self, *args):
         ret = ct.addressof(self.life_span_handler)
         return ret
 
-    def _get_load_handler(self, *args):
+    def py_get_load_handler(self, *args):
         ret = ct.addressof(self.load_handler)
         return ret
 
-    def _get_render_handler(self, *args):
+    def py_get_render_handler(self, *args):
         ret = ct.addressof(self.render_handler)
         return ret
 

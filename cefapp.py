@@ -47,8 +47,8 @@ class App(cef.cef_app_t):
         self.bph = cef.cef_browser_process_handler_t()
         self.switches = switches
 
-    def _on_before_command_line_processing(self, this, processType, commandLine):
-        print("App.OnBeforeCommandLineProcessing", flush=True)
+    def py_on_before_command_line_processing(self, this, processType, commandLine):
+        print("App.OnBeforeCommandLineProcessing")
         #v = processType
         #print('\tprocessType==',v, bool(v))
         #v = processType.contents
@@ -97,30 +97,30 @@ class App(cef.cef_app_t):
         return None
 
     # def OnRegisterCustomSchemes(self, this, registrar):
-    def _on_register_custom_schemes(self, this, registar):
-        print("App.OnRegisterCustomSchemes", registar, flush=True)
+    def py_on_register_custom_schemes(self, this, registar):
+        print("App.OnRegisterCustomSchemes", registar)
         return None
 
     # def GetResourceBundleHandler(self, this):
-    def _get_resource_bundle_handler(self, this):
+    def py_get_resource_bundle_handler(self, this):
         return None
-        print("App.GetResourceBundleHandler", flush=True)
+        print("App.GetResourceBundleHandler")
 
     # def GetBrowserProcessHandler(self, this):
-    def _get_browser_process_handler(self, this):
-        print("App.GetBrowserProcessHandler", flush=True)
+    def py_get_browser_process_handler(self, this):
+        print("App.GetBrowserProcessHandler")
         v = ct.addressof(self.bph)
         return v
 
     # def GetRenderProcessHandler(self, this):
-    def _get_render_process_handler(self, this):
-        print("App.GetRenderProcessHandler", flush=True)
+    def py_get_render_process_handler(self, this):
+        print("App.GetRenderProcessHandler")
         return None
 
 
 class AppSetup:
     def __init__(self, app, *args):
-        print("*" * 20, "AppSetup", flush=True)
+        print("*" * 20, "AppSetup")
         if libcefdef.win:
             mainArgs = cef.cef_main_args_t()
             mainArgs.instance = ct.windll.kernel32.GetModuleHandleA(None)
@@ -171,18 +171,18 @@ class AppSetup:
     def Execute(self):
         print('cef.cef_execute_process', self.mainArgs, self.app, None)
         rc = cef.cef_execute_process(self.mainArgs, self.app, None)
-        print("libcef.execute_process rc=", rc, flush=True)
+        print("libcef.execute_process rc=", rc)
         if rc != -1:
             return rc
 
-        print("libcef.initialize", flush=True)
+        print("libcef.initialize")
         cef.cef_initialize(self.mainArgs, self.settings, self.app, None)
-        print("/libcef.initialize", flush=True)
+        print("/libcef.initialize")
 
     def Cleanup(self):
-        print("finish", flush=True)
+        print("finish")
         gc.collect()
-        print("libcef.shutdown", flush=True)
-        cef.cef_shutdown()
-        time.sleep(2)
-        print("done", flush=True)
+        #print("libcef.shutdown")
+        #cef.cef_shutdown()
+        #time.sleep(2)
+        print("done")

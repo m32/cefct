@@ -83,15 +83,15 @@ class Main(wx.Frame):
 
         host = self.browser.contents.get_host(self.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
-        print('stop_load')
-        self.browser.contents.stop_load(self.browser, 1)
+        #self.browser.contents.stop_load(self.browser, 1)
         print('try_close_browser')
         rc = host.contents.try_close_browser(host)
         print('try_close_browser.1, rc=', rc)
         if not rc:
             print('skip')
-            event.Skip(False)
+            event.Skip(True)
             return
+        event.Skip(False)
         self.browser = None
         self.Destroy()
         if self.timer:
@@ -201,7 +201,7 @@ class Main(wx.Frame):
         elif zoom == 0:
             self.zoom = 1
         zoom = zoom + self.zoom
-        self.btZoom.SetLabel(f'Zoom: {zoom}')
+        self.btZoom.SetLabel('Zoom: %d'%self.zoom)
         host.contents.set_zoom_level(host, zoom)
 
     def OnBrowserWindowSetFocus(self, event):
@@ -247,8 +247,8 @@ class Main(wx.Frame):
             window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)
             #self.sw.get_window().move_resize(0, 0, size.width, size.height)
-        #host.contents._notify_move_or_resize_started(host)
-        host.contents._was_resized(host)
+        #host.contents.notify_move_or_resize_started(host)
+        host.contents.was_resized(host)
 
 
 class App(wx.App):

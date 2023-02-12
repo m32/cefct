@@ -613,3 +613,105 @@ def cef_xml_reader_create(stream, encodingType, URI):
 @CEFENTRY(POINTER(cef_zip_reader_t), "cef_zip_reader_create", POINTER(cef_stream_reader_t))
 def cef_zip_reader_create(stream):
     return cef_zip_reader_create._api_(stream)
+
+
+#cef_browser_view_t* cef_browser_view_create( cef_client_t* client, cef_string_t* url, cef_browser_settings_t* settings, cef_dictionary_value_t* extra_info, cef_request_context_t* request_context, cef_browser_view_delegate_t* delegate);
+@CEFENTRY(POINTER(cef_browser_view_t), "cef_browser_view_create", POINTER(cef_client_t), POINTER(cef_string_t), POINTER(cef_browser_settings_t), POINTER(cef_dictionary_value_t), POINTER(cef_request_context_t), POINTER(cef_browser_view_delegate_t))
+def cef_browser_view_create(client, url, settings, extra_info, request_context, delegate):
+    return cef_browser_view_create._api_(client, url, settings, extra_info, request_context, delegate)
+
+
+#cef_browser_view_t* cef_browser_view_get_for_browser( cef_browser_t* browser);
+@CEFENTRY(POINTER(cef_browser_view_t), "cef_browser_view_get_for_browser", POINTER(cef_browser_t))
+def cef_browser_view_get_for_browser(browser):
+    return cef_browser_view_get_for_browser._api_(browser)
+
+
+#cef_display_t* cef_display_get_primary(void);
+@CEFENTRY(POINTER(cef_display_t), "cef_display_get_primary")
+def cef_display_get_primary():
+    return cef_display_get_primary._api_()
+
+
+#cef_display_t* cef_display_get_nearest_point( cef_point_t* point, int input_pixel_coords);
+@CEFENTRY(POINTER(cef_display_t), "cef_display_get_nearest_point", POINTER(cef_point_t), c_int)
+def cef_display_get_nearest_point(point, input_pixel_coords):
+    return cef_display_get_nearest_point._api_(point, input_pixel_coords)
+
+
+#cef_display_t* cef_display_get_matching_bounds( cef_rect_t* bounds, int input_pixel_coords);
+@CEFENTRY(POINTER(cef_display_t), "cef_display_get_matching_bounds", POINTER(cef_rect_t), c_int)
+def cef_display_get_matching_bounds(bounds, input_pixel_coords):
+    return cef_display_get_matching_bounds._api_(bounds, input_pixel_coords)
+
+
+#size_t cef_display_get_count(void);
+@CEFENTRY(size_t, "cef_display_get_count")
+def cef_display_get_count():
+    return cef_display_get_count._api_()
+
+
+#void cef_display_get_alls(size_t* displaysCount, cef_display_t** displays);
+@CEFENTRY(c_void, "cef_display_get_alls", POINTER(size_t), POINTER(POINTER(cef_display_t)))
+def cef_display_get_alls(displaysCount, displays):
+    return cef_display_get_alls._api_(displaysCount, displays)
+
+
+#cef_point_t cef_display_convert_screen_point_to_pixels(cef_point_t* point);
+@CEFENTRY(cef_point_t, "cef_display_convert_screen_point_to_pixels", POINTER(cef_point_t))
+def cef_display_convert_screen_point_to_pixels(point):
+    return cef_display_convert_screen_point_to_pixels._api_(point)
+
+
+#cef_point_t cef_display_convert_screen_point_from_pixels(cef_point_t* point);
+@CEFENTRY(cef_point_t, "cef_display_convert_screen_point_from_pixels", POINTER(cef_point_t))
+def cef_display_convert_screen_point_from_pixels(point):
+    return cef_display_convert_screen_point_from_pixels._api_(point)
+
+
+#cef_rect_t cef_display_convert_screen_rect_to_pixels(cef_rect_t* rect);
+@CEFENTRY(cef_rect_t, "cef_display_convert_screen_rect_to_pixels", POINTER(cef_rect_t))
+def cef_display_convert_screen_rect_to_pixels(rect):
+    return cef_display_convert_screen_rect_to_pixels._api_(rect)
+
+
+#cef_rect_t cef_display_convert_screen_rect_from_pixels(cef_rect_t* rect);
+@CEFENTRY(cef_rect_t, "cef_display_convert_screen_rect_from_pixels", POINTER(cef_rect_t))
+def cef_display_convert_screen_rect_from_pixels(rect):
+    return cef_display_convert_screen_rect_from_pixels._api_(rect)
+
+
+#cef_label_button_t* cef_label_button_create( cef_button_delegate_t* delegate, cef_string_t* text);
+@CEFENTRY(POINTER(cef_label_button_t), "cef_label_button_create", POINTER(cef_button_delegate_t), POINTER(cef_string_t))
+def cef_label_button_create(delegate, text):
+    return cef_label_button_create._api_(delegate, text)
+
+
+#cef_menu_button_t* cef_menu_button_create( cef_menu_button_delegate_t* delegate, cef_string_t* text);
+@CEFENTRY(POINTER(cef_menu_button_t), "cef_menu_button_create", POINTER(cef_menu_button_delegate_t), POINTER(cef_string_t))
+def cef_menu_button_create(delegate, text):
+    return cef_menu_button_create._api_(delegate, text)
+
+
+#cef_panel_t* cef_panel_create( cef_panel_delegate_t* delegate);
+@CEFENTRY(POINTER(cef_panel_t), "cef_panel_create", POINTER(cef_panel_delegate_t))
+def cef_panel_create(delegate):
+    return cef_panel_create._api_(delegate)
+
+
+#cef_scroll_view_t* cef_scroll_view_create( cef_view_delegate_t* delegate);
+@CEFENTRY(POINTER(cef_scroll_view_t), "cef_scroll_view_create", POINTER(cef_view_delegate_t))
+def cef_scroll_view_create(delegate):
+    return cef_scroll_view_create._api_(delegate)
+
+
+#cef_textfield_t* cef_textfield_create( cef_textfield_delegate_t* delegate);
+@CEFENTRY(POINTER(cef_textfield_t), "cef_textfield_create", POINTER(cef_textfield_delegate_t))
+def cef_textfield_create(delegate):
+    return cef_textfield_create._api_(delegate)
+
+
+#cef_window_t* cef_window_create_top_level( cef_window_delegate_t* delegate);
+@CEFENTRY(POINTER(cef_window_t), "cef_window_create_top_level", POINTER(cef_window_delegate_t))
+def cef_window_create_top_level(delegate):
+    return cef_window_create_top_level._api_(delegate)

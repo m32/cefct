@@ -89,10 +89,19 @@ class Export(Element):
 
 class TypeDef(Element):
     def __init__(self, typename, lines):
+        tname = typename.split('_')[-2]
+        #print(tname)
+        # handler, callback, visitor
+        self.isHandler = tname == 'handler' or typename in ('cef_app_t' , 'cef_client_t')
+        self.isCallback = tname == 'calback'
+        self.isVisitor = tname == 'visitor'
+        self.isDelegate = tname == 'delegate'
+        self.isObserver = tname == 'observer'
         self.typename = typename
         self.lines = lines
         self.typedata = []
         self.basename = None
+        self.generated = False
 
         lp = 0
         for elem in lines:
@@ -126,7 +135,7 @@ class TypeDef(Element):
 
 class Parser(object):
     def __init__(self):
-        self.typedef = []
+        self.typedef = {}
         self.export = []
 
     def parseFile(self, fqname):
@@ -161,7 +170,7 @@ class Parser(object):
                 if not line or line[:2] == "//":
                     continue
                 s.append(line)
-            self.typedef.append(TypeDef(name[1:], " ".join(s).split(";")[:-1]))
+            self.typedef[name[1:]] = TypeDef(name[1:], " ".join(s).split(";")[:-1])
 
         start = 0
         while True:
@@ -176,7 +185,7 @@ class Parser(object):
             self.export.append(Export(s))
             start = end + 1
 
-    def parseDecl(self):
+    def genCefStruct(self):
         fp = open("cefct/libcefstruct.py", "wt")
         fp.write(
             """\
@@ -195,48 +204,87 @@ from .cef_string_userfree import *
 from .libcefinternal import *
 """
         )
-        for typedef in self.typedef:
+        self.genStructure(fp)
+        self.genStructureFields(fp)
+        fp.close()
+
+        self.genExport()
+
+    def genStructure(self, fp):
+        for name in sorted(self.typedef.keys()):
+            typedef = self.typedef[name]
             fp.write(
                 """\
 
 
 class {}(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
 """.format(
                     typedef.typename
                 )
             )
-            for typedata in typedef.typedata:
+            if typedef.isHandler:
                 fp.write(
+                """\
+
+    def __init__(self):
+        super().__init__()
+        # _base = {}
+        self._base.c_init()
+        self._base.size = sizeof(self)
+""".format(
+                        typedef.basename
+                    )
+                )
+                for typedata in typedef.typedata:
+                    fp.write(
                     """\
-        self.{} = self._callbacks[{}](self._{})
+        self.{} = self._callbacks[{}](self.py_{})
 """.format(
                         typedata.name, typedata.lp, typedata.name
                     )
                 )
 
-            fp.write("\n")
-            for typedata in typedef.typedata:
-                result = typedata.result
-                if result.split("(")[0] == "POINTER":
-                    result = None
-                else:
-                    result = 0
-                fp.write(
+                fp.write("\n")
+                for typedata in typedef.typedata:
+                    result = typedata.result
+                    if result.split("(")[0] == "POINTER":
+                        result = None
+                    else:
+                        result = 0
+                    fp.write(
                     """\
-    def _{}(self{}):
+    def py_{}(self{}):
         return {}
 """.format(
                         typedata.name, typedata.sargnames, result
                     )
                 )
 
-        for typedef in self.typedef:
+    def genStructureFields(self, fp):
+        pat = re.compile("POINTER\((cef_\w+)\)")
+        for name in sorted(self.typedef.keys()):
+            typedef = self.typedef[name]
+            if typedef.generated:
+                continue
+            base = self.typedef.get(typedef.basename, None)
+            if base is not None and not base.generated:
+                self.genStructureFieldsOne(fp, base)
+            for typedata in typedef.typedata:
+                for arg in typedata.argtypes:
+                    m = pat.match(arg)
+                    if m:
+                        base = m.groups()[0]
+                        if base == name:
+                            continue
+                        base = self.typedef.get(base, None)
+                        if base is not None and not base.generated:
+                            self.genStructureFieldsOne(fp, base)
+            # finally
+            self.genStructureFieldsOne(fp, typedef)
+
+    def genStructureFieldsOne(self, fp, typedef):
+            typedef.generated = True
             fp.write(
                 """\
 
@@ -284,6 +332,7 @@ class {}(Structure):
 """
             )
 
+    def genExport(self):
         fp = open("cefct/libcef.py", "wt")
         fp.write(
             """\
@@ -322,7 +371,7 @@ def {}({}):
                 )
             )
 
-    def parseSizes(self):
+    def genCefSizes(self):
         fp = open("cefsizes.c", "wt")
         fp.write(
             """\
@@ -336,6 +385,16 @@ def {}({}):
                 fp.write(
                     """\
 #include "include/capi/{}"
+""".format(
+                        fname
+                    )
+                )
+        fnames = os.listdir("cef/include/capi/views")
+        for fname in sorted(fnames):
+            if fname.find("_capi.h") > 0:
+                fp.write(
+                    """\
+#include "include/capi/views/{}"
 """.format(
                         fname
                     )
@@ -361,7 +420,7 @@ def cefchecksize(name, t, size):\\n\\
 
 """
         )
-        for typedef in self.typedef:
+        for name, typedef in sorted(self.typedef.items()):
             fp.write(
                 '    fprintf(fp, "cefsizesok &= cefchecksize(\\"{}\\", {}, %d)\\n", (int)sizeof({}));\n'.format(
                     typedef.typename, typedef.typename, typedef.typename
@@ -369,7 +428,7 @@ def cefchecksize(name, t, size):\\n\\
             )
         fp.close()
 
-    def parseVersion(self):
+    def genCefVersion(self):
         versions = {
             'CEF_VERSION_MAJOR': 0,
             'CEF_VERSION_MINOR': 0,
@@ -401,14 +460,19 @@ def cefchecksize(name, t, size):\\n\\
             if fname.split("_")[-1] == "capi.h":
                 fqname = "cef/include/capi/" + fname
                 self.parseFile(fqname)
-        self.parseDecl()
-        self.parseSizes()
-        self.parseVersion()
+        fnames = os.listdir("cef/include/capi/views")
+        for fname in sorted(fnames):
+            if fname.split("_")[-1] == "capi.h":
+                fqname = "cef/include/capi/views/" + fname
+                self.parseFile(fqname)
+        self.genCefStruct()
+        self.genCefSizes()
+        self.genCefVersion()
 
     def xgetfiles(self):
         self.parseFile("cef/include/capi/cef_audio_handler_capi.h")
-        self.parseDecl()
-        self.parseSizes()
+        self.genCefStruct()
+        self.genCefSizes()
 
 
 def main():

@@ -1,45 +1,24 @@
 #!/usr/bin/env vpython3
 # -*- coding: utf-8 -*-
-import ctypes
+import ctypes as ct
 import cefapp
 #import gc
 import time
 import wx
-import ctypes as ct
 from cefct import libcef
-from cefappcommon import Client
+import cefappcommon
 if libcef.win:
     import win32con
-
-gui = None
-
-def guiStartup():
-    global gui
-    if libcef.win:
-        return
-    class GUI:
-        pass
-    gui = GUI()
-    import gi
-
-    gi.require_version("Gtk", "3.0")
-    from gi.repository import Gtk, Gdk, GdkX11
-
-    gui.Gtk = Gtk
-    gui.Gdk = Gdk
-    gui.GdkX11 = GdkX11
-    gui.libX11 = ctypes.CDLL("libX11.so.6")
 
 useTimer = False
 #useTimer = True
 URL = "https://www.trisoft.com.pl/"
-browser = None
+URL = "http://html5test.com/"
 
 class Main(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent=parent, id=wx.ID_ANY, title="wxPython example")
-
-        guiStartup()
+        self.client = None
 
         szv = wx.BoxSizer(wx.VERTICAL)
         szh = wx.BoxSizer(wx.HORIZONTAL)
@@ -87,90 +66,36 @@ class Main(wx.Frame):
         libcef.cef_do_message_loop_work()
 
     def OnClose(self, event):
-        global browser
+        print('wx.OnClose')
         if self.timer:
             self.timer.Stop()
             self.timer = None
             time.sleep(1)
-        if browser is None:
+        if cefappcommon.browser is None:
             if not useTimer:
                 libcef.cef_quit_message_loop()
+            libcef.cef_do_message_loop_work()
             event.Skip()
             print('wx.Destroy')
             self.Destroy()
             return
 
         #self.client.life_span_handler.OnBeforeClose()
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         hwnd = host.contents.get_window_handle(host)
         #if libcef.win:
         #    hwnd = ct.windll.user32.GetAncestor(hwnd, win32con.GA_ROOT)
         #    ct.windll.user32.PostMessageW(hwnd, win32con.WM_CLOSE, 0, 0)
-        browser.contents.stop_load(browser, 1)
+        cefappcommon.browser.contents.stop_load(cefappcommon.browser, 1)
         host.contents.close_browser(host, 1)
-        browser = None
-        event.Skip()
-        #gc.collect()
-        if not useTimer:
-            libcef.cef_quit_message_loop()
-        print('wx.Destroy.1')
-        self.Destroy()
+        cefappcommon.browser = None
+        event.Veto()
+        print('wx.Destroy veto')
 
-    def embed_browser_linux(self):
-        print('embed_browser_linux')
-        handle_to_use = self.browserWindow.GetHandle()
-        xid = handle_to_use
-        assert handle_to_use, "Window handle not available"
-        (width, height) = self.browserWindow.GetClientSize().Get()
-        display = gui.Gdk.Display.get_default()
-        window = gui.GdkX11.X11Window.foreign_new_for_display(display, handle_to_use)
-        self.gtk_window = gtk_window = gui.Gtk.Window()
-
-        def callback(gtk_window, window):
-            print("inside callback")
-            gtk_window.set_window(window)
-            gtk_window.set_visual(gtk_window.get_screen().lookup_visual(0x21))
-
-        gtk_window.connect("realize", callback, window)
-        gtk_window.set_has_window(True)
-        gtk_window.show()
-
-        sw = gui.Gtk.ScrolledWindow()
-        sw.show()
-        gtk_window.add(sw)
-        sw.set_visual(sw.get_screen().lookup_visual(0x21))
-        self.sw = sw
-
-        global window_info, cef_url, client, browser_settings
-
-        xid = sw.get_window().get_xid()
-
-        window_info = libcef.cef_window_info_t()
-        window_info.parent_window = xid
-        window_info.x = 0
-        window_info.y = 0
-        window_info.width = width
-        window_info.height = height
-
-        cef_url = libcef.cef_string_t(URL)
-        client = Client()
-        browser_settings = libcef.cef_browser_settings_t()
-        browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
-        extra_info = None
-        request_context = None
-
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
-            window_info,
-            client,
-            cef_url,
-            browser_settings,
-            extra_info,
-            request_context
-        )
-
-    def embed_browser_windows(self):
+    def OnBrowser(self, event):
+        if cefappcommon.browser is not None:
+            return
         handle_to_use = self.browserWindow.GetHandle()
         assert handle_to_use, "Window handle not available"
         (width, height) = self.browserWindow.GetClientSize().Get()
@@ -190,7 +115,7 @@ class Main(wx.Frame):
         window_info.bounds.height = height
 
         cef_url = libcef.cef_string_t(URL)
-        client = Client()
+        self.client = cefappcommon.Client()
         browser_settings = libcef.cef_browser_settings_t()
         browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
         extra_info = None
@@ -201,28 +126,20 @@ class Main(wx.Frame):
         #cef_request_context_create_context(settings, handler)
         #cef_create_context_shared
 
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
+        cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
             window_info,
-            client,
+            self.client,
             cef_url,
             browser_settings,
             extra_info,
             request_context
         )
 
-    def OnBrowser(self, event):
-        if browser is None:
-            if libcef.win:
-                self.embed_browser_windows()
-            else:
-                self.embed_browser_linux()
-
     zoom = 1
     def OnZoom(self, event):
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         zoom = host.contents.get_zoom_level(host)
         if zoom == 5:
@@ -235,49 +152,30 @@ class Main(wx.Frame):
 
     def OnBrowserWindowSetFocus(self, event):
         print('OnBrowserWindowSetFocus')
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         host.contents.set_focus(host, 1)
         # browser.SetFocus(True)
 
     def OnBrowserWindowSize(self, evt):
         evt.Skip()
-        if browser is None:
+        if cefappcommon.browser is None:
             return
         size = self.browserWindow.GetClientSize()
         # browser.SetBounds(x, y, width, height)
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         hwnd = host.contents.get_window_handle(host)
 
-        if libcef.win:
-            SWP_NOZORDER = 0x0004
-            if 0:
-                hdwp = ct.windll.user32.BeginDeferWindowPos(1)
-                ct.windll.user32.DeferWindowPos(
-                    hdwp, hwnd, None,
-                    0, 0, size.width, size.height,
-                    SWP_NOZORDER)
-                ct.windll.user32.EndDeferWindowPos(hdwp)
-            elif 0:
-                ct.windll.user32.MoveWindow(hwnd,
-                    0, 0, size.width, size.height,
-                    False)
-            elif 1:
-                ct.windll.user32.SetWindowPos(hwnd, None,
-                    0, 0,
-                    size.width, size.height,
-                    SWP_NOZORDER)
-        else:
-            print('X11.onsize', hwnd)
-            display = gui.Gdk.Display.get_default()
-            window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd)
-            window.resize(size.width, size.height)
-            self.sw.get_window().move_resize(0, 0, size.width, size.height)
-        #host.contents._notify_move_or_resize_started(host)
-        host.contents._was_resized(host)
+        SWP_NOZORDER = 0x0004
+        ct.windll.user32.SetWindowPos(hwnd, None,
+            0, 0,
+            size.width, size.height,
+            SWP_NOZORDER)
+        #host.contents.notify_move_or_resize_started(host)
+        host.contents.was_resized(host)
 
 
 class App(wx.App):
@@ -302,7 +200,7 @@ def appmain():
     print('main')
     main()
     print('after main')
-    #cls.Cleanup()
+    cls.Cleanup()
     print('exit', c)
 
 if __name__ == '__main__':

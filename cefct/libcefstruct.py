@@ -18,14 +18,15 @@ class cef_accessibility_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_accessibility_tree_change = self._callbacks[0](self._on_accessibility_tree_change)
-        self.on_accessibility_location_change = self._callbacks[1](self._on_accessibility_location_change)
+        self.on_accessibility_tree_change = self._callbacks[0](self.py_on_accessibility_tree_change)
+        self.on_accessibility_location_change = self._callbacks[1](self.py_on_accessibility_location_change)
 
-    def _on_accessibility_tree_change(self, xself, value):
+    def py_on_accessibility_tree_change(self, xself, value):
         return 0
-    def _on_accessibility_location_change(self, xself, value):
+    def py_on_accessibility_location_change(self, xself, value):
         return 0
 
 
@@ -34,23 +35,24 @@ class cef_app_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_before_command_line_processing = self._callbacks[0](self._on_before_command_line_processing)
-        self.on_register_custom_schemes = self._callbacks[1](self._on_register_custom_schemes)
-        self.get_resource_bundle_handler = self._callbacks[2](self._get_resource_bundle_handler)
-        self.get_browser_process_handler = self._callbacks[3](self._get_browser_process_handler)
-        self.get_render_process_handler = self._callbacks[4](self._get_render_process_handler)
+        self.on_before_command_line_processing = self._callbacks[0](self.py_on_before_command_line_processing)
+        self.on_register_custom_schemes = self._callbacks[1](self.py_on_register_custom_schemes)
+        self.get_resource_bundle_handler = self._callbacks[2](self.py_get_resource_bundle_handler)
+        self.get_browser_process_handler = self._callbacks[3](self.py_get_browser_process_handler)
+        self.get_render_process_handler = self._callbacks[4](self.py_get_render_process_handler)
 
-    def _on_before_command_line_processing(self, xself, process_type, command_line):
+    def py_on_before_command_line_processing(self, xself, process_type, command_line):
         return 0
-    def _on_register_custom_schemes(self, xself, registrar):
+    def py_on_register_custom_schemes(self, xself, registrar):
         return 0
-    def _get_resource_bundle_handler(self, xself):
+    def py_get_resource_bundle_handler(self, xself):
         return None
-    def _get_browser_process_handler(self, xself):
+    def py_get_browser_process_handler(self, xself):
         return None
-    def _get_render_process_handler(self, xself):
+    def py_get_render_process_handler(self, xself):
         return None
 
 
@@ -59,352 +61,45 @@ class cef_audio_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.get_audio_parameters = self._callbacks[0](self._get_audio_parameters)
-        self.on_audio_stream_started = self._callbacks[1](self._on_audio_stream_started)
-        self.on_audio_stream_packet = self._callbacks[2](self._on_audio_stream_packet)
-        self.on_audio_stream_stopped = self._callbacks[3](self._on_audio_stream_stopped)
-        self.on_audio_stream_error = self._callbacks[4](self._on_audio_stream_error)
+        self.get_audio_parameters = self._callbacks[0](self.py_get_audio_parameters)
+        self.on_audio_stream_started = self._callbacks[1](self.py_on_audio_stream_started)
+        self.on_audio_stream_packet = self._callbacks[2](self.py_on_audio_stream_packet)
+        self.on_audio_stream_stopped = self._callbacks[3](self.py_on_audio_stream_stopped)
+        self.on_audio_stream_error = self._callbacks[4](self.py_on_audio_stream_error)
 
-    def _get_audio_parameters(self, xself, browser, params):
+    def py_get_audio_parameters(self, xself, browser, params):
         return 0
-    def _on_audio_stream_started(self, xself, browser, params, channels):
+    def py_on_audio_stream_started(self, xself, browser, params, channels):
         return 0
-    def _on_audio_stream_packet(self, xself, browser, data, frames, pts):
+    def py_on_audio_stream_packet(self, xself, browser, data, frames, pts):
         return 0
-    def _on_audio_stream_stopped(self, xself, browser):
+    def py_on_audio_stream_stopped(self, xself, browser):
         return 0
-    def _on_audio_stream_error(self, xself, browser, message):
+    def py_on_audio_stream_error(self, xself, browser, message):
         return 0
 
 
 class cef_auth_callback_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
 
-    def _cont(self, xself, username, password):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_browser_t(Structure):
+class cef_before_download_callback_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.get_host = self._callbacks[1](self._get_host)
-        self.can_go_back = self._callbacks[2](self._can_go_back)
-        self.go_back = self._callbacks[3](self._go_back)
-        self.can_go_forward = self._callbacks[4](self._can_go_forward)
-        self.go_forward = self._callbacks[5](self._go_forward)
-        self.is_loading = self._callbacks[6](self._is_loading)
-        self.xreload = self._callbacks[7](self._xreload)
-        self.reload_ignore_cache = self._callbacks[8](self._reload_ignore_cache)
-        self.stop_load = self._callbacks[9](self._stop_load)
-        self.get_identifier = self._callbacks[10](self._get_identifier)
-        self.is_same = self._callbacks[11](self._is_same)
-        self.is_popup = self._callbacks[12](self._is_popup)
-        self.has_document = self._callbacks[13](self._has_document)
-        self.get_main_frame = self._callbacks[14](self._get_main_frame)
-        self.get_focused_frame = self._callbacks[15](self._get_focused_frame)
-        self.get_frame_byident = self._callbacks[16](self._get_frame_byident)
-        self.get_frame = self._callbacks[17](self._get_frame)
-        self.get_frame_count = self._callbacks[18](self._get_frame_count)
-        self.get_frame_identifiers = self._callbacks[19](self._get_frame_identifiers)
-        self.get_frame_names = self._callbacks[20](self._get_frame_names)
 
-    def _is_valid(self, xself):
-        return 0
-    def _get_host(self, xself):
-        return None
-    def _can_go_back(self, xself):
-        return 0
-    def _go_back(self, xself):
-        return 0
-    def _can_go_forward(self, xself):
-        return 0
-    def _go_forward(self, xself):
-        return 0
-    def _is_loading(self, xself):
-        return 0
-    def _xreload(self, xself):
-        return 0
-    def _reload_ignore_cache(self, xself):
-        return 0
-    def _stop_load(self, xself):
-        return 0
-    def _get_identifier(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _is_popup(self, xself):
-        return 0
-    def _has_document(self, xself):
-        return 0
-    def _get_main_frame(self, xself):
-        return None
-    def _get_focused_frame(self, xself):
-        return None
-    def _get_frame_byident(self, xself, identifier):
-        return None
-    def _get_frame(self, xself, name):
-        return None
-    def _get_frame_count(self, xself):
-        return 0
-    def _get_frame_identifiers(self, xself, identifiersCount, identifiers):
-        return 0
-    def _get_frame_names(self, xself, names):
-        return 0
-
-
-class cef_run_file_dialog_callback_t(Structure):
+class cef_binary_value_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_file_dialog_dismissed = self._callbacks[0](self._on_file_dialog_dismissed)
 
-    def _on_file_dialog_dismissed(self, xself, file_paths):
-        return 0
-
-
-class cef_navigation_entry_visitor_t(Structure):
+class cef_box_layout_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.visit = self._callbacks[0](self._visit)
-
-    def _visit(self, xself, entry, current, index, total):
-        return 0
-
-
-class cef_pdf_print_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_pdf_print_finished = self._callbacks[0](self._on_pdf_print_finished)
-
-    def _on_pdf_print_finished(self, xself, path, ok):
-        return 0
-
-
-class cef_download_image_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_download_image_finished = self._callbacks[0](self._on_download_image_finished)
-
-    def _on_download_image_finished(self, xself, image_url, http_status_code, image):
-        return 0
 
 
 class cef_browser_host_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_browser = self._callbacks[0](self._get_browser)
-        self.close_browser = self._callbacks[1](self._close_browser)
-        self.try_close_browser = self._callbacks[2](self._try_close_browser)
-        self.set_focus = self._callbacks[3](self._set_focus)
-        self.get_window_handle = self._callbacks[4](self._get_window_handle)
-        self.get_opener_window_handle = self._callbacks[5](self._get_opener_window_handle)
-        self.has_view = self._callbacks[6](self._has_view)
-        self.get_client = self._callbacks[7](self._get_client)
-        self.get_request_context = self._callbacks[8](self._get_request_context)
-        self.get_zoom_level = self._callbacks[9](self._get_zoom_level)
-        self.set_zoom_level = self._callbacks[10](self._set_zoom_level)
-        self.run_file_dialog = self._callbacks[11](self._run_file_dialog)
-        self.start_download = self._callbacks[12](self._start_download)
-        self.download_image = self._callbacks[13](self._download_image)
-        self.print = self._callbacks[14](self._print)
-        self.print_to_pdf = self._callbacks[15](self._print_to_pdf)
-        self.find = self._callbacks[16](self._find)
-        self.stop_finding = self._callbacks[17](self._stop_finding)
-        self.show_dev_tools = self._callbacks[18](self._show_dev_tools)
-        self.close_dev_tools = self._callbacks[19](self._close_dev_tools)
-        self.has_dev_tools = self._callbacks[20](self._has_dev_tools)
-        self.send_dev_tools_message = self._callbacks[21](self._send_dev_tools_message)
-        self.execute_dev_tools_method = self._callbacks[22](self._execute_dev_tools_method)
-        self.add_dev_tools_message_observer = self._callbacks[23](self._add_dev_tools_message_observer)
-        self.get_navigation_entries = self._callbacks[24](self._get_navigation_entries)
-        self.replace_misspelling = self._callbacks[25](self._replace_misspelling)
-        self.add_word_to_dictionary = self._callbacks[26](self._add_word_to_dictionary)
-        self.is_window_rendering_disabled = self._callbacks[27](self._is_window_rendering_disabled)
-        self.was_resized = self._callbacks[28](self._was_resized)
-        self.was_hidden = self._callbacks[29](self._was_hidden)
-        self.notify_screen_info_changed = self._callbacks[30](self._notify_screen_info_changed)
-        self.invalidate = self._callbacks[31](self._invalidate)
-        self.send_external_begin_frame = self._callbacks[32](self._send_external_begin_frame)
-        self.send_key_event = self._callbacks[33](self._send_key_event)
-        self.send_mouse_click_event = self._callbacks[34](self._send_mouse_click_event)
-        self.send_mouse_move_event = self._callbacks[35](self._send_mouse_move_event)
-        self.send_mouse_wheel_event = self._callbacks[36](self._send_mouse_wheel_event)
-        self.send_touch_event = self._callbacks[37](self._send_touch_event)
-        self.send_capture_lost_event = self._callbacks[38](self._send_capture_lost_event)
-        self.notify_move_or_resize_started = self._callbacks[39](self._notify_move_or_resize_started)
-        self.get_windowless_frame_rate = self._callbacks[40](self._get_windowless_frame_rate)
-        self.set_windowless_frame_rate = self._callbacks[41](self._set_windowless_frame_rate)
-        self.ime_set_composition = self._callbacks[42](self._ime_set_composition)
-        self.ime_commit_text = self._callbacks[43](self._ime_commit_text)
-        self.ime_finish_composing_text = self._callbacks[44](self._ime_finish_composing_text)
-        self.ime_cancel_composition = self._callbacks[45](self._ime_cancel_composition)
-        self.drag_target_drag_enter = self._callbacks[46](self._drag_target_drag_enter)
-        self.drag_target_drag_over = self._callbacks[47](self._drag_target_drag_over)
-        self.drag_target_drag_leave = self._callbacks[48](self._drag_target_drag_leave)
-        self.drag_target_drop = self._callbacks[49](self._drag_target_drop)
-        self.drag_source_ended_at = self._callbacks[50](self._drag_source_ended_at)
-        self.drag_source_system_drag_ended = self._callbacks[51](self._drag_source_system_drag_ended)
-        self.get_visible_navigation_entry = self._callbacks[52](self._get_visible_navigation_entry)
-        self.set_accessibility_state = self._callbacks[53](self._set_accessibility_state)
-        self.set_auto_resize_enabled = self._callbacks[54](self._set_auto_resize_enabled)
-        self.get_extension = self._callbacks[55](self._get_extension)
-        self.is_background_host = self._callbacks[56](self._is_background_host)
-        self.set_audio_muted = self._callbacks[57](self._set_audio_muted)
-        self.is_audio_muted = self._callbacks[58](self._is_audio_muted)
-
-    def _get_browser(self, xself):
-        return None
-    def _close_browser(self, xself, force_close):
-        return 0
-    def _try_close_browser(self, xself):
-        return 0
-    def _set_focus(self, xself, focus):
-        return 0
-    def _get_window_handle(self, xself):
-        return 0
-    def _get_opener_window_handle(self, xself):
-        return 0
-    def _has_view(self, xself):
-        return 0
-    def _get_client(self, xself):
-        return None
-    def _get_request_context(self, xself):
-        return None
-    def _get_zoom_level(self, xself):
-        return 0
-    def _set_zoom_level(self, xself, zoomLevel):
-        return 0
-    def _run_file_dialog(self, xself, mode, title, default_file_path, accept_filters, callback):
-        return 0
-    def _start_download(self, xself, url):
-        return 0
-    def _download_image(self, xself, image_url, is_favicon, max_image_size, bypass_cache, callback):
-        return 0
-    def _print(self, xself):
-        return 0
-    def _print_to_pdf(self, xself, path, settings, callback):
-        return 0
-    def _find(self, xself, searchText, forward, matchCase, findNext):
-        return 0
-    def _stop_finding(self, xself, clearSelection):
-        return 0
-    def _show_dev_tools(self, xself, windowInfo, client, settings, inspect_element_at):
-        return 0
-    def _close_dev_tools(self, xself):
-        return 0
-    def _has_dev_tools(self, xself):
-        return 0
-    def _send_dev_tools_message(self, xself, message, message_size):
-        return 0
-    def _execute_dev_tools_method(self, xself, message_id, method, params):
-        return 0
-    def _add_dev_tools_message_observer(self, xself, observer):
-        return None
-    def _get_navigation_entries(self, xself, visitor, current_only):
-        return 0
-    def _replace_misspelling(self, xself, word):
-        return 0
-    def _add_word_to_dictionary(self, xself, word):
-        return 0
-    def _is_window_rendering_disabled(self, xself):
-        return 0
-    def _was_resized(self, xself):
-        return 0
-    def _was_hidden(self, xself, hidden):
-        return 0
-    def _notify_screen_info_changed(self, xself):
-        return 0
-    def _invalidate(self, xself, type):
-        return 0
-    def _send_external_begin_frame(self, xself):
-        return 0
-    def _send_key_event(self, xself, event):
-        return 0
-    def _send_mouse_click_event(self, xself, event, type, mouseUp, clickCount):
-        return 0
-    def _send_mouse_move_event(self, xself, event, mouseLeave):
-        return 0
-    def _send_mouse_wheel_event(self, xself, event, deltaX, deltaY):
-        return 0
-    def _send_touch_event(self, xself, event):
-        return 0
-    def _send_capture_lost_event(self, xself):
-        return 0
-    def _notify_move_or_resize_started(self, xself):
-        return 0
-    def _get_windowless_frame_rate(self, xself):
-        return 0
-    def _set_windowless_frame_rate(self, xself, frame_rate):
-        return 0
-    def _ime_set_composition(self, xself, text, underlinesCount, underlines, replacement_range, selection_range):
-        return 0
-    def _ime_commit_text(self, xself, text, replacement_range, relative_cursor_pos):
-        return 0
-    def _ime_finish_composing_text(self, xself, keep_selection):
-        return 0
-    def _ime_cancel_composition(self, xself):
-        return 0
-    def _drag_target_drag_enter(self, xself, drag_data, event, allowed_ops):
-        return 0
-    def _drag_target_drag_over(self, xself, event, allowed_ops):
-        return 0
-    def _drag_target_drag_leave(self, xself):
-        return 0
-    def _drag_target_drop(self, xself, event):
-        return 0
-    def _drag_source_ended_at(self, xself, x, y, op):
-        return 0
-    def _drag_source_system_drag_ended(self, xself):
-        return 0
-    def _get_visible_navigation_entry(self, xself):
-        return None
-    def _set_accessibility_state(self, xself, accessibility_state):
-        return 0
-    def _set_auto_resize_enabled(self, xself, enabled, min_size, max_size):
-        return 0
-    def _get_extension(self, xself):
-        return None
-    def _is_background_host(self, xself):
-        return 0
-    def _set_audio_muted(self, xself, mute):
-        return 0
-    def _is_audio_muted(self, xself):
-        return 0
 
 
 class cef_browser_process_handler_t(Structure):
@@ -412,53 +107,49 @@ class cef_browser_process_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_register_custom_preferences = self._callbacks[0](self._on_register_custom_preferences)
-        self.on_context_initialized = self._callbacks[1](self._on_context_initialized)
-        self.on_before_child_process_launch = self._callbacks[2](self._on_before_child_process_launch)
-        self.on_schedule_message_pump_work = self._callbacks[3](self._on_schedule_message_pump_work)
-        self.get_default_client = self._callbacks[4](self._get_default_client)
+        self.on_register_custom_preferences = self._callbacks[0](self.py_on_register_custom_preferences)
+        self.on_context_initialized = self._callbacks[1](self.py_on_context_initialized)
+        self.on_before_child_process_launch = self._callbacks[2](self.py_on_before_child_process_launch)
+        self.on_schedule_message_pump_work = self._callbacks[3](self.py_on_schedule_message_pump_work)
+        self.get_default_client = self._callbacks[4](self.py_get_default_client)
 
-    def _on_register_custom_preferences(self, xself, type, registrar):
+    def py_on_register_custom_preferences(self, xself, type, registrar):
         return 0
-    def _on_context_initialized(self, xself):
+    def py_on_context_initialized(self, xself):
         return 0
-    def _on_before_child_process_launch(self, xself, command_line):
+    def py_on_before_child_process_launch(self, xself, command_line):
         return 0
-    def _on_schedule_message_pump_work(self, xself, delay_ms):
+    def py_on_schedule_message_pump_work(self, xself, delay_ms):
         return 0
-    def _get_default_client(self, xself):
+    def py_get_default_client(self, xself):
         return None
+
+
+class cef_browser_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_browser_view_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_browser_view_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_button_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_button_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_completion_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_complete = self._callbacks[0](self._on_complete)
-
-    def _on_complete(self, xself):
-        return 0
 
 
 class cef_client_t(Structure):
@@ -466,65 +157,66 @@ class cef_client_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.get_audio_handler = self._callbacks[0](self._get_audio_handler)
-        self.get_command_handler = self._callbacks[1](self._get_command_handler)
-        self.get_context_menu_handler = self._callbacks[2](self._get_context_menu_handler)
-        self.get_dialog_handler = self._callbacks[3](self._get_dialog_handler)
-        self.get_display_handler = self._callbacks[4](self._get_display_handler)
-        self.get_download_handler = self._callbacks[5](self._get_download_handler)
-        self.get_drag_handler = self._callbacks[6](self._get_drag_handler)
-        self.get_find_handler = self._callbacks[7](self._get_find_handler)
-        self.get_focus_handler = self._callbacks[8](self._get_focus_handler)
-        self.get_frame_handler = self._callbacks[9](self._get_frame_handler)
-        self.get_permission_handler = self._callbacks[10](self._get_permission_handler)
-        self.get_jsdialog_handler = self._callbacks[11](self._get_jsdialog_handler)
-        self.get_keyboard_handler = self._callbacks[12](self._get_keyboard_handler)
-        self.get_life_span_handler = self._callbacks[13](self._get_life_span_handler)
-        self.get_load_handler = self._callbacks[14](self._get_load_handler)
-        self.get_print_handler = self._callbacks[15](self._get_print_handler)
-        self.get_render_handler = self._callbacks[16](self._get_render_handler)
-        self.get_request_handler = self._callbacks[17](self._get_request_handler)
-        self.on_process_message_received = self._callbacks[18](self._on_process_message_received)
+        self.get_audio_handler = self._callbacks[0](self.py_get_audio_handler)
+        self.get_command_handler = self._callbacks[1](self.py_get_command_handler)
+        self.get_context_menu_handler = self._callbacks[2](self.py_get_context_menu_handler)
+        self.get_dialog_handler = self._callbacks[3](self.py_get_dialog_handler)
+        self.get_display_handler = self._callbacks[4](self.py_get_display_handler)
+        self.get_download_handler = self._callbacks[5](self.py_get_download_handler)
+        self.get_drag_handler = self._callbacks[6](self.py_get_drag_handler)
+        self.get_find_handler = self._callbacks[7](self.py_get_find_handler)
+        self.get_focus_handler = self._callbacks[8](self.py_get_focus_handler)
+        self.get_frame_handler = self._callbacks[9](self.py_get_frame_handler)
+        self.get_permission_handler = self._callbacks[10](self.py_get_permission_handler)
+        self.get_jsdialog_handler = self._callbacks[11](self.py_get_jsdialog_handler)
+        self.get_keyboard_handler = self._callbacks[12](self.py_get_keyboard_handler)
+        self.get_life_span_handler = self._callbacks[13](self.py_get_life_span_handler)
+        self.get_load_handler = self._callbacks[14](self.py_get_load_handler)
+        self.get_print_handler = self._callbacks[15](self.py_get_print_handler)
+        self.get_render_handler = self._callbacks[16](self.py_get_render_handler)
+        self.get_request_handler = self._callbacks[17](self.py_get_request_handler)
+        self.on_process_message_received = self._callbacks[18](self.py_on_process_message_received)
 
-    def _get_audio_handler(self, xself):
+    def py_get_audio_handler(self, xself):
         return None
-    def _get_command_handler(self, xself):
+    def py_get_command_handler(self, xself):
         return None
-    def _get_context_menu_handler(self, xself):
+    def py_get_context_menu_handler(self, xself):
         return None
-    def _get_dialog_handler(self, xself):
+    def py_get_dialog_handler(self, xself):
         return None
-    def _get_display_handler(self, xself):
+    def py_get_display_handler(self, xself):
         return None
-    def _get_download_handler(self, xself):
+    def py_get_download_handler(self, xself):
         return None
-    def _get_drag_handler(self, xself):
+    def py_get_drag_handler(self, xself):
         return None
-    def _get_find_handler(self, xself):
+    def py_get_find_handler(self, xself):
         return None
-    def _get_focus_handler(self, xself):
+    def py_get_focus_handler(self, xself):
         return None
-    def _get_frame_handler(self, xself):
+    def py_get_frame_handler(self, xself):
         return None
-    def _get_permission_handler(self, xself):
+    def py_get_permission_handler(self, xself):
         return None
-    def _get_jsdialog_handler(self, xself):
+    def py_get_jsdialog_handler(self, xself):
         return None
-    def _get_keyboard_handler(self, xself):
+    def py_get_keyboard_handler(self, xself):
         return None
-    def _get_life_span_handler(self, xself):
+    def py_get_life_span_handler(self, xself):
         return None
-    def _get_load_handler(self, xself):
+    def py_get_load_handler(self, xself):
         return None
-    def _get_print_handler(self, xself):
+    def py_get_print_handler(self, xself):
         return None
-    def _get_render_handler(self, xself):
+    def py_get_render_handler(self, xself):
         return None
-    def _get_request_handler(self, xself):
+    def py_get_request_handler(self, xself):
         return None
-    def _on_process_message_received(self, xself, browser, frame, source_process, message):
+    def py_on_process_message_received(self, xself, browser, frame, source_process, message):
         return 0
 
 
@@ -533,114 +225,21 @@ class cef_command_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_chrome_command = self._callbacks[0](self._on_chrome_command)
+        self.on_chrome_command = self._callbacks[0](self.py_on_chrome_command)
 
-    def _on_chrome_command(self, xself, browser, command_id, disposition):
+    def py_on_chrome_command(self, xself, browser, command_id, disposition):
         return 0
 
 
 class cef_command_line_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_read_only = self._callbacks[1](self._is_read_only)
-        self.copy = self._callbacks[2](self._copy)
-        self.init_from_argv = self._callbacks[3](self._init_from_argv)
-        self.init_from_string = self._callbacks[4](self._init_from_string)
-        self.reset = self._callbacks[5](self._reset)
-        self.get_argv = self._callbacks[6](self._get_argv)
-        self.get_command_line_string = self._callbacks[7](self._get_command_line_string)
-        self.get_program = self._callbacks[8](self._get_program)
-        self.set_program = self._callbacks[9](self._set_program)
-        self.has_switches = self._callbacks[10](self._has_switches)
-        self.has_switch = self._callbacks[11](self._has_switch)
-        self.get_switch_value = self._callbacks[12](self._get_switch_value)
-        self.get_switches = self._callbacks[13](self._get_switches)
-        self.append_switch = self._callbacks[14](self._append_switch)
-        self.append_switch_with_value = self._callbacks[15](self._append_switch_with_value)
-        self.has_arguments = self._callbacks[16](self._has_arguments)
-        self.get_arguments = self._callbacks[17](self._get_arguments)
-        self.append_argument = self._callbacks[18](self._append_argument)
-        self.prepend_wrapper = self._callbacks[19](self._prepend_wrapper)
 
-    def _is_valid(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _copy(self, xself):
-        return None
-    def _init_from_argv(self, xself, argc, argv):
-        return 0
-    def _init_from_string(self, xself, command_line):
-        return 0
-    def _reset(self, xself):
-        return 0
-    def _get_argv(self, xself, argv):
-        return 0
-    def _get_command_line_string(self, xself):
-        return None
-    def _get_program(self, xself):
-        return None
-    def _set_program(self, xself, program):
-        return 0
-    def _has_switches(self, xself):
-        return 0
-    def _has_switch(self, xself, name):
-        return 0
-    def _get_switch_value(self, xself, name):
-        return None
-    def _get_switches(self, xself, switches):
-        return 0
-    def _append_switch(self, xself, name):
-        return 0
-    def _append_switch_with_value(self, xself, name, value):
-        return 0
-    def _has_arguments(self, xself):
-        return 0
-    def _get_arguments(self, xself, arguments):
-        return 0
-    def _append_argument(self, xself, argument):
-        return 0
-    def _prepend_wrapper(self, xself, wrapper):
-        return 0
-
-
-class cef_run_context_menu_callback_t(Structure):
+class cef_completion_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself, command_id, event_flags):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_run_quick_menu_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself, command_id, event_flags):
-        return 0
-    def _cancel(self, xself):
-        return 0
 
 
 class cef_context_menu_handler_t(Structure):
@@ -648,205 +247,55 @@ class cef_context_menu_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_before_context_menu = self._callbacks[0](self._on_before_context_menu)
-        self.run_context_menu = self._callbacks[1](self._run_context_menu)
-        self.on_context_menu_command = self._callbacks[2](self._on_context_menu_command)
-        self.on_context_menu_dismissed = self._callbacks[3](self._on_context_menu_dismissed)
-        self.run_quick_menu = self._callbacks[4](self._run_quick_menu)
-        self.on_quick_menu_command = self._callbacks[5](self._on_quick_menu_command)
-        self.on_quick_menu_dismissed = self._callbacks[6](self._on_quick_menu_dismissed)
+        self.on_before_context_menu = self._callbacks[0](self.py_on_before_context_menu)
+        self.run_context_menu = self._callbacks[1](self.py_run_context_menu)
+        self.on_context_menu_command = self._callbacks[2](self.py_on_context_menu_command)
+        self.on_context_menu_dismissed = self._callbacks[3](self.py_on_context_menu_dismissed)
+        self.run_quick_menu = self._callbacks[4](self.py_run_quick_menu)
+        self.on_quick_menu_command = self._callbacks[5](self.py_on_quick_menu_command)
+        self.on_quick_menu_dismissed = self._callbacks[6](self.py_on_quick_menu_dismissed)
 
-    def _on_before_context_menu(self, xself, browser, frame, params, model):
+    def py_on_before_context_menu(self, xself, browser, frame, params, model):
         return 0
-    def _run_context_menu(self, xself, browser, frame, params, model, callback):
+    def py_run_context_menu(self, xself, browser, frame, params, model, callback):
         return 0
-    def _on_context_menu_command(self, xself, browser, frame, params, command_id, event_flags):
+    def py_on_context_menu_command(self, xself, browser, frame, params, command_id, event_flags):
         return 0
-    def _on_context_menu_dismissed(self, xself, browser, frame):
+    def py_on_context_menu_dismissed(self, xself, browser, frame):
         return 0
-    def _run_quick_menu(self, xself, browser, frame, location, size, edit_state_flags, callback):
+    def py_run_quick_menu(self, xself, browser, frame, location, size, edit_state_flags, callback):
         return 0
-    def _on_quick_menu_command(self, xself, browser, frame, command_id, event_flags):
+    def py_on_quick_menu_command(self, xself, browser, frame, command_id, event_flags):
         return 0
-    def _on_quick_menu_dismissed(self, xself, browser, frame):
+    def py_on_quick_menu_dismissed(self, xself, browser, frame):
         return 0
 
 
 class cef_context_menu_params_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_xcoord = self._callbacks[0](self._get_xcoord)
-        self.get_ycoord = self._callbacks[1](self._get_ycoord)
-        self.get_type_flags = self._callbacks[2](self._get_type_flags)
-        self.get_link_url = self._callbacks[3](self._get_link_url)
-        self.get_unfiltered_link_url = self._callbacks[4](self._get_unfiltered_link_url)
-        self.get_source_url = self._callbacks[5](self._get_source_url)
-        self.has_image_contents = self._callbacks[6](self._has_image_contents)
-        self.get_title_text = self._callbacks[7](self._get_title_text)
-        self.get_page_url = self._callbacks[8](self._get_page_url)
-        self.get_frame_url = self._callbacks[9](self._get_frame_url)
-        self.get_frame_charset = self._callbacks[10](self._get_frame_charset)
-        self.get_media_type = self._callbacks[11](self._get_media_type)
-        self.get_media_state_flags = self._callbacks[12](self._get_media_state_flags)
-        self.get_selection_text = self._callbacks[13](self._get_selection_text)
-        self.get_misspelled_word = self._callbacks[14](self._get_misspelled_word)
-        self.get_dictionary_suggestions = self._callbacks[15](self._get_dictionary_suggestions)
-        self.is_editable = self._callbacks[16](self._is_editable)
-        self.is_spell_check_enabled = self._callbacks[17](self._is_spell_check_enabled)
-        self.get_edit_state_flags = self._callbacks[18](self._get_edit_state_flags)
-        self.is_custom_menu = self._callbacks[19](self._is_custom_menu)
 
-    def _get_xcoord(self, xself):
-        return 0
-    def _get_ycoord(self, xself):
-        return 0
-    def _get_type_flags(self, xself):
-        return 0
-    def _get_link_url(self, xself):
-        return None
-    def _get_unfiltered_link_url(self, xself):
-        return None
-    def _get_source_url(self, xself):
-        return None
-    def _has_image_contents(self, xself):
-        return 0
-    def _get_title_text(self, xself):
-        return None
-    def _get_page_url(self, xself):
-        return None
-    def _get_frame_url(self, xself):
-        return None
-    def _get_frame_charset(self, xself):
-        return None
-    def _get_media_type(self, xself):
-        return 0
-    def _get_media_state_flags(self, xself):
-        return 0
-    def _get_selection_text(self, xself):
-        return None
-    def _get_misspelled_word(self, xself):
-        return None
-    def _get_dictionary_suggestions(self, xself, suggestions):
-        return 0
-    def _is_editable(self, xself):
-        return 0
-    def _is_spell_check_enabled(self, xself):
-        return 0
-    def _get_edit_state_flags(self, xself):
-        return 0
-    def _is_custom_menu(self, xself):
-        return 0
+class cef_cookie_access_filter_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_cookie_manager_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.visit_all_cookies = self._callbacks[0](self._visit_all_cookies)
-        self.visit_url_cookies = self._callbacks[1](self._visit_url_cookies)
-        self.set_cookie = self._callbacks[2](self._set_cookie)
-        self.delete_cookies = self._callbacks[3](self._delete_cookies)
-        self.flush_store = self._callbacks[4](self._flush_store)
-
-    def _visit_all_cookies(self, xself, visitor):
-        return 0
-    def _visit_url_cookies(self, xself, url, includeHttpOnly, visitor):
-        return 0
-    def _set_cookie(self, xself, url, cookie, callback):
-        return 0
-    def _delete_cookies(self, xself, url, cookie_name, callback):
-        return 0
-    def _flush_store(self, xself, callback):
-        return 0
-
 
 class cef_cookie_visitor_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.visit = self._callbacks[0](self._visit)
-
-    def _visit(self, xself, cookie, count, total, deleteCookie):
-        return 0
-
-
-class cef_set_cookie_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_complete = self._callbacks[0](self._on_complete)
-
-    def _on_complete(self, xself, success):
-        return 0
 
 
 class cef_delete_cookies_callback_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_complete = self._callbacks[0](self._on_complete)
-
-    def _on_complete(self, xself, num_deleted):
-        return 0
-
 
 class cef_dev_tools_message_observer_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_dev_tools_message = self._callbacks[0](self._on_dev_tools_message)
-        self.on_dev_tools_method_result = self._callbacks[1](self._on_dev_tools_method_result)
-        self.on_dev_tools_event = self._callbacks[2](self._on_dev_tools_event)
-        self.on_dev_tools_agent_attached = self._callbacks[3](self._on_dev_tools_agent_attached)
-        self.on_dev_tools_agent_detached = self._callbacks[4](self._on_dev_tools_agent_detached)
-
-    def _on_dev_tools_message(self, xself, browser, message, message_size):
-        return 0
-    def _on_dev_tools_method_result(self, xself, browser, message_id, success, result, result_size):
-        return 0
-    def _on_dev_tools_event(self, xself, browser, method, params, params_size):
-        return 0
-    def _on_dev_tools_agent_attached(self, xself, browser):
-        return 0
-    def _on_dev_tools_agent_detached(self, xself, browser):
-        return 0
-
-
-class cef_file_dialog_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself, file_paths):
-        return 0
-    def _cancel(self, xself):
-        return 0
 
 
 class cef_dialog_handler_t(Structure):
@@ -854,12 +303,17 @@ class cef_dialog_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_file_dialog = self._callbacks[0](self._on_file_dialog)
+        self.on_file_dialog = self._callbacks[0](self.py_on_file_dialog)
 
-    def _on_file_dialog(self, xself, browser, mode, title, default_file_path, accept_filters, callback):
+    def py_on_file_dialog(self, xself, browser, mode, title, default_file_path, accept_filters, callback):
         return 0
+
+
+class cef_dictionary_value_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_display_handler_t(Structure):
@@ -867,227 +321,59 @@ class cef_display_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_address_change = self._callbacks[0](self._on_address_change)
-        self.on_title_change = self._callbacks[1](self._on_title_change)
-        self.on_favicon_urlchange = self._callbacks[2](self._on_favicon_urlchange)
-        self.on_fullscreen_mode_change = self._callbacks[3](self._on_fullscreen_mode_change)
-        self.on_tooltip = self._callbacks[4](self._on_tooltip)
-        self.on_status_message = self._callbacks[5](self._on_status_message)
-        self.on_console_message = self._callbacks[6](self._on_console_message)
-        self.on_auto_resize = self._callbacks[7](self._on_auto_resize)
-        self.on_loading_progress_change = self._callbacks[8](self._on_loading_progress_change)
-        self.on_cursor_change = self._callbacks[9](self._on_cursor_change)
-        self.on_media_access_change = self._callbacks[10](self._on_media_access_change)
+        self.on_address_change = self._callbacks[0](self.py_on_address_change)
+        self.on_title_change = self._callbacks[1](self.py_on_title_change)
+        self.on_favicon_urlchange = self._callbacks[2](self.py_on_favicon_urlchange)
+        self.on_fullscreen_mode_change = self._callbacks[3](self.py_on_fullscreen_mode_change)
+        self.on_tooltip = self._callbacks[4](self.py_on_tooltip)
+        self.on_status_message = self._callbacks[5](self.py_on_status_message)
+        self.on_console_message = self._callbacks[6](self.py_on_console_message)
+        self.on_auto_resize = self._callbacks[7](self.py_on_auto_resize)
+        self.on_loading_progress_change = self._callbacks[8](self.py_on_loading_progress_change)
+        self.on_cursor_change = self._callbacks[9](self.py_on_cursor_change)
+        self.on_media_access_change = self._callbacks[10](self.py_on_media_access_change)
 
-    def _on_address_change(self, xself, browser, frame, url):
+    def py_on_address_change(self, xself, browser, frame, url):
         return 0
-    def _on_title_change(self, xself, browser, title):
+    def py_on_title_change(self, xself, browser, title):
         return 0
-    def _on_favicon_urlchange(self, xself, browser, icon_urls):
+    def py_on_favicon_urlchange(self, xself, browser, icon_urls):
         return 0
-    def _on_fullscreen_mode_change(self, xself, browser, fullscreen):
+    def py_on_fullscreen_mode_change(self, xself, browser, fullscreen):
         return 0
-    def _on_tooltip(self, xself, browser, text):
+    def py_on_tooltip(self, xself, browser, text):
         return 0
-    def _on_status_message(self, xself, browser, value):
+    def py_on_status_message(self, xself, browser, value):
         return 0
-    def _on_console_message(self, xself, browser, level, message, source, line):
+    def py_on_console_message(self, xself, browser, level, message, source, line):
         return 0
-    def _on_auto_resize(self, xself, browser, new_size):
+    def py_on_auto_resize(self, xself, browser, new_size):
         return 0
-    def _on_loading_progress_change(self, xself, browser, progress):
+    def py_on_loading_progress_change(self, xself, browser, progress):
         return 0
-    def _on_cursor_change(self, xself, browser, cursor, type, custom_cursor_info):
+    def py_on_cursor_change(self, xself, browser, cursor, type, custom_cursor_info):
         return 0
-    def _on_media_access_change(self, xself, browser, has_video_access, has_audio_access):
+    def py_on_media_access_change(self, xself, browser, has_video_access, has_audio_access):
         return 0
 
 
-class cef_domvisitor_t(Structure):
+class cef_display_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.visit = self._callbacks[0](self._visit)
-
-    def _visit(self, xself, document):
-        return 0
 
 
 class cef_domdocument_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_type = self._callbacks[0](self._get_type)
-        self.get_document = self._callbacks[1](self._get_document)
-        self.get_body = self._callbacks[2](self._get_body)
-        self.get_head = self._callbacks[3](self._get_head)
-        self.get_title = self._callbacks[4](self._get_title)
-        self.get_element_by_id = self._callbacks[5](self._get_element_by_id)
-        self.get_focused_node = self._callbacks[6](self._get_focused_node)
-        self.has_selection = self._callbacks[7](self._has_selection)
-        self.get_selection_start_offset = self._callbacks[8](self._get_selection_start_offset)
-        self.get_selection_end_offset = self._callbacks[9](self._get_selection_end_offset)
-        self.get_selection_as_markup = self._callbacks[10](self._get_selection_as_markup)
-        self.get_selection_as_text = self._callbacks[11](self._get_selection_as_text)
-        self.get_base_url = self._callbacks[12](self._get_base_url)
-        self.get_complete_url = self._callbacks[13](self._get_complete_url)
-
-    def _get_type(self, xself):
-        return 0
-    def _get_document(self, xself):
-        return None
-    def _get_body(self, xself):
-        return None
-    def _get_head(self, xself):
-        return None
-    def _get_title(self, xself):
-        return None
-    def _get_element_by_id(self, xself, id):
-        return None
-    def _get_focused_node(self, xself):
-        return None
-    def _has_selection(self, xself):
-        return 0
-    def _get_selection_start_offset(self, xself):
-        return 0
-    def _get_selection_end_offset(self, xself):
-        return 0
-    def _get_selection_as_markup(self, xself):
-        return None
-    def _get_selection_as_text(self, xself):
-        return None
-    def _get_base_url(self, xself):
-        return None
-    def _get_complete_url(self, xself, partialURL):
-        return None
-
 
 class cef_domnode_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_type = self._callbacks[0](self._get_type)
-        self.is_text = self._callbacks[1](self._is_text)
-        self.is_element = self._callbacks[2](self._is_element)
-        self.is_editable = self._callbacks[3](self._is_editable)
-        self.is_form_control_element = self._callbacks[4](self._is_form_control_element)
-        self.get_form_control_element_type = self._callbacks[5](self._get_form_control_element_type)
-        self.is_same = self._callbacks[6](self._is_same)
-        self.get_name = self._callbacks[7](self._get_name)
-        self.get_value = self._callbacks[8](self._get_value)
-        self.set_value = self._callbacks[9](self._set_value)
-        self.get_as_markup = self._callbacks[10](self._get_as_markup)
-        self.get_document = self._callbacks[11](self._get_document)
-        self.get_parent = self._callbacks[12](self._get_parent)
-        self.get_previous_sibling = self._callbacks[13](self._get_previous_sibling)
-        self.get_next_sibling = self._callbacks[14](self._get_next_sibling)
-        self.has_children = self._callbacks[15](self._has_children)
-        self.get_first_child = self._callbacks[16](self._get_first_child)
-        self.get_last_child = self._callbacks[17](self._get_last_child)
-        self.get_element_tag_name = self._callbacks[18](self._get_element_tag_name)
-        self.has_element_attributes = self._callbacks[19](self._has_element_attributes)
-        self.has_element_attribute = self._callbacks[20](self._has_element_attribute)
-        self.get_element_attribute = self._callbacks[21](self._get_element_attribute)
-        self.get_element_attributes = self._callbacks[22](self._get_element_attributes)
-        self.set_element_attribute = self._callbacks[23](self._set_element_attribute)
-        self.get_element_inner_text = self._callbacks[24](self._get_element_inner_text)
-        self.get_element_bounds = self._callbacks[25](self._get_element_bounds)
 
-    def _get_type(self, xself):
-        return 0
-    def _is_text(self, xself):
-        return 0
-    def _is_element(self, xself):
-        return 0
-    def _is_editable(self, xself):
-        return 0
-    def _is_form_control_element(self, xself):
-        return 0
-    def _get_form_control_element_type(self, xself):
-        return None
-    def _is_same(self, xself, that):
-        return 0
-    def _get_name(self, xself):
-        return None
-    def _get_value(self, xself):
-        return None
-    def _set_value(self, xself, value):
-        return 0
-    def _get_as_markup(self, xself):
-        return None
-    def _get_document(self, xself):
-        return None
-    def _get_parent(self, xself):
-        return None
-    def _get_previous_sibling(self, xself):
-        return None
-    def _get_next_sibling(self, xself):
-        return None
-    def _has_children(self, xself):
-        return 0
-    def _get_first_child(self, xself):
-        return None
-    def _get_last_child(self, xself):
-        return None
-    def _get_element_tag_name(self, xself):
-        return None
-    def _has_element_attributes(self, xself):
-        return 0
-    def _has_element_attribute(self, xself, attrName):
-        return 0
-    def _get_element_attribute(self, xself, attrName):
-        return None
-    def _get_element_attributes(self, xself, attrMap):
-        return 0
-    def _set_element_attribute(self, xself, attrName, value):
-        return 0
-    def _get_element_inner_text(self, xself):
-        return None
-    def _get_element_bounds(self, xself):
-        return 0
-
-
-class cef_before_download_callback_t(Structure):
+class cef_domvisitor_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-
-    def _cont(self, xself, download_path, show_dialog):
-        return 0
-
-
-class cef_download_item_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cancel = self._callbacks[0](self._cancel)
-        self.pause = self._callbacks[1](self._pause)
-        self.resume = self._callbacks[2](self._resume)
-
-    def _cancel(self, xself):
-        return 0
-    def _pause(self, xself):
-        return 0
-    def _resume(self, xself):
-        return 0
 
 
 class cef_download_handler_t(Structure):
@@ -1095,167 +381,35 @@ class cef_download_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.can_download = self._callbacks[0](self._can_download)
-        self.on_before_download = self._callbacks[1](self._on_before_download)
-        self.on_download_updated = self._callbacks[2](self._on_download_updated)
+        self.can_download = self._callbacks[0](self.py_can_download)
+        self.on_before_download = self._callbacks[1](self.py_on_before_download)
+        self.on_download_updated = self._callbacks[2](self.py_on_download_updated)
 
-    def _can_download(self, xself, browser, url, request_method):
+    def py_can_download(self, xself, browser, url, request_method):
         return 0
-    def _on_before_download(self, xself, browser, download_item, suggested_name, callback):
+    def py_on_before_download(self, xself, browser, download_item, suggested_name, callback):
         return 0
-    def _on_download_updated(self, xself, browser, download_item, callback):
+    def py_on_download_updated(self, xself, browser, download_item, callback):
         return 0
+
+
+class cef_download_image_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_download_item_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_download_item_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_in_progress = self._callbacks[1](self._is_in_progress)
-        self.is_complete = self._callbacks[2](self._is_complete)
-        self.is_canceled = self._callbacks[3](self._is_canceled)
-        self.get_current_speed = self._callbacks[4](self._get_current_speed)
-        self.get_percent_complete = self._callbacks[5](self._get_percent_complete)
-        self.get_total_bytes = self._callbacks[6](self._get_total_bytes)
-        self.get_received_bytes = self._callbacks[7](self._get_received_bytes)
-        self.get_start_time = self._callbacks[8](self._get_start_time)
-        self.get_end_time = self._callbacks[9](self._get_end_time)
-        self.get_full_path = self._callbacks[10](self._get_full_path)
-        self.get_id = self._callbacks[11](self._get_id)
-        self.get_url = self._callbacks[12](self._get_url)
-        self.get_original_url = self._callbacks[13](self._get_original_url)
-        self.get_suggested_file_name = self._callbacks[14](self._get_suggested_file_name)
-        self.get_content_disposition = self._callbacks[15](self._get_content_disposition)
-        self.get_mime_type = self._callbacks[16](self._get_mime_type)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_in_progress(self, xself):
-        return 0
-    def _is_complete(self, xself):
-        return 0
-    def _is_canceled(self, xself):
-        return 0
-    def _get_current_speed(self, xself):
-        return 0
-    def _get_percent_complete(self, xself):
-        return 0
-    def _get_total_bytes(self, xself):
-        return 0
-    def _get_received_bytes(self, xself):
-        return 0
-    def _get_start_time(self, xself):
-        return 0
-    def _get_end_time(self, xself):
-        return 0
-    def _get_full_path(self, xself):
-        return None
-    def _get_id(self, xself):
-        return 0
-    def _get_url(self, xself):
-        return None
-    def _get_original_url(self, xself):
-        return None
-    def _get_suggested_file_name(self, xself):
-        return None
-    def _get_content_disposition(self, xself):
-        return None
-    def _get_mime_type(self, xself):
-        return None
-
 
 class cef_drag_data_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.clone = self._callbacks[0](self._clone)
-        self.is_read_only = self._callbacks[1](self._is_read_only)
-        self.is_link = self._callbacks[2](self._is_link)
-        self.is_fragment = self._callbacks[3](self._is_fragment)
-        self.is_file = self._callbacks[4](self._is_file)
-        self.get_link_url = self._callbacks[5](self._get_link_url)
-        self.get_link_title = self._callbacks[6](self._get_link_title)
-        self.get_link_metadata = self._callbacks[7](self._get_link_metadata)
-        self.get_fragment_text = self._callbacks[8](self._get_fragment_text)
-        self.get_fragment_html = self._callbacks[9](self._get_fragment_html)
-        self.get_fragment_base_url = self._callbacks[10](self._get_fragment_base_url)
-        self.get_file_name = self._callbacks[11](self._get_file_name)
-        self.get_file_contents = self._callbacks[12](self._get_file_contents)
-        self.get_file_names = self._callbacks[13](self._get_file_names)
-        self.set_link_url = self._callbacks[14](self._set_link_url)
-        self.set_link_title = self._callbacks[15](self._set_link_title)
-        self.set_link_metadata = self._callbacks[16](self._set_link_metadata)
-        self.set_fragment_text = self._callbacks[17](self._set_fragment_text)
-        self.set_fragment_html = self._callbacks[18](self._set_fragment_html)
-        self.set_fragment_base_url = self._callbacks[19](self._set_fragment_base_url)
-        self.reset_file_contents = self._callbacks[20](self._reset_file_contents)
-        self.add_file = self._callbacks[21](self._add_file)
-        self.clear_filenames = self._callbacks[22](self._clear_filenames)
-        self.get_image = self._callbacks[23](self._get_image)
-        self.get_image_hotspot = self._callbacks[24](self._get_image_hotspot)
-        self.has_image = self._callbacks[25](self._has_image)
-
-    def _clone(self, xself):
-        return None
-    def _is_read_only(self, xself):
-        return 0
-    def _is_link(self, xself):
-        return 0
-    def _is_fragment(self, xself):
-        return 0
-    def _is_file(self, xself):
-        return 0
-    def _get_link_url(self, xself):
-        return None
-    def _get_link_title(self, xself):
-        return None
-    def _get_link_metadata(self, xself):
-        return None
-    def _get_fragment_text(self, xself):
-        return None
-    def _get_fragment_html(self, xself):
-        return None
-    def _get_fragment_base_url(self, xself):
-        return None
-    def _get_file_name(self, xself):
-        return None
-    def _get_file_contents(self, xself, writer):
-        return 0
-    def _get_file_names(self, xself, names):
-        return 0
-    def _set_link_url(self, xself, url):
-        return 0
-    def _set_link_title(self, xself, title):
-        return 0
-    def _set_link_metadata(self, xself, data):
-        return 0
-    def _set_fragment_text(self, xself, text):
-        return 0
-    def _set_fragment_html(self, xself, html):
-        return 0
-    def _set_fragment_base_url(self, xself, base_url):
-        return 0
-    def _reset_file_contents(self, xself):
-        return 0
-    def _add_file(self, xself, path, display_name):
-        return 0
-    def _clear_filenames(self, xself):
-        return 0
-    def _get_image(self, xself):
-        return None
-    def _get_image_hotspot(self, xself):
-        return 0
-    def _has_image(self, xself):
-        return 0
 
 
 class cef_drag_handler_t(Structure):
@@ -1263,65 +417,20 @@ class cef_drag_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_drag_enter = self._callbacks[0](self._on_drag_enter)
-        self.on_draggable_regions_changed = self._callbacks[1](self._on_draggable_regions_changed)
+        self.on_drag_enter = self._callbacks[0](self.py_on_drag_enter)
+        self.on_draggable_regions_changed = self._callbacks[1](self.py_on_draggable_regions_changed)
 
-    def _on_drag_enter(self, xself, browser, dragData, mask):
+    def py_on_drag_enter(self, xself, browser, dragData, mask):
         return 0
-    def _on_draggable_regions_changed(self, xself, browser, frame, regionsCount, regions):
+    def py_on_draggable_regions_changed(self, xself, browser, frame, regionsCount, regions):
         return 0
 
 
-class cef_extension_t(Structure):
+class cef_end_tracing_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_identifier = self._callbacks[0](self._get_identifier)
-        self.get_path = self._callbacks[1](self._get_path)
-        self.get_manifest = self._callbacks[2](self._get_manifest)
-        self.is_same = self._callbacks[3](self._is_same)
-        self.get_handler = self._callbacks[4](self._get_handler)
-        self.get_loader_context = self._callbacks[5](self._get_loader_context)
-        self.is_loaded = self._callbacks[6](self._is_loaded)
-        self.unload = self._callbacks[7](self._unload)
-
-    def _get_identifier(self, xself):
-        return None
-    def _get_path(self, xself):
-        return None
-    def _get_manifest(self, xself):
-        return None
-    def _is_same(self, xself, that):
-        return 0
-    def _get_handler(self, xself):
-        return None
-    def _get_loader_context(self, xself):
-        return None
-    def _is_loaded(self, xself):
-        return 0
-    def _unload(self, xself):
-        return 0
-
-
-class cef_get_extension_resource_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself, stream):
-        return 0
-    def _cancel(self, xself):
-        return 0
 
 
 class cef_extension_handler_t(Structure):
@@ -1329,33 +438,46 @@ class cef_extension_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_extension_load_failed = self._callbacks[0](self._on_extension_load_failed)
-        self.on_extension_loaded = self._callbacks[1](self._on_extension_loaded)
-        self.on_extension_unloaded = self._callbacks[2](self._on_extension_unloaded)
-        self.on_before_background_browser = self._callbacks[3](self._on_before_background_browser)
-        self.on_before_browser = self._callbacks[4](self._on_before_browser)
-        self.get_active_browser = self._callbacks[5](self._get_active_browser)
-        self.can_access_browser = self._callbacks[6](self._can_access_browser)
-        self.get_extension_resource = self._callbacks[7](self._get_extension_resource)
+        self.on_extension_load_failed = self._callbacks[0](self.py_on_extension_load_failed)
+        self.on_extension_loaded = self._callbacks[1](self.py_on_extension_loaded)
+        self.on_extension_unloaded = self._callbacks[2](self.py_on_extension_unloaded)
+        self.on_before_background_browser = self._callbacks[3](self.py_on_before_background_browser)
+        self.on_before_browser = self._callbacks[4](self.py_on_before_browser)
+        self.get_active_browser = self._callbacks[5](self.py_get_active_browser)
+        self.can_access_browser = self._callbacks[6](self.py_can_access_browser)
+        self.get_extension_resource = self._callbacks[7](self.py_get_extension_resource)
 
-    def _on_extension_load_failed(self, xself, result):
+    def py_on_extension_load_failed(self, xself, result):
         return 0
-    def _on_extension_loaded(self, xself, extension):
+    def py_on_extension_loaded(self, xself, extension):
         return 0
-    def _on_extension_unloaded(self, xself, extension):
+    def py_on_extension_unloaded(self, xself, extension):
         return 0
-    def _on_before_background_browser(self, xself, extension, url, client, settings):
+    def py_on_before_background_browser(self, xself, extension, url, client, settings):
         return 0
-    def _on_before_browser(self, xself, extension, browser, active_browser, index, url, active, windowInfo, client, settings):
+    def py_on_before_browser(self, xself, extension, browser, active_browser, index, url, active, windowInfo, client, settings):
         return 0
-    def _get_active_browser(self, xself, extension, browser, include_incognito):
+    def py_get_active_browser(self, xself, extension, browser, include_incognito):
         return None
-    def _can_access_browser(self, xself, extension, browser, include_incognito, target_browser):
+    def py_can_access_browser(self, xself, extension, browser, include_incognito, target_browser):
         return 0
-    def _get_extension_resource(self, xself, extension, browser, file, callback):
+    def py_get_extension_resource(self, xself, extension, browser, file, callback):
         return 0
+
+
+class cef_extension_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_file_dialog_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_fill_layout_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_find_handler_t(Structure):
@@ -1363,11 +485,12 @@ class cef_find_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_find_result = self._callbacks[0](self._on_find_result)
+        self.on_find_result = self._callbacks[0](self.py_on_find_result)
 
-    def _on_find_result(self, xself, browser, identifier, count, selectionRect, activeMatchOrdinal, finalUpdate):
+    def py_on_find_result(self, xself, browser, identifier, count, selectionRect, activeMatchOrdinal, finalUpdate):
         return 0
 
 
@@ -1376,102 +499,18 @@ class cef_focus_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_take_focus = self._callbacks[0](self._on_take_focus)
-        self.on_set_focus = self._callbacks[1](self._on_set_focus)
-        self.on_got_focus = self._callbacks[2](self._on_got_focus)
+        self.on_take_focus = self._callbacks[0](self.py_on_take_focus)
+        self.on_set_focus = self._callbacks[1](self.py_on_set_focus)
+        self.on_got_focus = self._callbacks[2](self.py_on_got_focus)
 
-    def _on_take_focus(self, xself, browser, next):
+    def py_on_take_focus(self, xself, browser, next):
         return 0
-    def _on_set_focus(self, xself, browser, source):
+    def py_on_set_focus(self, xself, browser, source):
         return 0
-    def _on_got_focus(self, xself, browser):
-        return 0
-
-
-class cef_frame_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.undo = self._callbacks[1](self._undo)
-        self.redo = self._callbacks[2](self._redo)
-        self.cut = self._callbacks[3](self._cut)
-        self.copy = self._callbacks[4](self._copy)
-        self.paste = self._callbacks[5](self._paste)
-        self.xdel = self._callbacks[6](self._xdel)
-        self.select_all = self._callbacks[7](self._select_all)
-        self.view_source = self._callbacks[8](self._view_source)
-        self.get_source = self._callbacks[9](self._get_source)
-        self.get_text = self._callbacks[10](self._get_text)
-        self.load_request = self._callbacks[11](self._load_request)
-        self.load_url = self._callbacks[12](self._load_url)
-        self.execute_java_script = self._callbacks[13](self._execute_java_script)
-        self.is_main = self._callbacks[14](self._is_main)
-        self.is_focused = self._callbacks[15](self._is_focused)
-        self.get_name = self._callbacks[16](self._get_name)
-        self.get_identifier = self._callbacks[17](self._get_identifier)
-        self.get_parent = self._callbacks[18](self._get_parent)
-        self.get_url = self._callbacks[19](self._get_url)
-        self.get_browser = self._callbacks[20](self._get_browser)
-        self.get_v8context = self._callbacks[21](self._get_v8context)
-        self.visit_dom = self._callbacks[22](self._visit_dom)
-        self.create_urlrequest = self._callbacks[23](self._create_urlrequest)
-        self.send_process_message = self._callbacks[24](self._send_process_message)
-
-    def _is_valid(self, xself):
-        return 0
-    def _undo(self, xself):
-        return 0
-    def _redo(self, xself):
-        return 0
-    def _cut(self, xself):
-        return 0
-    def _copy(self, xself):
-        return 0
-    def _paste(self, xself):
-        return 0
-    def _xdel(self, xself):
-        return 0
-    def _select_all(self, xself):
-        return 0
-    def _view_source(self, xself):
-        return 0
-    def _get_source(self, xself, visitor):
-        return 0
-    def _get_text(self, xself, visitor):
-        return 0
-    def _load_request(self, xself, request):
-        return 0
-    def _load_url(self, xself, url):
-        return 0
-    def _execute_java_script(self, xself, code, script_url, start_line):
-        return 0
-    def _is_main(self, xself):
-        return 0
-    def _is_focused(self, xself):
-        return 0
-    def _get_name(self, xself):
-        return None
-    def _get_identifier(self, xself):
-        return 0
-    def _get_parent(self, xself):
-        return None
-    def _get_url(self, xself):
-        return None
-    def _get_browser(self, xself):
-        return None
-    def _get_v8context(self, xself):
-        return None
-    def _visit_dom(self, xself, visitor):
-        return 0
-    def _create_urlrequest(self, xself, request, client):
-        return None
-    def _send_process_message(self, xself, target_process, message):
+    def py_on_got_focus(self, xself, browser):
         return 0
 
 
@@ -1480,83 +519,38 @@ class cef_frame_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_frame_created = self._callbacks[0](self._on_frame_created)
-        self.on_frame_attached = self._callbacks[1](self._on_frame_attached)
-        self.on_frame_detached = self._callbacks[2](self._on_frame_detached)
-        self.on_main_frame_changed = self._callbacks[3](self._on_main_frame_changed)
+        self.on_frame_created = self._callbacks[0](self.py_on_frame_created)
+        self.on_frame_attached = self._callbacks[1](self.py_on_frame_attached)
+        self.on_frame_detached = self._callbacks[2](self.py_on_frame_detached)
+        self.on_main_frame_changed = self._callbacks[3](self.py_on_main_frame_changed)
 
-    def _on_frame_created(self, xself, browser, frame):
+    def py_on_frame_created(self, xself, browser, frame):
         return 0
-    def _on_frame_attached(self, xself, browser, frame, reattached):
+    def py_on_frame_attached(self, xself, browser, frame, reattached):
         return 0
-    def _on_frame_detached(self, xself, browser, frame):
+    def py_on_frame_detached(self, xself, browser, frame):
         return 0
-    def _on_main_frame_changed(self, xself, browser, old_frame, new_frame):
+    def py_on_main_frame_changed(self, xself, browser, old_frame, new_frame):
         return 0
+
+
+class cef_frame_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_get_extension_resource_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_image_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_empty = self._callbacks[0](self._is_empty)
-        self.is_same = self._callbacks[1](self._is_same)
-        self.add_bitmap = self._callbacks[2](self._add_bitmap)
-        self.add_png = self._callbacks[3](self._add_png)
-        self.add_jpeg = self._callbacks[4](self._add_jpeg)
-        self.get_width = self._callbacks[5](self._get_width)
-        self.get_height = self._callbacks[6](self._get_height)
-        self.has_representation = self._callbacks[7](self._has_representation)
-        self.remove_representation = self._callbacks[8](self._remove_representation)
-        self.get_representation_info = self._callbacks[9](self._get_representation_info)
-        self.get_as_bitmap = self._callbacks[10](self._get_as_bitmap)
-        self.get_as_png = self._callbacks[11](self._get_as_png)
-        self.get_as_jpeg = self._callbacks[12](self._get_as_jpeg)
-
-    def _is_empty(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _add_bitmap(self, xself, scale_factor, pixel_width, pixel_height, color_type, alpha_type, pixel_data, pixel_data_size):
-        return 0
-    def _add_png(self, xself, scale_factor, png_data, png_data_size):
-        return 0
-    def _add_jpeg(self, xself, scale_factor, jpeg_data, jpeg_data_size):
-        return 0
-    def _get_width(self, xself):
-        return 0
-    def _get_height(self, xself):
-        return 0
-    def _has_representation(self, xself, scale_factor):
-        return 0
-    def _remove_representation(self, xself, scale_factor):
-        return 0
-    def _get_representation_info(self, xself, scale_factor, actual_scale_factor, pixel_width, pixel_height):
-        return 0
-    def _get_as_bitmap(self, xself, scale_factor, color_type, alpha_type, pixel_width, pixel_height):
-        return None
-    def _get_as_png(self, xself, scale_factor, with_transparency, pixel_width, pixel_height):
-        return None
-    def _get_as_jpeg(self, xself, scale_factor, quality, pixel_width, pixel_height):
-        return None
-
 
 class cef_jsdialog_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-
-    def _cont(self, xself, success, user_input):
-        return 0
 
 
 class cef_jsdialog_handler_t(Structure):
@@ -1564,20 +558,21 @@ class cef_jsdialog_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_jsdialog = self._callbacks[0](self._on_jsdialog)
-        self.on_before_unload_dialog = self._callbacks[1](self._on_before_unload_dialog)
-        self.on_reset_dialog_state = self._callbacks[2](self._on_reset_dialog_state)
-        self.on_dialog_closed = self._callbacks[3](self._on_dialog_closed)
+        self.on_jsdialog = self._callbacks[0](self.py_on_jsdialog)
+        self.on_before_unload_dialog = self._callbacks[1](self.py_on_before_unload_dialog)
+        self.on_reset_dialog_state = self._callbacks[2](self.py_on_reset_dialog_state)
+        self.on_dialog_closed = self._callbacks[3](self.py_on_dialog_closed)
 
-    def _on_jsdialog(self, xself, browser, origin_url, dialog_type, message_text, default_prompt_text, callback, suppress_message):
+    def py_on_jsdialog(self, xself, browser, origin_url, dialog_type, message_text, default_prompt_text, callback, suppress_message):
         return 0
-    def _on_before_unload_dialog(self, xself, browser, message_text, is_reload, callback):
+    def py_on_before_unload_dialog(self, xself, browser, message_text, is_reload, callback):
         return 0
-    def _on_reset_dialog_state(self, xself, browser):
+    def py_on_reset_dialog_state(self, xself, browser):
         return 0
-    def _on_dialog_closed(self, xself, browser):
+    def py_on_dialog_closed(self, xself, browser):
         return 0
 
 
@@ -1586,15 +581,24 @@ class cef_keyboard_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_pre_key_event = self._callbacks[0](self._on_pre_key_event)
-        self.on_key_event = self._callbacks[1](self._on_key_event)
+        self.on_pre_key_event = self._callbacks[0](self.py_on_pre_key_event)
+        self.on_key_event = self._callbacks[1](self.py_on_key_event)
 
-    def _on_pre_key_event(self, xself, browser, event, os_event, is_keyboard_shortcut):
+    def py_on_pre_key_event(self, xself, browser, event, os_event, is_keyboard_shortcut):
         return 0
-    def _on_key_event(self, xself, browser, event, os_event):
+    def py_on_key_event(self, xself, browser, event, os_event):
         return 0
+
+
+class cef_label_button_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_layout_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_life_span_handler_t(Structure):
@@ -1602,21 +606,26 @@ class cef_life_span_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_before_popup = self._callbacks[0](self._on_before_popup)
-        self.on_after_created = self._callbacks[1](self._on_after_created)
-        self.do_close = self._callbacks[2](self._do_close)
-        self.on_before_close = self._callbacks[3](self._on_before_close)
+        self.on_before_popup = self._callbacks[0](self.py_on_before_popup)
+        self.on_after_created = self._callbacks[1](self.py_on_after_created)
+        self.do_close = self._callbacks[2](self.py_do_close)
+        self.on_before_close = self._callbacks[3](self.py_on_before_close)
 
-    def _on_before_popup(self, xself, browser, frame, target_url, target_frame_name, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, extra_info, no_javascript_access):
+    def py_on_before_popup(self, xself, browser, frame, target_url, target_frame_name, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, extra_info, no_javascript_access):
         return 0
-    def _on_after_created(self, xself, browser):
+    def py_on_after_created(self, xself, browser):
         return 0
-    def _do_close(self, xself, browser):
+    def py_do_close(self, xself, browser):
         return 0
-    def _on_before_close(self, xself, browser):
+    def py_on_before_close(self, xself, browser):
         return 0
+
+
+class cef_list_value_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_load_handler_t(Structure):
@@ -1624,450 +633,98 @@ class cef_load_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_loading_state_change = self._callbacks[0](self._on_loading_state_change)
-        self.on_load_start = self._callbacks[1](self._on_load_start)
-        self.on_load_end = self._callbacks[2](self._on_load_end)
-        self.on_load_error = self._callbacks[3](self._on_load_error)
+        self.on_loading_state_change = self._callbacks[0](self.py_on_loading_state_change)
+        self.on_load_start = self._callbacks[1](self.py_on_load_start)
+        self.on_load_end = self._callbacks[2](self.py_on_load_end)
+        self.on_load_error = self._callbacks[3](self.py_on_load_error)
 
-    def _on_loading_state_change(self, xself, browser, isLoading, canGoBack, canGoForward):
+    def py_on_loading_state_change(self, xself, browser, isLoading, canGoBack, canGoForward):
         return 0
-    def _on_load_start(self, xself, browser, frame, transition_type):
+    def py_on_load_start(self, xself, browser, frame, transition_type):
         return 0
-    def _on_load_end(self, xself, browser, frame, httpStatusCode):
+    def py_on_load_end(self, xself, browser, frame, httpStatusCode):
         return 0
-    def _on_load_error(self, xself, browser, frame, errorCode, errorText, failedUrl):
+    def py_on_load_error(self, xself, browser, frame, errorCode, errorText, failedUrl):
         return 0
-
-
-class cef_media_router_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.add_observer = self._callbacks[0](self._add_observer)
-        self.get_source = self._callbacks[1](self._get_source)
-        self.notify_current_sinks = self._callbacks[2](self._notify_current_sinks)
-        self.create_route = self._callbacks[3](self._create_route)
-        self.notify_current_routes = self._callbacks[4](self._notify_current_routes)
-
-    def _add_observer(self, xself, observer):
-        return None
-    def _get_source(self, xself, urn):
-        return None
-    def _notify_current_sinks(self, xself):
-        return 0
-    def _create_route(self, xself, source, sink, callback):
-        return 0
-    def _notify_current_routes(self, xself):
-        return 0
-
-
-class cef_media_observer_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_sinks = self._callbacks[0](self._on_sinks)
-        self.on_routes = self._callbacks[1](self._on_routes)
-        self.on_route_state_changed = self._callbacks[2](self._on_route_state_changed)
-        self.on_route_message_received = self._callbacks[3](self._on_route_message_received)
-
-    def _on_sinks(self, xself, sinksCount, sinks):
-        return 0
-    def _on_routes(self, xself, routesCount, routes):
-        return 0
-    def _on_route_state_changed(self, xself, route, state):
-        return 0
-    def _on_route_message_received(self, xself, route, message, message_size):
-        return 0
-
-
-class cef_media_route_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_id = self._callbacks[0](self._get_id)
-        self.get_source = self._callbacks[1](self._get_source)
-        self.get_sink = self._callbacks[2](self._get_sink)
-        self.send_route_message = self._callbacks[3](self._send_route_message)
-        self.terminate = self._callbacks[4](self._terminate)
-
-    def _get_id(self, xself):
-        return None
-    def _get_source(self, xself):
-        return None
-    def _get_sink(self, xself):
-        return None
-    def _send_route_message(self, xself, message, message_size):
-        return 0
-    def _terminate(self, xself):
-        return 0
-
-
-class cef_media_route_create_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_media_route_create_finished = self._callbacks[0](self._on_media_route_create_finished)
-
-    def _on_media_route_create_finished(self, xself, result, error, route):
-        return 0
-
-
-class cef_media_sink_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_id = self._callbacks[0](self._get_id)
-        self.get_name = self._callbacks[1](self._get_name)
-        self.get_description = self._callbacks[2](self._get_description)
-        self.get_icon_type = self._callbacks[3](self._get_icon_type)
-        self.get_device_info = self._callbacks[4](self._get_device_info)
-        self.is_cast_sink = self._callbacks[5](self._is_cast_sink)
-        self.is_dial_sink = self._callbacks[6](self._is_dial_sink)
-        self.is_compatible_with = self._callbacks[7](self._is_compatible_with)
-
-    def _get_id(self, xself):
-        return None
-    def _get_name(self, xself):
-        return None
-    def _get_description(self, xself):
-        return None
-    def _get_icon_type(self, xself):
-        return 0
-    def _get_device_info(self, xself, callback):
-        return 0
-    def _is_cast_sink(self, xself):
-        return 0
-    def _is_dial_sink(self, xself):
-        return 0
-    def _is_compatible_with(self, xself, source):
-        return 0
-
-
-class cef_media_sink_device_info_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_media_sink_device_info = self._callbacks[0](self._on_media_sink_device_info)
-
-    def _on_media_sink_device_info(self, xself, device_info):
-        return 0
-
-
-class cef_media_source_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_id = self._callbacks[0](self._get_id)
-        self.is_cast_source = self._callbacks[1](self._is_cast_source)
-        self.is_dial_source = self._callbacks[2](self._is_dial_source)
-
-    def _get_id(self, xself):
-        return None
-    def _is_cast_source(self, xself):
-        return 0
-    def _is_dial_source(self, xself):
-        return 0
-
-
-class cef_menu_model_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_sub_menu = self._callbacks[0](self._is_sub_menu)
-        self.clear = self._callbacks[1](self._clear)
-        self.get_count = self._callbacks[2](self._get_count)
-        self.add_separator = self._callbacks[3](self._add_separator)
-        self.add_item = self._callbacks[4](self._add_item)
-        self.add_check_item = self._callbacks[5](self._add_check_item)
-        self.add_radio_item = self._callbacks[6](self._add_radio_item)
-        self.add_sub_menu = self._callbacks[7](self._add_sub_menu)
-        self.insert_separator_at = self._callbacks[8](self._insert_separator_at)
-        self.insert_item_at = self._callbacks[9](self._insert_item_at)
-        self.insert_check_item_at = self._callbacks[10](self._insert_check_item_at)
-        self.insert_radio_item_at = self._callbacks[11](self._insert_radio_item_at)
-        self.insert_sub_menu_at = self._callbacks[12](self._insert_sub_menu_at)
-        self.remove = self._callbacks[13](self._remove)
-        self.remove_at = self._callbacks[14](self._remove_at)
-        self.get_index_of = self._callbacks[15](self._get_index_of)
-        self.get_command_id_at = self._callbacks[16](self._get_command_id_at)
-        self.set_command_id_at = self._callbacks[17](self._set_command_id_at)
-        self.get_label = self._callbacks[18](self._get_label)
-        self.get_label_at = self._callbacks[19](self._get_label_at)
-        self.set_label = self._callbacks[20](self._set_label)
-        self.set_label_at = self._callbacks[21](self._set_label_at)
-        self.get_type = self._callbacks[22](self._get_type)
-        self.get_type_at = self._callbacks[23](self._get_type_at)
-        self.get_group_id = self._callbacks[24](self._get_group_id)
-        self.get_group_id_at = self._callbacks[25](self._get_group_id_at)
-        self.set_group_id = self._callbacks[26](self._set_group_id)
-        self.set_group_id_at = self._callbacks[27](self._set_group_id_at)
-        self.get_sub_menu = self._callbacks[28](self._get_sub_menu)
-        self.get_sub_menu_at = self._callbacks[29](self._get_sub_menu_at)
-        self.is_visible = self._callbacks[30](self._is_visible)
-        self.is_visible_at = self._callbacks[31](self._is_visible_at)
-        self.set_visible = self._callbacks[32](self._set_visible)
-        self.set_visible_at = self._callbacks[33](self._set_visible_at)
-        self.is_enabled = self._callbacks[34](self._is_enabled)
-        self.is_enabled_at = self._callbacks[35](self._is_enabled_at)
-        self.set_enabled = self._callbacks[36](self._set_enabled)
-        self.set_enabled_at = self._callbacks[37](self._set_enabled_at)
-        self.is_checked = self._callbacks[38](self._is_checked)
-        self.is_checked_at = self._callbacks[39](self._is_checked_at)
-        self.set_checked = self._callbacks[40](self._set_checked)
-        self.set_checked_at = self._callbacks[41](self._set_checked_at)
-        self.has_accelerator = self._callbacks[42](self._has_accelerator)
-        self.has_accelerator_at = self._callbacks[43](self._has_accelerator_at)
-        self.set_accelerator = self._callbacks[44](self._set_accelerator)
-        self.set_accelerator_at = self._callbacks[45](self._set_accelerator_at)
-        self.remove_accelerator = self._callbacks[46](self._remove_accelerator)
-        self.remove_accelerator_at = self._callbacks[47](self._remove_accelerator_at)
-        self.get_accelerator = self._callbacks[48](self._get_accelerator)
-        self.get_accelerator_at = self._callbacks[49](self._get_accelerator_at)
-        self.set_color = self._callbacks[50](self._set_color)
-        self.set_color_at = self._callbacks[51](self._set_color_at)
-        self.get_color = self._callbacks[52](self._get_color)
-        self.get_color_at = self._callbacks[53](self._get_color_at)
-        self.set_font_list = self._callbacks[54](self._set_font_list)
-        self.set_font_list_at = self._callbacks[55](self._set_font_list_at)
-
-    def _is_sub_menu(self, xself):
-        return 0
-    def _clear(self, xself):
-        return 0
-    def _get_count(self, xself):
-        return 0
-    def _add_separator(self, xself):
-        return 0
-    def _add_item(self, xself, command_id, label):
-        return 0
-    def _add_check_item(self, xself, command_id, label):
-        return 0
-    def _add_radio_item(self, xself, command_id, label, group_id):
-        return 0
-    def _add_sub_menu(self, xself, command_id, label):
-        return None
-    def _insert_separator_at(self, xself, index):
-        return 0
-    def _insert_item_at(self, xself, index, command_id, label):
-        return 0
-    def _insert_check_item_at(self, xself, index, command_id, label):
-        return 0
-    def _insert_radio_item_at(self, xself, index, command_id, label, group_id):
-        return 0
-    def _insert_sub_menu_at(self, xself, index, command_id, label):
-        return None
-    def _remove(self, xself, command_id):
-        return 0
-    def _remove_at(self, xself, index):
-        return 0
-    def _get_index_of(self, xself, command_id):
-        return 0
-    def _get_command_id_at(self, xself, index):
-        return 0
-    def _set_command_id_at(self, xself, index, command_id):
-        return 0
-    def _get_label(self, xself, command_id):
-        return None
-    def _get_label_at(self, xself, index):
-        return None
-    def _set_label(self, xself, command_id, label):
-        return 0
-    def _set_label_at(self, xself, index, label):
-        return 0
-    def _get_type(self, xself, command_id):
-        return 0
-    def _get_type_at(self, xself, index):
-        return 0
-    def _get_group_id(self, xself, command_id):
-        return 0
-    def _get_group_id_at(self, xself, index):
-        return 0
-    def _set_group_id(self, xself, command_id, group_id):
-        return 0
-    def _set_group_id_at(self, xself, index, group_id):
-        return 0
-    def _get_sub_menu(self, xself, command_id):
-        return None
-    def _get_sub_menu_at(self, xself, index):
-        return None
-    def _is_visible(self, xself, command_id):
-        return 0
-    def _is_visible_at(self, xself, index):
-        return 0
-    def _set_visible(self, xself, command_id, visible):
-        return 0
-    def _set_visible_at(self, xself, index, visible):
-        return 0
-    def _is_enabled(self, xself, command_id):
-        return 0
-    def _is_enabled_at(self, xself, index):
-        return 0
-    def _set_enabled(self, xself, command_id, enabled):
-        return 0
-    def _set_enabled_at(self, xself, index, enabled):
-        return 0
-    def _is_checked(self, xself, command_id):
-        return 0
-    def _is_checked_at(self, xself, index):
-        return 0
-    def _set_checked(self, xself, command_id, checked):
-        return 0
-    def _set_checked_at(self, xself, index, checked):
-        return 0
-    def _has_accelerator(self, xself, command_id):
-        return 0
-    def _has_accelerator_at(self, xself, index):
-        return 0
-    def _set_accelerator(self, xself, command_id, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        return 0
-    def _set_accelerator_at(self, xself, index, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        return 0
-    def _remove_accelerator(self, xself, command_id):
-        return 0
-    def _remove_accelerator_at(self, xself, index):
-        return 0
-    def _get_accelerator(self, xself, command_id, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        return 0
-    def _get_accelerator_at(self, xself, index, key_code, shift_pressed, ctrl_pressed, alt_pressed):
-        return 0
-    def _set_color(self, xself, command_id, color_type, color):
-        return 0
-    def _set_color_at(self, xself, index, color_type, color):
-        return 0
-    def _get_color(self, xself, command_id, color_type, color):
-        return 0
-    def _get_color_at(self, xself, index, color_type, color):
-        return 0
-    def _set_font_list(self, xself, command_id, font_list):
-        return 0
-    def _set_font_list_at(self, xself, index, font_list):
-        return 0
-
-
-class cef_menu_model_delegate_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.execute_command = self._callbacks[0](self._execute_command)
-        self.mouse_outside_menu = self._callbacks[1](self._mouse_outside_menu)
-        self.unhandled_open_submenu = self._callbacks[2](self._unhandled_open_submenu)
-        self.unhandled_close_submenu = self._callbacks[3](self._unhandled_close_submenu)
-        self.menu_will_show = self._callbacks[4](self._menu_will_show)
-        self.menu_closed = self._callbacks[5](self._menu_closed)
-        self.format_label = self._callbacks[6](self._format_label)
-
-    def _execute_command(self, xself, menu_model, command_id, event_flags):
-        return 0
-    def _mouse_outside_menu(self, xself, menu_model, screen_point):
-        return 0
-    def _unhandled_open_submenu(self, xself, menu_model, is_rtl):
-        return 0
-    def _unhandled_close_submenu(self, xself, menu_model, is_rtl):
-        return 0
-    def _menu_will_show(self, xself, menu_model):
-        return 0
-    def _menu_closed(self, xself, menu_model):
-        return 0
-    def _format_label(self, xself, menu_model, label):
-        return 0
-
-
-class cef_navigation_entry_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.get_url = self._callbacks[1](self._get_url)
-        self.get_display_url = self._callbacks[2](self._get_display_url)
-        self.get_original_url = self._callbacks[3](self._get_original_url)
-        self.get_title = self._callbacks[4](self._get_title)
-        self.get_transition_type = self._callbacks[5](self._get_transition_type)
-        self.has_post_data = self._callbacks[6](self._has_post_data)
-        self.get_completion_time = self._callbacks[7](self._get_completion_time)
-        self.get_http_status_code = self._callbacks[8](self._get_http_status_code)
-        self.get_sslstatus = self._callbacks[9](self._get_sslstatus)
-
-    def _is_valid(self, xself):
-        return 0
-    def _get_url(self, xself):
-        return None
-    def _get_display_url(self, xself):
-        return None
-    def _get_original_url(self, xself):
-        return None
-    def _get_title(self, xself):
-        return None
-    def _get_transition_type(self, xself):
-        return 0
-    def _has_post_data(self, xself):
-        return 0
-    def _get_completion_time(self, xself):
-        return 0
-    def _get_http_status_code(self, xself):
-        return 0
-    def _get_sslstatus(self, xself):
-        return None
 
 
 class cef_media_access_callback_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
 
-    def _cont(self, xself, allowed_permissions):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_permission_prompt_callback_t(Structure):
+class cef_media_observer_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
 
-    def _cont(self, xself, result):
-        return 0
+class cef_media_route_create_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_media_route_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_media_router_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_media_sink_device_info_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_media_sink_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_media_source_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_menu_button_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_menu_button_pressed_lock_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_menu_button_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_menu_model_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_menu_model_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_navigation_entry_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_navigation_entry_visitor_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_overlay_controller_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_panel_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_panel_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_pdf_print_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_permission_handler_t(Structure):
@@ -2075,85 +732,43 @@ class cef_permission_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_request_media_access_permission = self._callbacks[0](self._on_request_media_access_permission)
-        self.on_show_permission_prompt = self._callbacks[1](self._on_show_permission_prompt)
-        self.on_dismiss_permission_prompt = self._callbacks[2](self._on_dismiss_permission_prompt)
+        self.on_request_media_access_permission = self._callbacks[0](self.py_on_request_media_access_permission)
+        self.on_show_permission_prompt = self._callbacks[1](self.py_on_show_permission_prompt)
+        self.on_dismiss_permission_prompt = self._callbacks[2](self.py_on_dismiss_permission_prompt)
 
-    def _on_request_media_access_permission(self, xself, browser, frame, requesting_origin, requested_permissions, callback):
+    def py_on_request_media_access_permission(self, xself, browser, frame, requesting_origin, requested_permissions, callback):
         return 0
-    def _on_show_permission_prompt(self, xself, browser, prompt_id, requesting_origin, requested_permissions, callback):
+    def py_on_show_permission_prompt(self, xself, browser, prompt_id, requesting_origin, requested_permissions, callback):
         return 0
-    def _on_dismiss_permission_prompt(self, xself, browser, prompt_id, result):
+    def py_on_dismiss_permission_prompt(self, xself, browser, prompt_id, result):
         return 0
 
 
-class cef_preference_registrar_t(Structure):
+class cef_permission_prompt_callback_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.add_preference = self._callbacks[0](self._add_preference)
 
-    def _add_preference(self, xself, name, default_value):
-        return 0
+class cef_post_data_element_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_post_data_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_preference_manager_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.has_preference = self._callbacks[0](self._has_preference)
-        self.get_preference = self._callbacks[1](self._get_preference)
-        self.get_all_preferences = self._callbacks[2](self._get_all_preferences)
-        self.can_set_preference = self._callbacks[3](self._can_set_preference)
-        self.set_preference = self._callbacks[4](self._set_preference)
 
-    def _has_preference(self, xself, name):
-        return 0
-    def _get_preference(self, xself, name):
-        return None
-    def _get_all_preferences(self, xself, include_defaults):
-        return None
-    def _can_set_preference(self, xself, name):
-        return 0
-    def _set_preference(self, xself, name, value, error):
-        return 0
+class cef_preference_registrar_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_print_dialog_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-        self.cancel = self._callbacks[1](self._cancel)
-
-    def _cont(self, xself, settings):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_print_job_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-
-    def _cont(self, xself):
-        return 0
 
 
 class cef_print_handler_t(Structure):
@@ -2161,141 +776,70 @@ class cef_print_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_print_start = self._callbacks[0](self._on_print_start)
-        self.on_print_settings = self._callbacks[1](self._on_print_settings)
-        self.on_print_dialog = self._callbacks[2](self._on_print_dialog)
-        self.on_print_job = self._callbacks[3](self._on_print_job)
-        self.on_print_reset = self._callbacks[4](self._on_print_reset)
-        self.get_pdf_paper_size = self._callbacks[5](self._get_pdf_paper_size)
+        self.on_print_start = self._callbacks[0](self.py_on_print_start)
+        self.on_print_settings = self._callbacks[1](self.py_on_print_settings)
+        self.on_print_dialog = self._callbacks[2](self.py_on_print_dialog)
+        self.on_print_job = self._callbacks[3](self.py_on_print_job)
+        self.on_print_reset = self._callbacks[4](self.py_on_print_reset)
+        self.get_pdf_paper_size = self._callbacks[5](self.py_get_pdf_paper_size)
 
-    def _on_print_start(self, xself, browser):
+    def py_on_print_start(self, xself, browser):
         return 0
-    def _on_print_settings(self, xself, browser, settings, get_defaults):
+    def py_on_print_settings(self, xself, browser, settings, get_defaults):
         return 0
-    def _on_print_dialog(self, xself, browser, has_selection, callback):
+    def py_on_print_dialog(self, xself, browser, has_selection, callback):
         return 0
-    def _on_print_job(self, xself, browser, document_name, pdf_file_path, callback):
+    def py_on_print_job(self, xself, browser, document_name, pdf_file_path, callback):
         return 0
-    def _on_print_reset(self, xself, browser):
+    def py_on_print_reset(self, xself, browser):
         return 0
-    def _get_pdf_paper_size(self, xself, browser, device_units_per_inch):
+    def py_get_pdf_paper_size(self, xself, browser, device_units_per_inch):
         return 0
+
+
+class cef_print_job_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_print_settings_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_read_only = self._callbacks[1](self._is_read_only)
-        self.set_orientation = self._callbacks[2](self._set_orientation)
-        self.is_landscape = self._callbacks[3](self._is_landscape)
-        self.set_printer_printable_area = self._callbacks[4](self._set_printer_printable_area)
-        self.set_device_name = self._callbacks[5](self._set_device_name)
-        self.get_device_name = self._callbacks[6](self._get_device_name)
-        self.set_dpi = self._callbacks[7](self._set_dpi)
-        self.get_dpi = self._callbacks[8](self._get_dpi)
-        self.set_page_ranges = self._callbacks[9](self._set_page_ranges)
-        self.get_page_ranges_count = self._callbacks[10](self._get_page_ranges_count)
-        self.get_page_ranges = self._callbacks[11](self._get_page_ranges)
-        self.set_selection_only = self._callbacks[12](self._set_selection_only)
-        self.is_selection_only = self._callbacks[13](self._is_selection_only)
-        self.set_collate = self._callbacks[14](self._set_collate)
-        self.will_collate = self._callbacks[15](self._will_collate)
-        self.set_color_model = self._callbacks[16](self._set_color_model)
-        self.get_color_model = self._callbacks[17](self._get_color_model)
-        self.set_copies = self._callbacks[18](self._set_copies)
-        self.get_copies = self._callbacks[19](self._get_copies)
-        self.set_duplex_mode = self._callbacks[20](self._set_duplex_mode)
-        self.get_duplex_mode = self._callbacks[21](self._get_duplex_mode)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _set_orientation(self, xself, landscape):
-        return 0
-    def _is_landscape(self, xself):
-        return 0
-    def _set_printer_printable_area(self, xself, physical_size_device_units, printable_area_device_units, landscape_needs_flip):
-        return 0
-    def _set_device_name(self, xself, name):
-        return 0
-    def _get_device_name(self, xself):
-        return None
-    def _set_dpi(self, xself, dpi):
-        return 0
-    def _get_dpi(self, xself):
-        return 0
-    def _set_page_ranges(self, xself, rangesCount, ranges):
-        return 0
-    def _get_page_ranges_count(self, xself):
-        return 0
-    def _get_page_ranges(self, xself, rangesCount, ranges):
-        return 0
-    def _set_selection_only(self, xself, selection_only):
-        return 0
-    def _is_selection_only(self, xself):
-        return 0
-    def _set_collate(self, xself, collate):
-        return 0
-    def _will_collate(self, xself):
-        return 0
-    def _set_color_model(self, xself, model):
-        return 0
-    def _get_color_model(self, xself):
-        return 0
-    def _set_copies(self, xself, copies):
-        return 0
-    def _get_copies(self, xself):
-        return 0
-    def _set_duplex_mode(self, xself, mode):
-        return 0
-    def _get_duplex_mode(self, xself):
-        return 0
-
 
 class cef_process_message_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_read_only = self._callbacks[1](self._is_read_only)
-        self.copy = self._callbacks[2](self._copy)
-        self.get_name = self._callbacks[3](self._get_name)
-        self.get_argument_list = self._callbacks[4](self._get_argument_list)
-        self.get_shared_memory_region = self._callbacks[5](self._get_shared_memory_region)
 
-    def _is_valid(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _copy(self, xself):
-        return None
-    def _get_name(self, xself):
-        return None
-    def _get_argument_list(self, xself):
-        return None
-    def _get_shared_memory_region(self, xself):
-        return None
-
-
-class cef_registration_t(Structure):
+class cef_read_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
+        self.read = self._callbacks[0](self.py_read)
+        self.seek = self._callbacks[1](self.py_seek)
+        self.tell = self._callbacks[2](self.py_tell)
+        self.eof = self._callbacks[3](self.py_eof)
+        self.may_block = self._callbacks[4](self.py_may_block)
 
+    def py_read(self, xself, ptr, size, n):
+        return 0
+    def py_seek(self, xself, offset, whence):
+        return 0
+    def py_tell(self, xself):
+        return 0
+    def py_eof(self, xself):
+        return 0
+    def py_may_block(self, xself):
+        return 0
+
+
+class cef_registration_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_render_handler_t(Structure):
@@ -2303,59 +847,60 @@ class cef_render_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.get_accessibility_handler = self._callbacks[0](self._get_accessibility_handler)
-        self.get_root_screen_rect = self._callbacks[1](self._get_root_screen_rect)
-        self.get_view_rect = self._callbacks[2](self._get_view_rect)
-        self.get_screen_point = self._callbacks[3](self._get_screen_point)
-        self.get_screen_info = self._callbacks[4](self._get_screen_info)
-        self.on_popup_show = self._callbacks[5](self._on_popup_show)
-        self.on_popup_size = self._callbacks[6](self._on_popup_size)
-        self.on_paint = self._callbacks[7](self._on_paint)
-        self.on_accelerated_paint = self._callbacks[8](self._on_accelerated_paint)
-        self.get_touch_handle_size = self._callbacks[9](self._get_touch_handle_size)
-        self.on_touch_handle_state_changed = self._callbacks[10](self._on_touch_handle_state_changed)
-        self.start_dragging = self._callbacks[11](self._start_dragging)
-        self.update_drag_cursor = self._callbacks[12](self._update_drag_cursor)
-        self.on_scroll_offset_changed = self._callbacks[13](self._on_scroll_offset_changed)
-        self.on_ime_composition_range_changed = self._callbacks[14](self._on_ime_composition_range_changed)
-        self.on_text_selection_changed = self._callbacks[15](self._on_text_selection_changed)
-        self.on_virtual_keyboard_requested = self._callbacks[16](self._on_virtual_keyboard_requested)
+        self.get_accessibility_handler = self._callbacks[0](self.py_get_accessibility_handler)
+        self.get_root_screen_rect = self._callbacks[1](self.py_get_root_screen_rect)
+        self.get_view_rect = self._callbacks[2](self.py_get_view_rect)
+        self.get_screen_point = self._callbacks[3](self.py_get_screen_point)
+        self.get_screen_info = self._callbacks[4](self.py_get_screen_info)
+        self.on_popup_show = self._callbacks[5](self.py_on_popup_show)
+        self.on_popup_size = self._callbacks[6](self.py_on_popup_size)
+        self.on_paint = self._callbacks[7](self.py_on_paint)
+        self.on_accelerated_paint = self._callbacks[8](self.py_on_accelerated_paint)
+        self.get_touch_handle_size = self._callbacks[9](self.py_get_touch_handle_size)
+        self.on_touch_handle_state_changed = self._callbacks[10](self.py_on_touch_handle_state_changed)
+        self.start_dragging = self._callbacks[11](self.py_start_dragging)
+        self.update_drag_cursor = self._callbacks[12](self.py_update_drag_cursor)
+        self.on_scroll_offset_changed = self._callbacks[13](self.py_on_scroll_offset_changed)
+        self.on_ime_composition_range_changed = self._callbacks[14](self.py_on_ime_composition_range_changed)
+        self.on_text_selection_changed = self._callbacks[15](self.py_on_text_selection_changed)
+        self.on_virtual_keyboard_requested = self._callbacks[16](self.py_on_virtual_keyboard_requested)
 
-    def _get_accessibility_handler(self, xself):
+    def py_get_accessibility_handler(self, xself):
         return None
-    def _get_root_screen_rect(self, xself, browser, rect):
+    def py_get_root_screen_rect(self, xself, browser, rect):
         return 0
-    def _get_view_rect(self, xself, browser, rect):
+    def py_get_view_rect(self, xself, browser, rect):
         return 0
-    def _get_screen_point(self, xself, browser, viewX, viewY, screenX, screenY):
+    def py_get_screen_point(self, xself, browser, viewX, viewY, screenX, screenY):
         return 0
-    def _get_screen_info(self, xself, browser, screen_info):
+    def py_get_screen_info(self, xself, browser, screen_info):
         return 0
-    def _on_popup_show(self, xself, browser, show):
+    def py_on_popup_show(self, xself, browser, show):
         return 0
-    def _on_popup_size(self, xself, browser, rect):
+    def py_on_popup_size(self, xself, browser, rect):
         return 0
-    def _on_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, buffer, width, height):
+    def py_on_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, buffer, width, height):
         return 0
-    def _on_accelerated_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
+    def py_on_accelerated_paint(self, xself, browser, type, dirtyRectsCount, dirtyRects, shared_handle):
         return 0
-    def _get_touch_handle_size(self, xself, browser, orientation, size):
+    def py_get_touch_handle_size(self, xself, browser, orientation, size):
         return 0
-    def _on_touch_handle_state_changed(self, xself, browser, state):
+    def py_on_touch_handle_state_changed(self, xself, browser, state):
         return 0
-    def _start_dragging(self, xself, browser, drag_data, allowed_ops, x, y):
+    def py_start_dragging(self, xself, browser, drag_data, allowed_ops, x, y):
         return 0
-    def _update_drag_cursor(self, xself, browser, operation):
+    def py_update_drag_cursor(self, xself, browser, operation):
         return 0
-    def _on_scroll_offset_changed(self, xself, browser, x, y):
+    def py_on_scroll_offset_changed(self, xself, browser, x, y):
         return 0
-    def _on_ime_composition_range_changed(self, xself, browser, selected_range, character_boundsCount, character_bounds):
+    def py_on_ime_composition_range_changed(self, xself, browser, selected_range, character_boundsCount, character_bounds):
         return 0
-    def _on_text_selection_changed(self, xself, browser, selected_text, selected_range):
+    def py_on_text_selection_changed(self, xself, browser, selected_text, selected_range):
         return 0
-    def _on_virtual_keyboard_requested(self, xself, browser, input_mode):
+    def py_on_virtual_keyboard_requested(self, xself, browser, input_mode):
         return 0
 
 
@@ -2364,254 +909,37 @@ class cef_render_process_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_web_kit_initialized = self._callbacks[0](self._on_web_kit_initialized)
-        self.on_browser_created = self._callbacks[1](self._on_browser_created)
-        self.on_browser_destroyed = self._callbacks[2](self._on_browser_destroyed)
-        self.get_load_handler = self._callbacks[3](self._get_load_handler)
-        self.on_context_created = self._callbacks[4](self._on_context_created)
-        self.on_context_released = self._callbacks[5](self._on_context_released)
-        self.on_uncaught_exception = self._callbacks[6](self._on_uncaught_exception)
-        self.on_focused_node_changed = self._callbacks[7](self._on_focused_node_changed)
-        self.on_process_message_received = self._callbacks[8](self._on_process_message_received)
+        self.on_web_kit_initialized = self._callbacks[0](self.py_on_web_kit_initialized)
+        self.on_browser_created = self._callbacks[1](self.py_on_browser_created)
+        self.on_browser_destroyed = self._callbacks[2](self.py_on_browser_destroyed)
+        self.get_load_handler = self._callbacks[3](self.py_get_load_handler)
+        self.on_context_created = self._callbacks[4](self.py_on_context_created)
+        self.on_context_released = self._callbacks[5](self.py_on_context_released)
+        self.on_uncaught_exception = self._callbacks[6](self.py_on_uncaught_exception)
+        self.on_focused_node_changed = self._callbacks[7](self.py_on_focused_node_changed)
+        self.on_process_message_received = self._callbacks[8](self.py_on_process_message_received)
 
-    def _on_web_kit_initialized(self, xself):
+    def py_on_web_kit_initialized(self, xself):
         return 0
-    def _on_browser_created(self, xself, browser, extra_info):
+    def py_on_browser_created(self, xself, browser, extra_info):
         return 0
-    def _on_browser_destroyed(self, xself, browser):
+    def py_on_browser_destroyed(self, xself, browser):
         return 0
-    def _get_load_handler(self, xself):
+    def py_get_load_handler(self, xself):
         return None
-    def _on_context_created(self, xself, browser, frame, context):
+    def py_on_context_created(self, xself, browser, frame, context):
         return 0
-    def _on_context_released(self, xself, browser, frame, context):
+    def py_on_context_released(self, xself, browser, frame, context):
         return 0
-    def _on_uncaught_exception(self, xself, browser, frame, context, exception, stackTrace):
+    def py_on_uncaught_exception(self, xself, browser, frame, context, exception, stackTrace):
         return 0
-    def _on_focused_node_changed(self, xself, browser, frame, node):
+    def py_on_focused_node_changed(self, xself, browser, frame, node):
         return 0
-    def _on_process_message_received(self, xself, browser, frame, source_process, message):
+    def py_on_process_message_received(self, xself, browser, frame, source_process, message):
         return 0
-
-
-class cef_request_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_read_only = self._callbacks[0](self._is_read_only)
-        self.get_url = self._callbacks[1](self._get_url)
-        self.set_url = self._callbacks[2](self._set_url)
-        self.get_method = self._callbacks[3](self._get_method)
-        self.set_method = self._callbacks[4](self._set_method)
-        self.set_referrer = self._callbacks[5](self._set_referrer)
-        self.get_referrer_url = self._callbacks[6](self._get_referrer_url)
-        self.get_referrer_policy = self._callbacks[7](self._get_referrer_policy)
-        self.get_post_data = self._callbacks[8](self._get_post_data)
-        self.set_post_data = self._callbacks[9](self._set_post_data)
-        self.get_header_map = self._callbacks[10](self._get_header_map)
-        self.set_header_map = self._callbacks[11](self._set_header_map)
-        self.get_header_by_name = self._callbacks[12](self._get_header_by_name)
-        self.set_header_by_name = self._callbacks[13](self._set_header_by_name)
-        self.set = self._callbacks[14](self._set)
-        self.get_flags = self._callbacks[15](self._get_flags)
-        self.set_flags = self._callbacks[16](self._set_flags)
-        self.get_first_party_for_cookies = self._callbacks[17](self._get_first_party_for_cookies)
-        self.set_first_party_for_cookies = self._callbacks[18](self._set_first_party_for_cookies)
-        self.get_resource_type = self._callbacks[19](self._get_resource_type)
-        self.get_transition_type = self._callbacks[20](self._get_transition_type)
-        self.get_identifier = self._callbacks[21](self._get_identifier)
-
-    def _is_read_only(self, xself):
-        return 0
-    def _get_url(self, xself):
-        return None
-    def _set_url(self, xself, url):
-        return 0
-    def _get_method(self, xself):
-        return None
-    def _set_method(self, xself, method):
-        return 0
-    def _set_referrer(self, xself, referrer_url, policy):
-        return 0
-    def _get_referrer_url(self, xself):
-        return None
-    def _get_referrer_policy(self, xself):
-        return 0
-    def _get_post_data(self, xself):
-        return None
-    def _set_post_data(self, xself, postData):
-        return 0
-    def _get_header_map(self, xself, headerMap):
-        return 0
-    def _set_header_map(self, xself, headerMap):
-        return 0
-    def _get_header_by_name(self, xself, name):
-        return None
-    def _set_header_by_name(self, xself, name, value, overwrite):
-        return 0
-    def _set(self, xself, url, method, postData, headerMap):
-        return 0
-    def _get_flags(self, xself):
-        return 0
-    def _set_flags(self, xself, flags):
-        return 0
-    def _get_first_party_for_cookies(self, xself):
-        return None
-    def _set_first_party_for_cookies(self, xself, url):
-        return 0
-    def _get_resource_type(self, xself):
-        return 0
-    def _get_transition_type(self, xself):
-        return 0
-    def _get_identifier(self, xself):
-        return 0
-
-
-class cef_post_data_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_read_only = self._callbacks[0](self._is_read_only)
-        self.has_excluded_elements = self._callbacks[1](self._has_excluded_elements)
-        self.get_element_count = self._callbacks[2](self._get_element_count)
-        self.get_elements = self._callbacks[3](self._get_elements)
-        self.remove_element = self._callbacks[4](self._remove_element)
-        self.add_element = self._callbacks[5](self._add_element)
-        self.remove_elements = self._callbacks[6](self._remove_elements)
-
-    def _is_read_only(self, xself):
-        return 0
-    def _has_excluded_elements(self, xself):
-        return 0
-    def _get_element_count(self, xself):
-        return 0
-    def _get_elements(self, xself, elementsCount, elements):
-        return 0
-    def _remove_element(self, xself, element):
-        return 0
-    def _add_element(self, xself, element):
-        return 0
-    def _remove_elements(self, xself):
-        return 0
-
-
-class cef_post_data_element_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_read_only = self._callbacks[0](self._is_read_only)
-        self.set_to_empty = self._callbacks[1](self._set_to_empty)
-        self.set_to_file = self._callbacks[2](self._set_to_file)
-        self.set_to_bytes = self._callbacks[3](self._set_to_bytes)
-        self.get_type = self._callbacks[4](self._get_type)
-        self.get_file = self._callbacks[5](self._get_file)
-        self.get_bytes_count = self._callbacks[6](self._get_bytes_count)
-        self.get_bytes = self._callbacks[7](self._get_bytes)
-
-    def _is_read_only(self, xself):
-        return 0
-    def _set_to_empty(self, xself):
-        return 0
-    def _set_to_file(self, xself, fileName):
-        return 0
-    def _set_to_bytes(self, xself, size, bytes):
-        return 0
-    def _get_type(self, xself):
-        return 0
-    def _get_file(self, xself):
-        return None
-    def _get_bytes_count(self, xself):
-        return 0
-    def _get_bytes(self, xself, size, bytes):
-        return 0
-
-
-class cef_resolve_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_resolve_completed = self._callbacks[0](self._on_resolve_completed)
-
-    def _on_resolve_completed(self, xself, result, resolved_ips):
-        return 0
-
-
-class cef_request_context_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_same = self._callbacks[0](self._is_same)
-        self.is_sharing_with = self._callbacks[1](self._is_sharing_with)
-        self.is_global = self._callbacks[2](self._is_global)
-        self.get_handler = self._callbacks[3](self._get_handler)
-        self.get_cache_path = self._callbacks[4](self._get_cache_path)
-        self.get_cookie_manager = self._callbacks[5](self._get_cookie_manager)
-        self.register_scheme_handler_factory = self._callbacks[6](self._register_scheme_handler_factory)
-        self.clear_scheme_handler_factories = self._callbacks[7](self._clear_scheme_handler_factories)
-        self.clear_certificate_exceptions = self._callbacks[8](self._clear_certificate_exceptions)
-        self.clear_http_auth_credentials = self._callbacks[9](self._clear_http_auth_credentials)
-        self.close_all_connections = self._callbacks[10](self._close_all_connections)
-        self.resolve_host = self._callbacks[11](self._resolve_host)
-        self.load_extension = self._callbacks[12](self._load_extension)
-        self.did_load_extension = self._callbacks[13](self._did_load_extension)
-        self.has_extension = self._callbacks[14](self._has_extension)
-        self.get_extensions = self._callbacks[15](self._get_extensions)
-        self.get_extension = self._callbacks[16](self._get_extension)
-        self.get_media_router = self._callbacks[17](self._get_media_router)
-
-    def _is_same(self, xself, other):
-        return 0
-    def _is_sharing_with(self, xself, other):
-        return 0
-    def _is_global(self, xself):
-        return 0
-    def _get_handler(self, xself):
-        return None
-    def _get_cache_path(self, xself):
-        return None
-    def _get_cookie_manager(self, xself, callback):
-        return None
-    def _register_scheme_handler_factory(self, xself, scheme_name, domain_name, factory):
-        return 0
-    def _clear_scheme_handler_factories(self, xself):
-        return 0
-    def _clear_certificate_exceptions(self, xself, callback):
-        return 0
-    def _clear_http_auth_credentials(self, xself, callback):
-        return 0
-    def _close_all_connections(self, xself, callback):
-        return 0
-    def _resolve_host(self, xself, origin, callback):
-        return 0
-    def _load_extension(self, xself, root_directory, manifest, handler):
-        return 0
-    def _did_load_extension(self, xself, extension_id):
-        return 0
-    def _has_extension(self, xself, extension_id):
-        return 0
-    def _get_extensions(self, xself, extension_ids):
-        return 0
-    def _get_extension(self, xself, extension_id):
-        return None
-    def _get_media_router(self, xself, callback):
-        return None
 
 
 class cef_request_context_handler_t(Structure):
@@ -2619,28 +947,20 @@ class cef_request_context_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_request_context_initialized = self._callbacks[0](self._on_request_context_initialized)
-        self.get_resource_request_handler = self._callbacks[1](self._get_resource_request_handler)
+        self.on_request_context_initialized = self._callbacks[0](self.py_on_request_context_initialized)
+        self.get_resource_request_handler = self._callbacks[1](self.py_get_resource_request_handler)
 
-    def _on_request_context_initialized(self, xself, request_context):
+    def py_on_request_context_initialized(self, xself, request_context):
         return 0
-    def _get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
+    def py_get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
         return None
 
 
-class cef_select_client_certificate_callback_t(Structure):
+class cef_request_context_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.select = self._callbacks[0](self._select)
-
-    def _select(self, xself, cert):
-        return 0
 
 
 class cef_request_handler_t(Structure):
@@ -2648,55 +968,45 @@ class cef_request_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_before_browse = self._callbacks[0](self._on_before_browse)
-        self.on_open_urlfrom_tab = self._callbacks[1](self._on_open_urlfrom_tab)
-        self.get_resource_request_handler = self._callbacks[2](self._get_resource_request_handler)
-        self.get_auth_credentials = self._callbacks[3](self._get_auth_credentials)
-        self.on_certificate_error = self._callbacks[4](self._on_certificate_error)
-        self.on_select_client_certificate = self._callbacks[5](self._on_select_client_certificate)
-        self.on_render_view_ready = self._callbacks[6](self._on_render_view_ready)
-        self.on_render_process_terminated = self._callbacks[7](self._on_render_process_terminated)
-        self.on_document_available_in_main_frame = self._callbacks[8](self._on_document_available_in_main_frame)
+        self.on_before_browse = self._callbacks[0](self.py_on_before_browse)
+        self.on_open_urlfrom_tab = self._callbacks[1](self.py_on_open_urlfrom_tab)
+        self.get_resource_request_handler = self._callbacks[2](self.py_get_resource_request_handler)
+        self.get_auth_credentials = self._callbacks[3](self.py_get_auth_credentials)
+        self.on_certificate_error = self._callbacks[4](self.py_on_certificate_error)
+        self.on_select_client_certificate = self._callbacks[5](self.py_on_select_client_certificate)
+        self.on_render_view_ready = self._callbacks[6](self.py_on_render_view_ready)
+        self.on_render_process_terminated = self._callbacks[7](self.py_on_render_process_terminated)
+        self.on_document_available_in_main_frame = self._callbacks[8](self.py_on_document_available_in_main_frame)
 
-    def _on_before_browse(self, xself, browser, frame, request, user_gesture, is_redirect):
+    def py_on_before_browse(self, xself, browser, frame, request, user_gesture, is_redirect):
         return 0
-    def _on_open_urlfrom_tab(self, xself, browser, frame, target_url, target_disposition, user_gesture):
+    def py_on_open_urlfrom_tab(self, xself, browser, frame, target_url, target_disposition, user_gesture):
         return 0
-    def _get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
+    def py_get_resource_request_handler(self, xself, browser, frame, request, is_navigation, is_download, request_initiator, disable_default_handling):
         return None
-    def _get_auth_credentials(self, xself, browser, origin_url, isProxy, host, port, realm, scheme, callback):
+    def py_get_auth_credentials(self, xself, browser, origin_url, isProxy, host, port, realm, scheme, callback):
         return 0
-    def _on_certificate_error(self, xself, browser, cert_error, request_url, ssl_info, callback):
+    def py_on_certificate_error(self, xself, browser, cert_error, request_url, ssl_info, callback):
         return 0
-    def _on_select_client_certificate(self, xself, browser, isProxy, host, port, certificatesCount, certificates, callback):
+    def py_on_select_client_certificate(self, xself, browser, isProxy, host, port, certificatesCount, certificates, callback):
         return 0
-    def _on_render_view_ready(self, xself, browser):
+    def py_on_render_view_ready(self, xself, browser):
         return 0
-    def _on_render_process_terminated(self, xself, browser, status):
+    def py_on_render_process_terminated(self, xself, browser, status):
         return 0
-    def _on_document_available_in_main_frame(self, xself, browser):
+    def py_on_document_available_in_main_frame(self, xself, browser):
         return 0
 
 
-class cef_resource_bundle_t(Structure):
+class cef_request_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_localized_string = self._callbacks[0](self._get_localized_string)
-        self.get_data_resource = self._callbacks[1](self._get_data_resource)
-        self.get_data_resource_for_scale = self._callbacks[2](self._get_data_resource_for_scale)
 
-    def _get_localized_string(self, xself, string_id):
-        return None
-    def _get_data_resource(self, xself, resource_id):
-        return None
-    def _get_data_resource_for_scale(self, xself, resource_id, scale_factor):
-        return None
+class cef_resolve_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_resource_bundle_handler_t(Structure):
@@ -2704,44 +1014,23 @@ class cef_resource_bundle_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.get_localized_string = self._callbacks[0](self._get_localized_string)
-        self.get_data_resource = self._callbacks[1](self._get_data_resource)
-        self.get_data_resource_for_scale = self._callbacks[2](self._get_data_resource_for_scale)
+        self.get_localized_string = self._callbacks[0](self.py_get_localized_string)
+        self.get_data_resource = self._callbacks[1](self.py_get_data_resource)
+        self.get_data_resource_for_scale = self._callbacks[2](self.py_get_data_resource_for_scale)
 
-    def _get_localized_string(self, xself, string_id, string):
+    def py_get_localized_string(self, xself, string_id, string):
         return 0
-    def _get_data_resource(self, xself, resource_id, data, data_size):
+    def py_get_data_resource(self, xself, resource_id, data, data_size):
         return 0
-    def _get_data_resource_for_scale(self, xself, resource_id, scale_factor, data, data_size):
+    def py_get_data_resource_for_scale(self, xself, resource_id, scale_factor, data, data_size):
         return 0
 
 
-class cef_resource_skip_callback_t(Structure):
+class cef_resource_bundle_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-
-    def _cont(self, xself, bytes_skipped):
-        return 0
-
-
-class cef_resource_read_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.cont = self._callbacks[0](self._cont)
-
-    def _cont(self, xself, bytes_read):
-        return 0
 
 
 class cef_resource_handler_t(Structure):
@@ -2749,30 +1038,35 @@ class cef_resource_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.open = self._callbacks[0](self._open)
-        self.process_request = self._callbacks[1](self._process_request)
-        self.get_response_headers = self._callbacks[2](self._get_response_headers)
-        self.skip = self._callbacks[3](self._skip)
-        self.read = self._callbacks[4](self._read)
-        self.read_response = self._callbacks[5](self._read_response)
-        self.cancel = self._callbacks[6](self._cancel)
+        self.open = self._callbacks[0](self.py_open)
+        self.process_request = self._callbacks[1](self.py_process_request)
+        self.get_response_headers = self._callbacks[2](self.py_get_response_headers)
+        self.skip = self._callbacks[3](self.py_skip)
+        self.read = self._callbacks[4](self.py_read)
+        self.read_response = self._callbacks[5](self.py_read_response)
+        self.cancel = self._callbacks[6](self.py_cancel)
 
-    def _open(self, xself, request, handle_request, callback):
+    def py_open(self, xself, request, handle_request, callback):
         return 0
-    def _process_request(self, xself, request, callback):
+    def py_process_request(self, xself, request, callback):
         return 0
-    def _get_response_headers(self, xself, response, response_length, redirectUrl):
+    def py_get_response_headers(self, xself, response, response_length, redirectUrl):
         return 0
-    def _skip(self, xself, bytes_to_skip, bytes_skipped, callback):
+    def py_skip(self, xself, bytes_to_skip, bytes_skipped, callback):
         return 0
-    def _read(self, xself, data_out, bytes_to_read, bytes_read, callback):
+    def py_read(self, xself, data_out, bytes_to_read, bytes_read, callback):
         return 0
-    def _read_response(self, xself, data_out, bytes_to_read, bytes_read, callback):
+    def py_read_response(self, xself, data_out, bytes_to_read, bytes_read, callback):
         return 0
-    def _cancel(self, xself):
+    def py_cancel(self, xself):
         return 0
+
+
+class cef_resource_read_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_resource_request_handler_t(Structure):
@@ -2780,201 +1074,74 @@ class cef_resource_request_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.get_cookie_access_filter = self._callbacks[0](self._get_cookie_access_filter)
-        self.on_before_resource_load = self._callbacks[1](self._on_before_resource_load)
-        self.get_resource_handler = self._callbacks[2](self._get_resource_handler)
-        self.on_resource_redirect = self._callbacks[3](self._on_resource_redirect)
-        self.on_resource_response = self._callbacks[4](self._on_resource_response)
-        self.get_resource_response_filter = self._callbacks[5](self._get_resource_response_filter)
-        self.on_resource_load_complete = self._callbacks[6](self._on_resource_load_complete)
-        self.on_protocol_execution = self._callbacks[7](self._on_protocol_execution)
+        self.get_cookie_access_filter = self._callbacks[0](self.py_get_cookie_access_filter)
+        self.on_before_resource_load = self._callbacks[1](self.py_on_before_resource_load)
+        self.get_resource_handler = self._callbacks[2](self.py_get_resource_handler)
+        self.on_resource_redirect = self._callbacks[3](self.py_on_resource_redirect)
+        self.on_resource_response = self._callbacks[4](self.py_on_resource_response)
+        self.get_resource_response_filter = self._callbacks[5](self.py_get_resource_response_filter)
+        self.on_resource_load_complete = self._callbacks[6](self.py_on_resource_load_complete)
+        self.on_protocol_execution = self._callbacks[7](self.py_on_protocol_execution)
 
-    def _get_cookie_access_filter(self, xself, browser, frame, request):
+    def py_get_cookie_access_filter(self, xself, browser, frame, request):
         return None
-    def _on_before_resource_load(self, xself, browser, frame, request, callback):
+    def py_on_before_resource_load(self, xself, browser, frame, request, callback):
         return 0
-    def _get_resource_handler(self, xself, browser, frame, request):
+    def py_get_resource_handler(self, xself, browser, frame, request):
         return None
-    def _on_resource_redirect(self, xself, browser, frame, request, response, new_url):
+    def py_on_resource_redirect(self, xself, browser, frame, request, response, new_url):
         return 0
-    def _on_resource_response(self, xself, browser, frame, request, response):
+    def py_on_resource_response(self, xself, browser, frame, request, response):
         return 0
-    def _get_resource_response_filter(self, xself, browser, frame, request, response):
+    def py_get_resource_response_filter(self, xself, browser, frame, request, response):
         return None
-    def _on_resource_load_complete(self, xself, browser, frame, request, response, status, received_content_length):
+    def py_on_resource_load_complete(self, xself, browser, frame, request, response, status, received_content_length):
         return 0
-    def _on_protocol_execution(self, xself, browser, frame, request, allow_os_execution):
+    def py_on_protocol_execution(self, xself, browser, frame, request, allow_os_execution):
         return 0
 
 
-class cef_cookie_access_filter_t(Structure):
+class cef_resource_skip_callback_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.can_send_cookie = self._callbacks[0](self._can_send_cookie)
-        self.can_save_cookie = self._callbacks[1](self._can_save_cookie)
-
-    def _can_send_cookie(self, xself, browser, frame, request, cookie):
-        return 0
-    def _can_save_cookie(self, xself, browser, frame, request, response, cookie):
-        return 0
-
-
-class cef_response_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_read_only = self._callbacks[0](self._is_read_only)
-        self.get_error = self._callbacks[1](self._get_error)
-        self.set_error = self._callbacks[2](self._set_error)
-        self.get_status = self._callbacks[3](self._get_status)
-        self.set_status = self._callbacks[4](self._set_status)
-        self.get_status_text = self._callbacks[5](self._get_status_text)
-        self.set_status_text = self._callbacks[6](self._set_status_text)
-        self.get_mime_type = self._callbacks[7](self._get_mime_type)
-        self.set_mime_type = self._callbacks[8](self._set_mime_type)
-        self.get_charset = self._callbacks[9](self._get_charset)
-        self.set_charset = self._callbacks[10](self._set_charset)
-        self.get_header_by_name = self._callbacks[11](self._get_header_by_name)
-        self.set_header_by_name = self._callbacks[12](self._set_header_by_name)
-        self.get_header_map = self._callbacks[13](self._get_header_map)
-        self.set_header_map = self._callbacks[14](self._set_header_map)
-        self.get_url = self._callbacks[15](self._get_url)
-        self.set_url = self._callbacks[16](self._set_url)
-
-    def _is_read_only(self, xself):
-        return 0
-    def _get_error(self, xself):
-        return 0
-    def _set_error(self, xself, error):
-        return 0
-    def _get_status(self, xself):
-        return 0
-    def _set_status(self, xself, status):
-        return 0
-    def _get_status_text(self, xself):
-        return None
-    def _set_status_text(self, xself, statusText):
-        return 0
-    def _get_mime_type(self, xself):
-        return None
-    def _set_mime_type(self, xself, mimeType):
-        return 0
-    def _get_charset(self, xself):
-        return None
-    def _set_charset(self, xself, charset):
-        return 0
-    def _get_header_by_name(self, xself, name):
-        return None
-    def _set_header_by_name(self, xself, name, value, overwrite):
-        return 0
-    def _get_header_map(self, xself, headerMap):
-        return 0
-    def _set_header_map(self, xself, headerMap):
-        return 0
-    def _get_url(self, xself):
-        return None
-    def _set_url(self, xself, url):
-        return 0
 
 
 class cef_response_filter_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.init_filter = self._callbacks[0](self._init_filter)
-        self.filter = self._callbacks[1](self._filter)
 
-    def _init_filter(self, xself):
-        return 0
-    def _filter(self, xself, data_in, data_in_size, data_in_read, data_out, data_out_size, data_out_written):
-        return 0
-
-
-class cef_scheme_registrar_t(Structure):
+class cef_response_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.add_custom_scheme = self._callbacks[0](self._add_custom_scheme)
 
-    def _add_custom_scheme(self, xself, scheme_name, options):
-        return 0
+class cef_run_context_menu_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_run_file_dialog_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_run_quick_menu_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_scheme_handler_factory_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.create = self._callbacks[0](self._create)
 
-    def _create(self, xself, browser, frame, scheme_name, request):
-        return None
-
-
-class cef_server_t(Structure):
+class cef_scheme_registrar_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_task_runner = self._callbacks[0](self._get_task_runner)
-        self.shutdown = self._callbacks[1](self._shutdown)
-        self.is_running = self._callbacks[2](self._is_running)
-        self.get_address = self._callbacks[3](self._get_address)
-        self.has_connection = self._callbacks[4](self._has_connection)
-        self.is_valid_connection = self._callbacks[5](self._is_valid_connection)
-        self.send_http200response = self._callbacks[6](self._send_http200response)
-        self.send_http404response = self._callbacks[7](self._send_http404response)
-        self.send_http500response = self._callbacks[8](self._send_http500response)
-        self.send_http_response = self._callbacks[9](self._send_http_response)
-        self.send_raw_data = self._callbacks[10](self._send_raw_data)
-        self.close_connection = self._callbacks[11](self._close_connection)
-        self.send_web_socket_message = self._callbacks[12](self._send_web_socket_message)
 
-    def _get_task_runner(self, xself):
-        return None
-    def _shutdown(self, xself):
-        return 0
-    def _is_running(self, xself):
-        return 0
-    def _get_address(self, xself):
-        return None
-    def _has_connection(self, xself):
-        return 0
-    def _is_valid_connection(self, xself, connection_id):
-        return 0
-    def _send_http200response(self, xself, connection_id, content_type, data, data_size):
-        return 0
-    def _send_http404response(self, xself, connection_id):
-        return 0
-    def _send_http500response(self, xself, connection_id, error_message):
-        return 0
-    def _send_http_response(self, xself, connection_id, response_code, content_type, content_length, extra_headers):
-        return 0
-    def _send_raw_data(self, xself, connection_id, data, data_size):
-        return 0
-    def _close_connection(self, xself, connection_id):
-        return 0
-    def _send_web_socket_message(self, xself, connection_id, data, data_size):
-        return 0
+class cef_scroll_view_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_select_client_certificate_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_server_handler_t(Structure):
@@ -2982,165 +1149,158 @@ class cef_server_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.on_server_created = self._callbacks[0](self._on_server_created)
-        self.on_server_destroyed = self._callbacks[1](self._on_server_destroyed)
-        self.on_client_connected = self._callbacks[2](self._on_client_connected)
-        self.on_client_disconnected = self._callbacks[3](self._on_client_disconnected)
-        self.on_http_request = self._callbacks[4](self._on_http_request)
-        self.on_web_socket_request = self._callbacks[5](self._on_web_socket_request)
-        self.on_web_socket_connected = self._callbacks[6](self._on_web_socket_connected)
-        self.on_web_socket_message = self._callbacks[7](self._on_web_socket_message)
+        self.on_server_created = self._callbacks[0](self.py_on_server_created)
+        self.on_server_destroyed = self._callbacks[1](self.py_on_server_destroyed)
+        self.on_client_connected = self._callbacks[2](self.py_on_client_connected)
+        self.on_client_disconnected = self._callbacks[3](self.py_on_client_disconnected)
+        self.on_http_request = self._callbacks[4](self.py_on_http_request)
+        self.on_web_socket_request = self._callbacks[5](self.py_on_web_socket_request)
+        self.on_web_socket_connected = self._callbacks[6](self.py_on_web_socket_connected)
+        self.on_web_socket_message = self._callbacks[7](self.py_on_web_socket_message)
 
-    def _on_server_created(self, xself, server):
+    def py_on_server_created(self, xself, server):
         return 0
-    def _on_server_destroyed(self, xself, server):
+    def py_on_server_destroyed(self, xself, server):
         return 0
-    def _on_client_connected(self, xself, server, connection_id):
+    def py_on_client_connected(self, xself, server, connection_id):
         return 0
-    def _on_client_disconnected(self, xself, server, connection_id):
+    def py_on_client_disconnected(self, xself, server, connection_id):
         return 0
-    def _on_http_request(self, xself, server, connection_id, client_address, request):
+    def py_on_http_request(self, xself, server, connection_id, client_address, request):
         return 0
-    def _on_web_socket_request(self, xself, server, connection_id, client_address, request, callback):
+    def py_on_web_socket_request(self, xself, server, connection_id, client_address, request, callback):
         return 0
-    def _on_web_socket_connected(self, xself, server, connection_id):
+    def py_on_web_socket_connected(self, xself, server, connection_id):
         return 0
-    def _on_web_socket_message(self, xself, server, connection_id, data, data_size):
+    def py_on_web_socket_message(self, xself, server, connection_id, data, data_size):
         return 0
+
+
+class cef_server_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_set_cookie_callback_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_shared_memory_region_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.size = self._callbacks[1](self._size)
-        self.memory = self._callbacks[2](self._memory)
-
-    def _is_valid(self, xself):
-        return 0
-    def _size(self, xself):
-        return 0
-    def _memory(self, xself):
-        return None
-
 
 class cef_shared_process_message_builder_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.size = self._callbacks[1](self._size)
-        self.memory = self._callbacks[2](self._memory)
-        self.build = self._callbacks[3](self._build)
-
-    def _is_valid(self, xself):
-        return 0
-    def _size(self, xself):
-        return 0
-    def _memory(self, xself):
-        return None
-    def _build(self, xself):
-        return None
 
 
 class cef_sslinfo_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_cert_status = self._callbacks[0](self._get_cert_status)
-        self.get_x509certificate = self._callbacks[1](self._get_x509certificate)
-
-    def _get_cert_status(self, xself):
-        return 0
-    def _get_x509certificate(self, xself):
-        return None
-
 
 class cef_sslstatus_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_secure_connection = self._callbacks[0](self._is_secure_connection)
-        self.get_cert_status = self._callbacks[1](self._get_cert_status)
-        self.get_sslversion = self._callbacks[2](self._get_sslversion)
-        self.get_content_status = self._callbacks[3](self._get_content_status)
-        self.get_x509certificate = self._callbacks[4](self._get_x509certificate)
-
-    def _is_secure_connection(self, xself):
-        return 0
-    def _get_cert_status(self, xself):
-        return 0
-    def _get_sslversion(self, xself):
-        return 0
-    def _get_content_status(self, xself):
-        return 0
-    def _get_x509certificate(self, xself):
-        return None
-
-
-class cef_read_handler_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.read = self._callbacks[0](self._read)
-        self.seek = self._callbacks[1](self._seek)
-        self.tell = self._callbacks[2](self._tell)
-        self.eof = self._callbacks[3](self._eof)
-        self.may_block = self._callbacks[4](self._may_block)
-
-    def _read(self, xself, ptr, size, n):
-        return 0
-    def _seek(self, xself, offset, whence):
-        return 0
-    def _tell(self, xself):
-        return 0
-    def _eof(self, xself):
-        return 0
-    def _may_block(self, xself):
-        return 0
 
 
 class cef_stream_reader_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.read = self._callbacks[0](self._read)
-        self.seek = self._callbacks[1](self._seek)
-        self.tell = self._callbacks[2](self._tell)
-        self.eof = self._callbacks[3](self._eof)
-        self.may_block = self._callbacks[4](self._may_block)
 
-    def _read(self, xself, ptr, size, n):
-        return 0
-    def _seek(self, xself, offset, whence):
-        return 0
-    def _tell(self, xself):
-        return 0
-    def _eof(self, xself):
-        return 0
-    def _may_block(self, xself):
-        return 0
+class cef_stream_writer_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_string_visitor_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_task_runner_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_task_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_textfield_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_textfield_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_thread_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_urlrequest_client_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_urlrequest_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8accessor_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8array_buffer_release_callback_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8context_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8exception_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8handler_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8interceptor_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8stack_frame_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8stack_trace_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_v8value_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_value_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_view_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_view_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_waitable_event_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_window_delegate_t(Structure):
+    _align_ = CEFALIGN
+
+
+class cef_window_t(Structure):
+    _align_ = CEFALIGN
 
 
 class cef_write_handler_t(Structure):
@@ -3148,1082 +1308,92 @@ class cef_write_handler_t(Structure):
 
     def __init__(self):
         super().__init__()
+        # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
-        self.write = self._callbacks[0](self._write)
-        self.seek = self._callbacks[1](self._seek)
-        self.tell = self._callbacks[2](self._tell)
-        self.flush = self._callbacks[3](self._flush)
-        self.may_block = self._callbacks[4](self._may_block)
+        self.write = self._callbacks[0](self.py_write)
+        self.seek = self._callbacks[1](self.py_seek)
+        self.tell = self._callbacks[2](self.py_tell)
+        self.flush = self._callbacks[3](self.py_flush)
+        self.may_block = self._callbacks[4](self.py_may_block)
 
-    def _write(self, xself, ptr, size, n):
+    def py_write(self, xself, ptr, size, n):
         return 0
-    def _seek(self, xself, offset, whence):
+    def py_seek(self, xself, offset, whence):
         return 0
-    def _tell(self, xself):
+    def py_tell(self, xself):
         return 0
-    def _flush(self, xself):
+    def py_flush(self, xself):
         return 0
-    def _may_block(self, xself):
-        return 0
-
-
-class cef_stream_writer_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.write = self._callbacks[0](self._write)
-        self.seek = self._callbacks[1](self._seek)
-        self.tell = self._callbacks[2](self._tell)
-        self.flush = self._callbacks[3](self._flush)
-        self.may_block = self._callbacks[4](self._may_block)
-
-    def _write(self, xself, ptr, size, n):
-        return 0
-    def _seek(self, xself, offset, whence):
-        return 0
-    def _tell(self, xself):
-        return 0
-    def _flush(self, xself):
-        return 0
-    def _may_block(self, xself):
-        return 0
-
-
-class cef_string_visitor_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.visit = self._callbacks[0](self._visit)
-
-    def _visit(self, xself, string):
-        return 0
-
-
-class cef_task_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.execute = self._callbacks[0](self._execute)
-
-    def _execute(self, xself):
-        return 0
-
-
-class cef_task_runner_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_same = self._callbacks[0](self._is_same)
-        self.belongs_to_current_thread = self._callbacks[1](self._belongs_to_current_thread)
-        self.belongs_to_thread = self._callbacks[2](self._belongs_to_thread)
-        self.post_task = self._callbacks[3](self._post_task)
-        self.post_delayed_task = self._callbacks[4](self._post_delayed_task)
-
-    def _is_same(self, xself, that):
-        return 0
-    def _belongs_to_current_thread(self, xself):
-        return 0
-    def _belongs_to_thread(self, xself, threadId):
-        return 0
-    def _post_task(self, xself, task):
-        return 0
-    def _post_delayed_task(self, xself, task, delay_ms):
-        return 0
-
-
-class cef_thread_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_task_runner = self._callbacks[0](self._get_task_runner)
-        self.get_platform_thread_id = self._callbacks[1](self._get_platform_thread_id)
-        self.stop = self._callbacks[2](self._stop)
-        self.is_running = self._callbacks[3](self._is_running)
-
-    def _get_task_runner(self, xself):
-        return None
-    def _get_platform_thread_id(self, xself):
-        return 0
-    def _stop(self, xself):
-        return 0
-    def _is_running(self, xself):
-        return 0
-
-
-class cef_end_tracing_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_end_tracing_complete = self._callbacks[0](self._on_end_tracing_complete)
-
-    def _on_end_tracing_complete(self, xself, tracing_file):
-        return 0
-
-
-class cef_urlrequest_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_request = self._callbacks[0](self._get_request)
-        self.get_client = self._callbacks[1](self._get_client)
-        self.get_request_status = self._callbacks[2](self._get_request_status)
-        self.get_request_error = self._callbacks[3](self._get_request_error)
-        self.get_response = self._callbacks[4](self._get_response)
-        self.response_was_cached = self._callbacks[5](self._response_was_cached)
-        self.cancel = self._callbacks[6](self._cancel)
-
-    def _get_request(self, xself):
-        return None
-    def _get_client(self, xself):
-        return None
-    def _get_request_status(self, xself):
-        return 0
-    def _get_request_error(self, xself):
-        return 0
-    def _get_response(self, xself):
-        return None
-    def _response_was_cached(self, xself):
-        return 0
-    def _cancel(self, xself):
-        return 0
-
-
-class cef_urlrequest_client_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.on_request_complete = self._callbacks[0](self._on_request_complete)
-        self.on_upload_progress = self._callbacks[1](self._on_upload_progress)
-        self.on_download_progress = self._callbacks[2](self._on_download_progress)
-        self.on_download_data = self._callbacks[3](self._on_download_data)
-        self.get_auth_credentials = self._callbacks[4](self._get_auth_credentials)
-
-    def _on_request_complete(self, xself, request):
-        return 0
-    def _on_upload_progress(self, xself, request, current, total):
-        return 0
-    def _on_download_progress(self, xself, request, current, total):
-        return 0
-    def _on_download_data(self, xself, request, data, data_length):
-        return 0
-    def _get_auth_credentials(self, xself, isProxy, host, port, realm, scheme, callback):
-        return 0
-
-
-class cef_v8context_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_task_runner = self._callbacks[0](self._get_task_runner)
-        self.is_valid = self._callbacks[1](self._is_valid)
-        self.get_browser = self._callbacks[2](self._get_browser)
-        self.get_frame = self._callbacks[3](self._get_frame)
-        self.get_global = self._callbacks[4](self._get_global)
-        self.enter = self._callbacks[5](self._enter)
-        self.exit = self._callbacks[6](self._exit)
-        self.is_same = self._callbacks[7](self._is_same)
-        self.eval = self._callbacks[8](self._eval)
-
-    def _get_task_runner(self, xself):
-        return None
-    def _is_valid(self, xself):
-        return 0
-    def _get_browser(self, xself):
-        return None
-    def _get_frame(self, xself):
-        return None
-    def _get_global(self, xself):
-        return None
-    def _enter(self, xself):
-        return 0
-    def _exit(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _eval(self, xself, code, script_url, start_line, retval, exception):
-        return 0
-
-
-class cef_v8handler_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.execute = self._callbacks[0](self._execute)
-
-    def _execute(self, xself, name, object, argumentsCount, arguments, retval, exception):
-        return 0
-
-
-class cef_v8accessor_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get = self._callbacks[0](self._get)
-        self.set = self._callbacks[1](self._set)
-
-    def _get(self, xself, name, object, retval, exception):
-        return 0
-    def _set(self, xself, name, object, value, exception):
-        return 0
-
-
-class cef_v8interceptor_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_byname = self._callbacks[0](self._get_byname)
-        self.get_byindex = self._callbacks[1](self._get_byindex)
-        self.set_byname = self._callbacks[2](self._set_byname)
-        self.set_byindex = self._callbacks[3](self._set_byindex)
-
-    def _get_byname(self, xself, name, object, retval, exception):
-        return 0
-    def _get_byindex(self, xself, index, object, retval, exception):
-        return 0
-    def _set_byname(self, xself, name, object, value, exception):
-        return 0
-    def _set_byindex(self, xself, index, object, value, exception):
-        return 0
-
-
-class cef_v8exception_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_message = self._callbacks[0](self._get_message)
-        self.get_source_line = self._callbacks[1](self._get_source_line)
-        self.get_script_resource_name = self._callbacks[2](self._get_script_resource_name)
-        self.get_line_number = self._callbacks[3](self._get_line_number)
-        self.get_start_position = self._callbacks[4](self._get_start_position)
-        self.get_end_position = self._callbacks[5](self._get_end_position)
-        self.get_start_column = self._callbacks[6](self._get_start_column)
-        self.get_end_column = self._callbacks[7](self._get_end_column)
-
-    def _get_message(self, xself):
-        return None
-    def _get_source_line(self, xself):
-        return None
-    def _get_script_resource_name(self, xself):
-        return None
-    def _get_line_number(self, xself):
-        return 0
-    def _get_start_position(self, xself):
-        return 0
-    def _get_end_position(self, xself):
-        return 0
-    def _get_start_column(self, xself):
-        return 0
-    def _get_end_column(self, xself):
-        return 0
-
-
-class cef_v8array_buffer_release_callback_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.release_buffer = self._callbacks[0](self._release_buffer)
-
-    def _release_buffer(self, xself, buffer):
-        return 0
-
-
-class cef_v8value_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_undefined = self._callbacks[1](self._is_undefined)
-        self.is_null = self._callbacks[2](self._is_null)
-        self.is_bool = self._callbacks[3](self._is_bool)
-        self.is_int = self._callbacks[4](self._is_int)
-        self.is_uint = self._callbacks[5](self._is_uint)
-        self.is_double = self._callbacks[6](self._is_double)
-        self.is_date = self._callbacks[7](self._is_date)
-        self.is_string = self._callbacks[8](self._is_string)
-        self.is_object = self._callbacks[9](self._is_object)
-        self.is_array = self._callbacks[10](self._is_array)
-        self.is_array_buffer = self._callbacks[11](self._is_array_buffer)
-        self.is_function = self._callbacks[12](self._is_function)
-        self.is_promise = self._callbacks[13](self._is_promise)
-        self.is_same = self._callbacks[14](self._is_same)
-        self.get_bool_value = self._callbacks[15](self._get_bool_value)
-        self.get_int_value = self._callbacks[16](self._get_int_value)
-        self.get_uint_value = self._callbacks[17](self._get_uint_value)
-        self.get_double_value = self._callbacks[18](self._get_double_value)
-        self.get_date_value = self._callbacks[19](self._get_date_value)
-        self.get_string_value = self._callbacks[20](self._get_string_value)
-        self.is_user_created = self._callbacks[21](self._is_user_created)
-        self.has_exception = self._callbacks[22](self._has_exception)
-        self.get_exception = self._callbacks[23](self._get_exception)
-        self.clear_exception = self._callbacks[24](self._clear_exception)
-        self.will_rethrow_exceptions = self._callbacks[25](self._will_rethrow_exceptions)
-        self.set_rethrow_exceptions = self._callbacks[26](self._set_rethrow_exceptions)
-        self.has_value_bykey = self._callbacks[27](self._has_value_bykey)
-        self.has_value_byindex = self._callbacks[28](self._has_value_byindex)
-        self.delete_value_bykey = self._callbacks[29](self._delete_value_bykey)
-        self.delete_value_byindex = self._callbacks[30](self._delete_value_byindex)
-        self.get_value_bykey = self._callbacks[31](self._get_value_bykey)
-        self.get_value_byindex = self._callbacks[32](self._get_value_byindex)
-        self.set_value_bykey = self._callbacks[33](self._set_value_bykey)
-        self.set_value_byindex = self._callbacks[34](self._set_value_byindex)
-        self.set_value_byaccessor = self._callbacks[35](self._set_value_byaccessor)
-        self.get_keys = self._callbacks[36](self._get_keys)
-        self.set_user_data = self._callbacks[37](self._set_user_data)
-        self.get_user_data = self._callbacks[38](self._get_user_data)
-        self.get_externally_allocated_memory = self._callbacks[39](self._get_externally_allocated_memory)
-        self.adjust_externally_allocated_memory = self._callbacks[40](self._adjust_externally_allocated_memory)
-        self.get_array_length = self._callbacks[41](self._get_array_length)
-        self.get_array_buffer_release_callback = self._callbacks[42](self._get_array_buffer_release_callback)
-        self.neuter_array_buffer = self._callbacks[43](self._neuter_array_buffer)
-        self.get_function_name = self._callbacks[44](self._get_function_name)
-        self.get_function_handler = self._callbacks[45](self._get_function_handler)
-        self.execute_function = self._callbacks[46](self._execute_function)
-        self.execute_function_with_context = self._callbacks[47](self._execute_function_with_context)
-        self.resolve_promise = self._callbacks[48](self._resolve_promise)
-        self.reject_promise = self._callbacks[49](self._reject_promise)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_undefined(self, xself):
-        return 0
-    def _is_null(self, xself):
-        return 0
-    def _is_bool(self, xself):
-        return 0
-    def _is_int(self, xself):
-        return 0
-    def _is_uint(self, xself):
-        return 0
-    def _is_double(self, xself):
-        return 0
-    def _is_date(self, xself):
-        return 0
-    def _is_string(self, xself):
-        return 0
-    def _is_object(self, xself):
-        return 0
-    def _is_array(self, xself):
-        return 0
-    def _is_array_buffer(self, xself):
-        return 0
-    def _is_function(self, xself):
-        return 0
-    def _is_promise(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _get_bool_value(self, xself):
-        return 0
-    def _get_int_value(self, xself):
-        return 0
-    def _get_uint_value(self, xself):
-        return 0
-    def _get_double_value(self, xself):
-        return 0
-    def _get_date_value(self, xself):
-        return 0
-    def _get_string_value(self, xself):
-        return None
-    def _is_user_created(self, xself):
-        return 0
-    def _has_exception(self, xself):
-        return 0
-    def _get_exception(self, xself):
-        return None
-    def _clear_exception(self, xself):
-        return 0
-    def _will_rethrow_exceptions(self, xself):
-        return 0
-    def _set_rethrow_exceptions(self, xself, rethrow):
-        return 0
-    def _has_value_bykey(self, xself, key):
-        return 0
-    def _has_value_byindex(self, xself, index):
-        return 0
-    def _delete_value_bykey(self, xself, key):
-        return 0
-    def _delete_value_byindex(self, xself, index):
-        return 0
-    def _get_value_bykey(self, xself, key):
-        return None
-    def _get_value_byindex(self, xself, index):
-        return None
-    def _set_value_bykey(self, xself, key, value, attribute):
-        return 0
-    def _set_value_byindex(self, xself, index, value):
-        return 0
-    def _set_value_byaccessor(self, xself, key, settings, attribute):
-        return 0
-    def _get_keys(self, xself, keys):
-        return 0
-    def _set_user_data(self, xself, user_data):
-        return 0
-    def _get_user_data(self, xself):
-        return None
-    def _get_externally_allocated_memory(self, xself):
-        return 0
-    def _adjust_externally_allocated_memory(self, xself, change_in_bytes):
-        return 0
-    def _get_array_length(self, xself):
-        return 0
-    def _get_array_buffer_release_callback(self, xself):
-        return None
-    def _neuter_array_buffer(self, xself):
-        return 0
-    def _get_function_name(self, xself):
-        return None
-    def _get_function_handler(self, xself):
-        return None
-    def _execute_function(self, xself, object, argumentsCount, arguments):
-        return None
-    def _execute_function_with_context(self, xself, context, object, argumentsCount, arguments):
-        return None
-    def _resolve_promise(self, xself, arg):
-        return 0
-    def _reject_promise(self, xself, errorMsg):
-        return 0
-
-
-class cef_v8stack_trace_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.get_frame_count = self._callbacks[1](self._get_frame_count)
-        self.get_frame = self._callbacks[2](self._get_frame)
-
-    def _is_valid(self, xself):
-        return 0
-    def _get_frame_count(self, xself):
-        return 0
-    def _get_frame(self, xself, index):
-        return None
-
-
-class cef_v8stack_frame_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.get_script_name = self._callbacks[1](self._get_script_name)
-        self.get_script_name_or_source_url = self._callbacks[2](self._get_script_name_or_source_url)
-        self.get_function_name = self._callbacks[3](self._get_function_name)
-        self.get_line_number = self._callbacks[4](self._get_line_number)
-        self.get_column = self._callbacks[5](self._get_column)
-        self.is_eval = self._callbacks[6](self._is_eval)
-        self.is_constructor = self._callbacks[7](self._is_constructor)
-
-    def _is_valid(self, xself):
-        return 0
-    def _get_script_name(self, xself):
-        return None
-    def _get_script_name_or_source_url(self, xself):
-        return None
-    def _get_function_name(self, xself):
-        return None
-    def _get_line_number(self, xself):
-        return 0
-    def _get_column(self, xself):
-        return 0
-    def _is_eval(self, xself):
-        return 0
-    def _is_constructor(self, xself):
-        return 0
-
-
-class cef_value_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_owned = self._callbacks[1](self._is_owned)
-        self.is_read_only = self._callbacks[2](self._is_read_only)
-        self.is_same = self._callbacks[3](self._is_same)
-        self.is_equal = self._callbacks[4](self._is_equal)
-        self.copy = self._callbacks[5](self._copy)
-        self.get_type = self._callbacks[6](self._get_type)
-        self.get_bool = self._callbacks[7](self._get_bool)
-        self.get_int = self._callbacks[8](self._get_int)
-        self.get_double = self._callbacks[9](self._get_double)
-        self.get_string = self._callbacks[10](self._get_string)
-        self.get_binary = self._callbacks[11](self._get_binary)
-        self.get_dictionary = self._callbacks[12](self._get_dictionary)
-        self.get_list = self._callbacks[13](self._get_list)
-        self.set_null = self._callbacks[14](self._set_null)
-        self.set_bool = self._callbacks[15](self._set_bool)
-        self.set_int = self._callbacks[16](self._set_int)
-        self.set_double = self._callbacks[17](self._set_double)
-        self.set_string = self._callbacks[18](self._set_string)
-        self.set_binary = self._callbacks[19](self._set_binary)
-        self.set_dictionary = self._callbacks[20](self._set_dictionary)
-        self.set_list = self._callbacks[21](self._set_list)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_owned(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _is_equal(self, xself, that):
-        return 0
-    def _copy(self, xself):
-        return None
-    def _get_type(self, xself):
-        return 0
-    def _get_bool(self, xself):
-        return 0
-    def _get_int(self, xself):
-        return 0
-    def _get_double(self, xself):
-        return 0
-    def _get_string(self, xself):
-        return None
-    def _get_binary(self, xself):
-        return None
-    def _get_dictionary(self, xself):
-        return None
-    def _get_list(self, xself):
-        return None
-    def _set_null(self, xself):
-        return 0
-    def _set_bool(self, xself, value):
-        return 0
-    def _set_int(self, xself, value):
-        return 0
-    def _set_double(self, xself, value):
-        return 0
-    def _set_string(self, xself, value):
-        return 0
-    def _set_binary(self, xself, value):
-        return 0
-    def _set_dictionary(self, xself, value):
-        return 0
-    def _set_list(self, xself, value):
-        return 0
-
-
-class cef_binary_value_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_owned = self._callbacks[1](self._is_owned)
-        self.is_same = self._callbacks[2](self._is_same)
-        self.is_equal = self._callbacks[3](self._is_equal)
-        self.copy = self._callbacks[4](self._copy)
-        self.get_size = self._callbacks[5](self._get_size)
-        self.get_data = self._callbacks[6](self._get_data)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_owned(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _is_equal(self, xself, that):
-        return 0
-    def _copy(self, xself):
-        return None
-    def _get_size(self, xself):
-        return 0
-    def _get_data(self, xself, buffer, buffer_size, data_offset):
-        return 0
-
-
-class cef_dictionary_value_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_owned = self._callbacks[1](self._is_owned)
-        self.is_read_only = self._callbacks[2](self._is_read_only)
-        self.is_same = self._callbacks[3](self._is_same)
-        self.is_equal = self._callbacks[4](self._is_equal)
-        self.copy = self._callbacks[5](self._copy)
-        self.get_size = self._callbacks[6](self._get_size)
-        self.clear = self._callbacks[7](self._clear)
-        self.has_key = self._callbacks[8](self._has_key)
-        self.get_keys = self._callbacks[9](self._get_keys)
-        self.remove = self._callbacks[10](self._remove)
-        self.get_type = self._callbacks[11](self._get_type)
-        self.get_value = self._callbacks[12](self._get_value)
-        self.get_bool = self._callbacks[13](self._get_bool)
-        self.get_int = self._callbacks[14](self._get_int)
-        self.get_double = self._callbacks[15](self._get_double)
-        self.get_string = self._callbacks[16](self._get_string)
-        self.get_binary = self._callbacks[17](self._get_binary)
-        self.get_dictionary = self._callbacks[18](self._get_dictionary)
-        self.get_list = self._callbacks[19](self._get_list)
-        self.set_value = self._callbacks[20](self._set_value)
-        self.set_null = self._callbacks[21](self._set_null)
-        self.set_bool = self._callbacks[22](self._set_bool)
-        self.set_int = self._callbacks[23](self._set_int)
-        self.set_double = self._callbacks[24](self._set_double)
-        self.set_string = self._callbacks[25](self._set_string)
-        self.set_binary = self._callbacks[26](self._set_binary)
-        self.set_dictionary = self._callbacks[27](self._set_dictionary)
-        self.set_list = self._callbacks[28](self._set_list)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_owned(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _is_equal(self, xself, that):
-        return 0
-    def _copy(self, xself, exclude_empty_children):
-        return None
-    def _get_size(self, xself):
-        return 0
-    def _clear(self, xself):
-        return 0
-    def _has_key(self, xself, key):
-        return 0
-    def _get_keys(self, xself, keys):
-        return 0
-    def _remove(self, xself, key):
-        return 0
-    def _get_type(self, xself, key):
-        return 0
-    def _get_value(self, xself, key):
-        return None
-    def _get_bool(self, xself, key):
-        return 0
-    def _get_int(self, xself, key):
-        return 0
-    def _get_double(self, xself, key):
-        return 0
-    def _get_string(self, xself, key):
-        return None
-    def _get_binary(self, xself, key):
-        return None
-    def _get_dictionary(self, xself, key):
-        return None
-    def _get_list(self, xself, key):
-        return None
-    def _set_value(self, xself, key, value):
-        return 0
-    def _set_null(self, xself, key):
-        return 0
-    def _set_bool(self, xself, key, value):
-        return 0
-    def _set_int(self, xself, key, value):
-        return 0
-    def _set_double(self, xself, key, value):
-        return 0
-    def _set_string(self, xself, key, value):
-        return 0
-    def _set_binary(self, xself, key, value):
-        return 0
-    def _set_dictionary(self, xself, key, value):
-        return 0
-    def _set_list(self, xself, key, value):
-        return 0
-
-
-class cef_list_value_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.is_valid = self._callbacks[0](self._is_valid)
-        self.is_owned = self._callbacks[1](self._is_owned)
-        self.is_read_only = self._callbacks[2](self._is_read_only)
-        self.is_same = self._callbacks[3](self._is_same)
-        self.is_equal = self._callbacks[4](self._is_equal)
-        self.copy = self._callbacks[5](self._copy)
-        self.set_size = self._callbacks[6](self._set_size)
-        self.get_size = self._callbacks[7](self._get_size)
-        self.clear = self._callbacks[8](self._clear)
-        self.remove = self._callbacks[9](self._remove)
-        self.get_type = self._callbacks[10](self._get_type)
-        self.get_value = self._callbacks[11](self._get_value)
-        self.get_bool = self._callbacks[12](self._get_bool)
-        self.get_int = self._callbacks[13](self._get_int)
-        self.get_double = self._callbacks[14](self._get_double)
-        self.get_string = self._callbacks[15](self._get_string)
-        self.get_binary = self._callbacks[16](self._get_binary)
-        self.get_dictionary = self._callbacks[17](self._get_dictionary)
-        self.get_list = self._callbacks[18](self._get_list)
-        self.set_value = self._callbacks[19](self._set_value)
-        self.set_null = self._callbacks[20](self._set_null)
-        self.set_bool = self._callbacks[21](self._set_bool)
-        self.set_int = self._callbacks[22](self._set_int)
-        self.set_double = self._callbacks[23](self._set_double)
-        self.set_string = self._callbacks[24](self._set_string)
-        self.set_binary = self._callbacks[25](self._set_binary)
-        self.set_dictionary = self._callbacks[26](self._set_dictionary)
-        self.set_list = self._callbacks[27](self._set_list)
-
-    def _is_valid(self, xself):
-        return 0
-    def _is_owned(self, xself):
-        return 0
-    def _is_read_only(self, xself):
-        return 0
-    def _is_same(self, xself, that):
-        return 0
-    def _is_equal(self, xself, that):
-        return 0
-    def _copy(self, xself):
-        return None
-    def _set_size(self, xself, size):
-        return 0
-    def _get_size(self, xself):
-        return 0
-    def _clear(self, xself):
-        return 0
-    def _remove(self, xself, index):
-        return 0
-    def _get_type(self, xself, index):
-        return 0
-    def _get_value(self, xself, index):
-        return None
-    def _get_bool(self, xself, index):
-        return 0
-    def _get_int(self, xself, index):
-        return 0
-    def _get_double(self, xself, index):
-        return 0
-    def _get_string(self, xself, index):
-        return None
-    def _get_binary(self, xself, index):
-        return None
-    def _get_dictionary(self, xself, index):
-        return None
-    def _get_list(self, xself, index):
-        return None
-    def _set_value(self, xself, index, value):
-        return 0
-    def _set_null(self, xself, index):
-        return 0
-    def _set_bool(self, xself, index, value):
-        return 0
-    def _set_int(self, xself, index, value):
-        return 0
-    def _set_double(self, xself, index, value):
-        return 0
-    def _set_string(self, xself, index, value):
-        return 0
-    def _set_binary(self, xself, index, value):
-        return 0
-    def _set_dictionary(self, xself, index, value):
-        return 0
-    def _set_list(self, xself, index, value):
-        return 0
-
-
-class cef_waitable_event_t(Structure):
-    _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.reset = self._callbacks[0](self._reset)
-        self.signal = self._callbacks[1](self._signal)
-        self.is_signaled = self._callbacks[2](self._is_signaled)
-        self.wait = self._callbacks[3](self._wait)
-        self.timed_wait = self._callbacks[4](self._timed_wait)
-
-    def _reset(self, xself):
-        return 0
-    def _signal(self, xself):
-        return 0
-    def _is_signaled(self, xself):
-        return 0
-    def _wait(self, xself):
-        return 0
-    def _timed_wait(self, xself, max_ms):
+    def py_may_block(self, xself):
         return 0
 
 
 class cef_x509cert_principal_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_display_name = self._callbacks[0](self._get_display_name)
-        self.get_common_name = self._callbacks[1](self._get_common_name)
-        self.get_locality_name = self._callbacks[2](self._get_locality_name)
-        self.get_state_or_province_name = self._callbacks[3](self._get_state_or_province_name)
-        self.get_country_name = self._callbacks[4](self._get_country_name)
-        self.get_street_addresses = self._callbacks[5](self._get_street_addresses)
-        self.get_organization_names = self._callbacks[6](self._get_organization_names)
-        self.get_organization_unit_names = self._callbacks[7](self._get_organization_unit_names)
-        self.get_domain_components = self._callbacks[8](self._get_domain_components)
-
-    def _get_display_name(self, xself):
-        return None
-    def _get_common_name(self, xself):
-        return None
-    def _get_locality_name(self, xself):
-        return None
-    def _get_state_or_province_name(self, xself):
-        return None
-    def _get_country_name(self, xself):
-        return None
-    def _get_street_addresses(self, xself, addresses):
-        return 0
-    def _get_organization_names(self, xself, names):
-        return 0
-    def _get_organization_unit_names(self, xself, names):
-        return 0
-    def _get_domain_components(self, xself, components):
-        return 0
-
 
 class cef_x509certificate_t(Structure):
     _align_ = CEFALIGN
-
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.get_subject = self._callbacks[0](self._get_subject)
-        self.get_issuer = self._callbacks[1](self._get_issuer)
-        self.get_serial_number = self._callbacks[2](self._get_serial_number)
-        self.get_valid_start = self._callbacks[3](self._get_valid_start)
-        self.get_valid_expiry = self._callbacks[4](self._get_valid_expiry)
-        self.get_derencoded = self._callbacks[5](self._get_derencoded)
-        self.get_pemencoded = self._callbacks[6](self._get_pemencoded)
-        self.get_issuer_chain_size = self._callbacks[7](self._get_issuer_chain_size)
-        self.get_derencoded_issuer_chain = self._callbacks[8](self._get_derencoded_issuer_chain)
-        self.get_pemencoded_issuer_chain = self._callbacks[9](self._get_pemencoded_issuer_chain)
-
-    def _get_subject(self, xself):
-        return None
-    def _get_issuer(self, xself):
-        return None
-    def _get_serial_number(self, xself):
-        return None
-    def _get_valid_start(self, xself):
-        return 0
-    def _get_valid_expiry(self, xself):
-        return 0
-    def _get_derencoded(self, xself):
-        return None
-    def _get_pemencoded(self, xself):
-        return None
-    def _get_issuer_chain_size(self, xself):
-        return 0
-    def _get_derencoded_issuer_chain(self, xself, chainCount, chain):
-        return 0
-    def _get_pemencoded_issuer_chain(self, xself, chainCount, chain):
-        return 0
 
 
 class cef_xml_reader_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.move_to_next_node = self._callbacks[0](self._move_to_next_node)
-        self.close = self._callbacks[1](self._close)
-        self.has_error = self._callbacks[2](self._has_error)
-        self.get_error = self._callbacks[3](self._get_error)
-        self.get_type = self._callbacks[4](self._get_type)
-        self.get_depth = self._callbacks[5](self._get_depth)
-        self.get_local_name = self._callbacks[6](self._get_local_name)
-        self.get_prefix = self._callbacks[7](self._get_prefix)
-        self.get_qualified_name = self._callbacks[8](self._get_qualified_name)
-        self.get_namespace_uri = self._callbacks[9](self._get_namespace_uri)
-        self.get_base_uri = self._callbacks[10](self._get_base_uri)
-        self.get_xml_lang = self._callbacks[11](self._get_xml_lang)
-        self.is_empty_element = self._callbacks[12](self._is_empty_element)
-        self.has_value = self._callbacks[13](self._has_value)
-        self.get_value = self._callbacks[14](self._get_value)
-        self.has_attributes = self._callbacks[15](self._has_attributes)
-        self.get_attribute_count = self._callbacks[16](self._get_attribute_count)
-        self.get_attribute_byindex = self._callbacks[17](self._get_attribute_byindex)
-        self.get_attribute_byqname = self._callbacks[18](self._get_attribute_byqname)
-        self.get_attribute_bylname = self._callbacks[19](self._get_attribute_bylname)
-        self.get_inner_xml = self._callbacks[20](self._get_inner_xml)
-        self.get_outer_xml = self._callbacks[21](self._get_outer_xml)
-        self.get_line_number = self._callbacks[22](self._get_line_number)
-        self.move_to_attribute_byindex = self._callbacks[23](self._move_to_attribute_byindex)
-        self.move_to_attribute_byqname = self._callbacks[24](self._move_to_attribute_byqname)
-        self.move_to_attribute_bylname = self._callbacks[25](self._move_to_attribute_bylname)
-        self.move_to_first_attribute = self._callbacks[26](self._move_to_first_attribute)
-        self.move_to_next_attribute = self._callbacks[27](self._move_to_next_attribute)
-        self.move_to_carrying_element = self._callbacks[28](self._move_to_carrying_element)
-
-    def _move_to_next_node(self, xself):
-        return 0
-    def _close(self, xself):
-        return 0
-    def _has_error(self, xself):
-        return 0
-    def _get_error(self, xself):
-        return None
-    def _get_type(self, xself):
-        return 0
-    def _get_depth(self, xself):
-        return 0
-    def _get_local_name(self, xself):
-        return None
-    def _get_prefix(self, xself):
-        return None
-    def _get_qualified_name(self, xself):
-        return None
-    def _get_namespace_uri(self, xself):
-        return None
-    def _get_base_uri(self, xself):
-        return None
-    def _get_xml_lang(self, xself):
-        return None
-    def _is_empty_element(self, xself):
-        return 0
-    def _has_value(self, xself):
-        return 0
-    def _get_value(self, xself):
-        return None
-    def _has_attributes(self, xself):
-        return 0
-    def _get_attribute_count(self, xself):
-        return 0
-    def _get_attribute_byindex(self, xself, index):
-        return None
-    def _get_attribute_byqname(self, xself, qualifiedName):
-        return None
-    def _get_attribute_bylname(self, xself, localName, namespaceURI):
-        return None
-    def _get_inner_xml(self, xself):
-        return None
-    def _get_outer_xml(self, xself):
-        return None
-    def _get_line_number(self, xself):
-        return 0
-    def _move_to_attribute_byindex(self, xself, index):
-        return 0
-    def _move_to_attribute_byqname(self, xself, qualifiedName):
-        return 0
-    def _move_to_attribute_bylname(self, xself, localName, namespaceURI):
-        return 0
-    def _move_to_first_attribute(self, xself):
-        return 0
-    def _move_to_next_attribute(self, xself):
-        return 0
-    def _move_to_carrying_element(self, xself):
-        return 0
-
 
 class cef_zip_reader_t(Structure):
     _align_ = CEFALIGN
 
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = sizeof(self)
-        self.move_to_first_file = self._callbacks[0](self._move_to_first_file)
-        self.move_to_next_file = self._callbacks[1](self._move_to_next_file)
-        self.move_to_file = self._callbacks[2](self._move_to_file)
-        self.close = self._callbacks[3](self._close)
-        self.get_file_name = self._callbacks[4](self._get_file_name)
-        self.get_file_size = self._callbacks[5](self._get_file_size)
-        self.get_file_last_modified = self._callbacks[6](self._get_file_last_modified)
-        self.open_file = self._callbacks[7](self._open_file)
-        self.close_file = self._callbacks[8](self._close_file)
-        self.read_file = self._callbacks[9](self._read_file)
-        self.tell = self._callbacks[10](self._tell)
-        self.eof = self._callbacks[11](self._eof)
 
-    def _move_to_first_file(self, xself):
-        return 0
-    def _move_to_next_file(self, xself):
-        return 0
-    def _move_to_file(self, xself, fileName, caseSensitive):
-        return 0
-    def _close(self, xself):
-        return 0
-    def _get_file_name(self, xself):
-        return None
-    def _get_file_size(self, xself):
-        return 0
-    def _get_file_last_modified(self, xself):
-        return 0
-    def _open_file(self, xself, password):
-        return 0
-    def _close_file(self, xself):
-        return 0
-    def _read_file(self, xself, buffer, bufferSize):
-        return 0
-    def _tell(self, xself):
-        return 0
-    def _eof(self, xself):
-        return 0
+cef_value_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(double, POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), double),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_list_value_t)),
+)
+cef_value_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_value_t._callbacks[0]),
+    ('is_owned', cef_value_t._callbacks[1]),
+    ('is_read_only', cef_value_t._callbacks[2]),
+    ('is_same', cef_value_t._callbacks[3]),
+    ('is_equal', cef_value_t._callbacks[4]),
+    ('copy', cef_value_t._callbacks[5]),
+    ('get_type', cef_value_t._callbacks[6]),
+    ('get_bool', cef_value_t._callbacks[7]),
+    ('get_int', cef_value_t._callbacks[8]),
+    ('get_double', cef_value_t._callbacks[9]),
+    ('get_string', cef_value_t._callbacks[10]),
+    ('get_binary', cef_value_t._callbacks[11]),
+    ('get_dictionary', cef_value_t._callbacks[12]),
+    ('get_list', cef_value_t._callbacks[13]),
+    ('set_null', cef_value_t._callbacks[14]),
+    ('set_bool', cef_value_t._callbacks[15]),
+    ('set_int', cef_value_t._callbacks[16]),
+    ('set_double', cef_value_t._callbacks[17]),
+    ('set_string', cef_value_t._callbacks[18]),
+    ('set_binary', cef_value_t._callbacks[19]),
+    ('set_dictionary', cef_value_t._callbacks[20]),
+    ('set_list', cef_value_t._callbacks[21]),
+)
 
 
 cef_accessibility_handler_t._callbacks = (
@@ -4234,6 +1404,62 @@ cef_accessibility_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('on_accessibility_tree_change', cef_accessibility_handler_t._callbacks[0]),
     ('on_accessibility_location_change', cef_accessibility_handler_t._callbacks[1]),
+)
+
+
+cef_command_line_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), c_int, POINTER(POINTER(char))),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_map_t),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+)
+cef_command_line_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_command_line_t._callbacks[0]),
+    ('is_read_only', cef_command_line_t._callbacks[1]),
+    ('copy', cef_command_line_t._callbacks[2]),
+    ('init_from_argv', cef_command_line_t._callbacks[3]),
+    ('init_from_string', cef_command_line_t._callbacks[4]),
+    ('reset', cef_command_line_t._callbacks[5]),
+    ('get_argv', cef_command_line_t._callbacks[6]),
+    ('get_command_line_string', cef_command_line_t._callbacks[7]),
+    ('get_program', cef_command_line_t._callbacks[8]),
+    ('set_program', cef_command_line_t._callbacks[9]),
+    ('has_switches', cef_command_line_t._callbacks[10]),
+    ('has_switch', cef_command_line_t._callbacks[11]),
+    ('get_switch_value', cef_command_line_t._callbacks[12]),
+    ('get_switches', cef_command_line_t._callbacks[13]),
+    ('append_switch', cef_command_line_t._callbacks[14]),
+    ('append_switch_with_value', cef_command_line_t._callbacks[15]),
+    ('has_arguments', cef_command_line_t._callbacks[16]),
+    ('get_arguments', cef_command_line_t._callbacks[17]),
+    ('append_argument', cef_command_line_t._callbacks[18]),
+    ('prepend_wrapper', cef_command_line_t._callbacks[19]),
+)
+
+
+cef_scheme_registrar_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_scheme_registrar_t), POINTER(cef_string_t), c_int),
+)
+cef_scheme_registrar_t._fields_ = (
+    ('_base', cef_base_scoped_t),
+    ('add_custom_scheme', cef_scheme_registrar_t._callbacks[0]),
 )
 
 
@@ -4251,34 +1477,6 @@ cef_app_t._fields_ = (
     ('get_resource_bundle_handler', cef_app_t._callbacks[2]),
     ('get_browser_process_handler', cef_app_t._callbacks[3]),
     ('get_render_process_handler', cef_app_t._callbacks[4]),
-)
-
-
-cef_audio_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t)),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-)
-cef_audio_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_audio_parameters', cef_audio_handler_t._callbacks[0]),
-    ('on_audio_stream_started', cef_audio_handler_t._callbacks[1]),
-    ('on_audio_stream_packet', cef_audio_handler_t._callbacks[2]),
-    ('on_audio_stream_stopped', cef_audio_handler_t._callbacks[3]),
-    ('on_audio_stream_error', cef_audio_handler_t._callbacks[4]),
-)
-
-
-cef_auth_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t)),
-)
-cef_auth_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_auth_callback_t._callbacks[0]),
-    ('cancel', cef_auth_callback_t._callbacks[1]),
 )
 
 
@@ -4331,6 +1529,195 @@ cef_browser_t._fields_ = (
 )
 
 
+cef_audio_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t)),
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64),
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+)
+cef_audio_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_audio_parameters', cef_audio_handler_t._callbacks[0]),
+    ('on_audio_stream_started', cef_audio_handler_t._callbacks[1]),
+    ('on_audio_stream_packet', cef_audio_handler_t._callbacks[2]),
+    ('on_audio_stream_stopped', cef_audio_handler_t._callbacks[3]),
+    ('on_audio_stream_error', cef_audio_handler_t._callbacks[4]),
+)
+
+
+cef_auth_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t)),
+)
+cef_auth_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_auth_callback_t._callbacks[0]),
+    ('cancel', cef_auth_callback_t._callbacks[1]),
+)
+
+
+cef_before_download_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_before_download_callback_t), POINTER(cef_string_t), c_int),
+)
+cef_before_download_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_before_download_callback_t._callbacks[0]),
+)
+
+
+cef_binary_value_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(size_t, POINTER(cef_binary_value_t)),
+    CFUNCTYPE(size_t, POINTER(cef_binary_value_t), POINTER(c_void), size_t, size_t),
+)
+cef_binary_value_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_binary_value_t._callbacks[0]),
+    ('is_owned', cef_binary_value_t._callbacks[1]),
+    ('is_same', cef_binary_value_t._callbacks[2]),
+    ('is_equal', cef_binary_value_t._callbacks[3]),
+    ('copy', cef_binary_value_t._callbacks[4]),
+    ('get_size', cef_binary_value_t._callbacks[5]),
+    ('get_data', cef_binary_value_t._callbacks[6]),
+)
+
+
+cef_layout_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)),
+    CFUNCTYPE(c_int, POINTER(cef_layout_t)),
+)
+cef_layout_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('as_box_layout', cef_layout_t._callbacks[0]),
+    ('as_fill_layout', cef_layout_t._callbacks[1]),
+    ('is_valid', cef_layout_t._callbacks[2]),
+)
+
+
+cef_view_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_size_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(cef_point_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_insets_t)),
+    CFUNCTYPE(cef_insets_t, POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_t), cef_color_t),
+    CFUNCTYPE(cef_color_t, POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)),
+)
+cef_view_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('as_browser_view', cef_view_t._callbacks[0]),
+    ('as_button', cef_view_t._callbacks[1]),
+    ('as_panel', cef_view_t._callbacks[2]),
+    ('as_scroll_view', cef_view_t._callbacks[3]),
+    ('as_textfield', cef_view_t._callbacks[4]),
+    ('get_type_string', cef_view_t._callbacks[5]),
+    ('to_string', cef_view_t._callbacks[6]),
+    ('is_valid', cef_view_t._callbacks[7]),
+    ('is_attached', cef_view_t._callbacks[8]),
+    ('is_same', cef_view_t._callbacks[9]),
+    ('get_delegate', cef_view_t._callbacks[10]),
+    ('get_window', cef_view_t._callbacks[11]),
+    ('get_id', cef_view_t._callbacks[12]),
+    ('set_id', cef_view_t._callbacks[13]),
+    ('get_group_id', cef_view_t._callbacks[14]),
+    ('set_group_id', cef_view_t._callbacks[15]),
+    ('get_parent_view', cef_view_t._callbacks[16]),
+    ('get_view_for_id', cef_view_t._callbacks[17]),
+    ('set_bounds', cef_view_t._callbacks[18]),
+    ('get_bounds', cef_view_t._callbacks[19]),
+    ('get_bounds_in_screen', cef_view_t._callbacks[20]),
+    ('set_size', cef_view_t._callbacks[21]),
+    ('get_size', cef_view_t._callbacks[22]),
+    ('set_position', cef_view_t._callbacks[23]),
+    ('get_position', cef_view_t._callbacks[24]),
+    ('set_insets', cef_view_t._callbacks[25]),
+    ('get_insets', cef_view_t._callbacks[26]),
+    ('get_preferred_size', cef_view_t._callbacks[27]),
+    ('size_to_preferred_size', cef_view_t._callbacks[28]),
+    ('get_minimum_size', cef_view_t._callbacks[29]),
+    ('get_maximum_size', cef_view_t._callbacks[30]),
+    ('get_height_for_width', cef_view_t._callbacks[31]),
+    ('invalidate_layout', cef_view_t._callbacks[32]),
+    ('set_visible', cef_view_t._callbacks[33]),
+    ('is_visible', cef_view_t._callbacks[34]),
+    ('is_drawn', cef_view_t._callbacks[35]),
+    ('set_enabled', cef_view_t._callbacks[36]),
+    ('is_enabled', cef_view_t._callbacks[37]),
+    ('set_focusable', cef_view_t._callbacks[38]),
+    ('is_focusable', cef_view_t._callbacks[39]),
+    ('is_accessibility_focusable', cef_view_t._callbacks[40]),
+    ('request_focus', cef_view_t._callbacks[41]),
+    ('set_background_color', cef_view_t._callbacks[42]),
+    ('get_background_color', cef_view_t._callbacks[43]),
+    ('convert_point_to_screen', cef_view_t._callbacks[44]),
+    ('convert_point_from_screen', cef_view_t._callbacks[45]),
+    ('convert_point_to_window', cef_view_t._callbacks[46]),
+    ('convert_point_from_window', cef_view_t._callbacks[47]),
+    ('convert_point_to_view', cef_view_t._callbacks[48]),
+    ('convert_point_from_view', cef_view_t._callbacks[49]),
+)
+
+
+cef_box_layout_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t)),
+)
+cef_box_layout_t._fields_ = (
+    ('_base', cef_layout_t),
+    ('set_flex_for_view', cef_box_layout_t._callbacks[0]),
+    ('clear_flex_for_view', cef_box_layout_t._callbacks[1]),
+)
+
+
 cef_run_file_dialog_callback_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_run_file_dialog_callback_t), cef_string_list_t),
 )
@@ -4340,12 +1727,12 @@ cef_run_file_dialog_callback_t._fields_ = (
 )
 
 
-cef_navigation_entry_visitor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_visitor_t), POINTER(cef_navigation_entry_t), c_int, c_int, c_int),
+cef_download_image_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_download_image_callback_t), POINTER(cef_string_t), c_int, POINTER(cef_image_t)),
 )
-cef_navigation_entry_visitor_t._fields_ = (
+cef_download_image_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('visit', cef_navigation_entry_visitor_t._callbacks[0]),
+    ('on_download_image_finished', cef_download_image_callback_t._callbacks[0]),
 )
 
 
@@ -4358,12 +1745,198 @@ cef_pdf_print_callback_t._fields_ = (
 )
 
 
-cef_download_image_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_download_image_callback_t), POINTER(cef_string_t), c_int, POINTER(cef_image_t)),
+cef_client_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
+    CFUNCTYPE(c_int, POINTER(cef_client_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
 )
-cef_download_image_callback_t._fields_ = (
+cef_client_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('on_download_image_finished', cef_download_image_callback_t._callbacks[0]),
+    ('get_audio_handler', cef_client_t._callbacks[0]),
+    ('get_command_handler', cef_client_t._callbacks[1]),
+    ('get_context_menu_handler', cef_client_t._callbacks[2]),
+    ('get_dialog_handler', cef_client_t._callbacks[3]),
+    ('get_display_handler', cef_client_t._callbacks[4]),
+    ('get_download_handler', cef_client_t._callbacks[5]),
+    ('get_drag_handler', cef_client_t._callbacks[6]),
+    ('get_find_handler', cef_client_t._callbacks[7]),
+    ('get_focus_handler', cef_client_t._callbacks[8]),
+    ('get_frame_handler', cef_client_t._callbacks[9]),
+    ('get_permission_handler', cef_client_t._callbacks[10]),
+    ('get_jsdialog_handler', cef_client_t._callbacks[11]),
+    ('get_keyboard_handler', cef_client_t._callbacks[12]),
+    ('get_life_span_handler', cef_client_t._callbacks[13]),
+    ('get_load_handler', cef_client_t._callbacks[14]),
+    ('get_print_handler', cef_client_t._callbacks[15]),
+    ('get_render_handler', cef_client_t._callbacks[16]),
+    ('get_request_handler', cef_client_t._callbacks[17]),
+    ('on_process_message_received', cef_client_t._callbacks[18]),
+)
+
+
+cef_dictionary_value_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), c_int),
+    CFUNCTYPE(size_t, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), cef_string_list_t),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(double, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), double),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_list_value_t)),
+)
+cef_dictionary_value_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_dictionary_value_t._callbacks[0]),
+    ('is_owned', cef_dictionary_value_t._callbacks[1]),
+    ('is_read_only', cef_dictionary_value_t._callbacks[2]),
+    ('is_same', cef_dictionary_value_t._callbacks[3]),
+    ('is_equal', cef_dictionary_value_t._callbacks[4]),
+    ('copy', cef_dictionary_value_t._callbacks[5]),
+    ('get_size', cef_dictionary_value_t._callbacks[6]),
+    ('clear', cef_dictionary_value_t._callbacks[7]),
+    ('has_key', cef_dictionary_value_t._callbacks[8]),
+    ('get_keys', cef_dictionary_value_t._callbacks[9]),
+    ('remove', cef_dictionary_value_t._callbacks[10]),
+    ('get_type', cef_dictionary_value_t._callbacks[11]),
+    ('get_value', cef_dictionary_value_t._callbacks[12]),
+    ('get_bool', cef_dictionary_value_t._callbacks[13]),
+    ('get_int', cef_dictionary_value_t._callbacks[14]),
+    ('get_double', cef_dictionary_value_t._callbacks[15]),
+    ('get_string', cef_dictionary_value_t._callbacks[16]),
+    ('get_binary', cef_dictionary_value_t._callbacks[17]),
+    ('get_dictionary', cef_dictionary_value_t._callbacks[18]),
+    ('get_list', cef_dictionary_value_t._callbacks[19]),
+    ('set_value', cef_dictionary_value_t._callbacks[20]),
+    ('set_null', cef_dictionary_value_t._callbacks[21]),
+    ('set_bool', cef_dictionary_value_t._callbacks[22]),
+    ('set_int', cef_dictionary_value_t._callbacks[23]),
+    ('set_double', cef_dictionary_value_t._callbacks[24]),
+    ('set_string', cef_dictionary_value_t._callbacks[25]),
+    ('set_binary', cef_dictionary_value_t._callbacks[26]),
+    ('set_dictionary', cef_dictionary_value_t._callbacks[27]),
+    ('set_list', cef_dictionary_value_t._callbacks[28]),
+)
+
+
+cef_dev_tools_message_observer_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
+)
+cef_dev_tools_message_observer_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_dev_tools_message', cef_dev_tools_message_observer_t._callbacks[0]),
+    ('on_dev_tools_method_result', cef_dev_tools_message_observer_t._callbacks[1]),
+    ('on_dev_tools_event', cef_dev_tools_message_observer_t._callbacks[2]),
+    ('on_dev_tools_agent_attached', cef_dev_tools_message_observer_t._callbacks[3]),
+    ('on_dev_tools_agent_detached', cef_dev_tools_message_observer_t._callbacks[4]),
+)
+
+
+cef_navigation_entry_visitor_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_visitor_t), POINTER(cef_navigation_entry_t), c_int, c_int, c_int),
+)
+cef_navigation_entry_visitor_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('visit', cef_navigation_entry_visitor_t._callbacks[0]),
+)
+
+
+cef_drag_data_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(size_t, POINTER(cef_drag_data_t), POINTER(cef_stream_writer_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(cef_point_t, POINTER(cef_drag_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+)
+cef_drag_data_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('clone', cef_drag_data_t._callbacks[0]),
+    ('is_read_only', cef_drag_data_t._callbacks[1]),
+    ('is_link', cef_drag_data_t._callbacks[2]),
+    ('is_fragment', cef_drag_data_t._callbacks[3]),
+    ('is_file', cef_drag_data_t._callbacks[4]),
+    ('get_link_url', cef_drag_data_t._callbacks[5]),
+    ('get_link_title', cef_drag_data_t._callbacks[6]),
+    ('get_link_metadata', cef_drag_data_t._callbacks[7]),
+    ('get_fragment_text', cef_drag_data_t._callbacks[8]),
+    ('get_fragment_html', cef_drag_data_t._callbacks[9]),
+    ('get_fragment_base_url', cef_drag_data_t._callbacks[10]),
+    ('get_file_name', cef_drag_data_t._callbacks[11]),
+    ('get_file_contents', cef_drag_data_t._callbacks[12]),
+    ('get_file_names', cef_drag_data_t._callbacks[13]),
+    ('set_link_url', cef_drag_data_t._callbacks[14]),
+    ('set_link_title', cef_drag_data_t._callbacks[15]),
+    ('set_link_metadata', cef_drag_data_t._callbacks[16]),
+    ('set_fragment_text', cef_drag_data_t._callbacks[17]),
+    ('set_fragment_html', cef_drag_data_t._callbacks[18]),
+    ('set_fragment_base_url', cef_drag_data_t._callbacks[19]),
+    ('reset_file_contents', cef_drag_data_t._callbacks[20]),
+    ('add_file', cef_drag_data_t._callbacks[21]),
+    ('clear_filenames', cef_drag_data_t._callbacks[22]),
+    ('get_image', cef_drag_data_t._callbacks[23]),
+    ('get_image_hotspot', cef_drag_data_t._callbacks[24]),
+    ('has_image', cef_drag_data_t._callbacks[25]),
 )
 
 
@@ -4492,6 +2065,15 @@ cef_browser_host_t._fields_ = (
 )
 
 
+cef_preference_registrar_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_preference_registrar_t), POINTER(cef_string_t), POINTER(cef_value_t)),
+)
+cef_preference_registrar_t._fields_ = (
+    ('_base', cef_base_scoped_t),
+    ('add_preference', cef_preference_registrar_t._callbacks[0]),
+)
+
+
 cef_browser_process_handler_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), cef_preferences_type_t, POINTER(cef_preference_registrar_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t)),
@@ -4509,6 +2091,93 @@ cef_browser_process_handler_t._fields_ = (
 )
 
 
+cef_view_delegate_t._callbacks = (
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+)
+cef_view_delegate_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_preferred_size', cef_view_delegate_t._callbacks[0]),
+    ('get_minimum_size', cef_view_delegate_t._callbacks[1]),
+    ('get_maximum_size', cef_view_delegate_t._callbacks[2]),
+    ('get_height_for_width', cef_view_delegate_t._callbacks[3]),
+    ('on_parent_view_changed', cef_view_delegate_t._callbacks[4]),
+    ('on_child_view_changed', cef_view_delegate_t._callbacks[5]),
+    ('on_window_changed', cef_view_delegate_t._callbacks[6]),
+    ('on_layout_changed', cef_view_delegate_t._callbacks[7]),
+    ('on_focus', cef_view_delegate_t._callbacks[8]),
+    ('on_blur', cef_view_delegate_t._callbacks[9]),
+)
+
+
+cef_browser_view_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_t), c_int),
+)
+cef_browser_view_t._fields_ = (
+    ('_base', cef_view_t),
+    ('get_browser', cef_browser_view_t._callbacks[0]),
+    ('get_chrome_toolbar', cef_browser_view_t._callbacks[1]),
+    ('set_prefer_accelerators', cef_browser_view_t._callbacks[2]),
+)
+
+
+cef_browser_view_delegate_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_settings_t), POINTER(cef_client_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_view_t), c_int),
+    CFUNCTYPE(cef_chrome_toolbar_type_t, POINTER(cef_browser_view_delegate_t)),
+)
+cef_browser_view_delegate_t._fields_ = (
+    ('_base', cef_view_delegate_t),
+    ('on_browser_created', cef_browser_view_delegate_t._callbacks[0]),
+    ('on_browser_destroyed', cef_browser_view_delegate_t._callbacks[1]),
+    ('get_delegate_for_popup_browser_view', cef_browser_view_delegate_t._callbacks[2]),
+    ('on_popup_browser_view_created', cef_browser_view_delegate_t._callbacks[3]),
+    ('get_chrome_toolbar_type', cef_browser_view_delegate_t._callbacks[4]),
+)
+
+
+cef_button_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_button_t), cef_button_state_t),
+    CFUNCTYPE(cef_button_state_t, POINTER(cef_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_button_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)),
+)
+cef_button_t._fields_ = (
+    ('_base', cef_view_t),
+    ('as_label_button', cef_button_t._callbacks[0]),
+    ('set_state', cef_button_t._callbacks[1]),
+    ('get_state', cef_button_t._callbacks[2]),
+    ('set_ink_drop_enabled', cef_button_t._callbacks[3]),
+    ('set_tooltip_text', cef_button_t._callbacks[4]),
+    ('set_accessible_name', cef_button_t._callbacks[5]),
+)
+
+
+cef_button_delegate_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)),
+)
+cef_button_delegate_t._fields_ = (
+    ('_base', cef_view_delegate_t),
+    ('on_button_pressed', cef_button_delegate_t._callbacks[0]),
+    ('on_button_state_changed', cef_button_delegate_t._callbacks[1]),
+)
+
+
 cef_callback_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_callback_t)),
@@ -4517,60 +2186,6 @@ cef_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('cont', cef_callback_t._callbacks[0]),
     ('cancel', cef_callback_t._callbacks[1]),
-)
-
-
-cef_completion_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_completion_callback_t)),
-)
-cef_completion_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_complete', cef_completion_callback_t._callbacks[0]),
-)
-
-
-cef_client_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(c_int, POINTER(cef_client_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
-)
-cef_client_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_audio_handler', cef_client_t._callbacks[0]),
-    ('get_command_handler', cef_client_t._callbacks[1]),
-    ('get_context_menu_handler', cef_client_t._callbacks[2]),
-    ('get_dialog_handler', cef_client_t._callbacks[3]),
-    ('get_display_handler', cef_client_t._callbacks[4]),
-    ('get_download_handler', cef_client_t._callbacks[5]),
-    ('get_drag_handler', cef_client_t._callbacks[6]),
-    ('get_find_handler', cef_client_t._callbacks[7]),
-    ('get_focus_handler', cef_client_t._callbacks[8]),
-    ('get_frame_handler', cef_client_t._callbacks[9]),
-    ('get_permission_handler', cef_client_t._callbacks[10]),
-    ('get_jsdialog_handler', cef_client_t._callbacks[11]),
-    ('get_keyboard_handler', cef_client_t._callbacks[12]),
-    ('get_life_span_handler', cef_client_t._callbacks[13]),
-    ('get_load_handler', cef_client_t._callbacks[14]),
-    ('get_print_handler', cef_client_t._callbacks[15]),
-    ('get_render_handler', cef_client_t._callbacks[16]),
-    ('get_request_handler', cef_client_t._callbacks[17]),
-    ('on_process_message_received', cef_client_t._callbacks[18]),
 )
 
 
@@ -4583,578 +2198,12 @@ cef_command_handler_t._fields_ = (
 )
 
 
-cef_command_line_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), c_int, POINTER(POINTER(char))),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_map_t),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+cef_completion_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_completion_callback_t)),
 )
-cef_command_line_t._fields_ = (
+cef_completion_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_command_line_t._callbacks[0]),
-    ('is_read_only', cef_command_line_t._callbacks[1]),
-    ('copy', cef_command_line_t._callbacks[2]),
-    ('init_from_argv', cef_command_line_t._callbacks[3]),
-    ('init_from_string', cef_command_line_t._callbacks[4]),
-    ('reset', cef_command_line_t._callbacks[5]),
-    ('get_argv', cef_command_line_t._callbacks[6]),
-    ('get_command_line_string', cef_command_line_t._callbacks[7]),
-    ('get_program', cef_command_line_t._callbacks[8]),
-    ('set_program', cef_command_line_t._callbacks[9]),
-    ('has_switches', cef_command_line_t._callbacks[10]),
-    ('has_switch', cef_command_line_t._callbacks[11]),
-    ('get_switch_value', cef_command_line_t._callbacks[12]),
-    ('get_switches', cef_command_line_t._callbacks[13]),
-    ('append_switch', cef_command_line_t._callbacks[14]),
-    ('append_switch_with_value', cef_command_line_t._callbacks[15]),
-    ('has_arguments', cef_command_line_t._callbacks[16]),
-    ('get_arguments', cef_command_line_t._callbacks[17]),
-    ('append_argument', cef_command_line_t._callbacks[18]),
-    ('prepend_wrapper', cef_command_line_t._callbacks[19]),
-)
-
-
-cef_run_context_menu_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t)),
-)
-cef_run_context_menu_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_run_context_menu_callback_t._callbacks[0]),
-    ('cancel', cef_run_context_menu_callback_t._callbacks[1]),
-)
-
-
-cef_run_quick_menu_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t)),
-)
-cef_run_quick_menu_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_run_quick_menu_callback_t._callbacks[0]),
-    ('cancel', cef_run_quick_menu_callback_t._callbacks[1]),
-)
-
-
-cef_context_menu_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t), POINTER(cef_run_context_menu_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_point_t), POINTER(cef_size_t), cef_quick_menu_edit_state_flags_t, POINTER(cef_run_quick_menu_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-)
-cef_context_menu_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_before_context_menu', cef_context_menu_handler_t._callbacks[0]),
-    ('run_context_menu', cef_context_menu_handler_t._callbacks[1]),
-    ('on_context_menu_command', cef_context_menu_handler_t._callbacks[2]),
-    ('on_context_menu_dismissed', cef_context_menu_handler_t._callbacks[3]),
-    ('run_quick_menu', cef_context_menu_handler_t._callbacks[4]),
-    ('on_quick_menu_command', cef_context_menu_handler_t._callbacks[5]),
-    ('on_quick_menu_dismissed', cef_context_menu_handler_t._callbacks[6]),
-)
-
-
-cef_context_menu_params_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_type_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_media_type_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_media_state_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_edit_state_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-)
-cef_context_menu_params_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_xcoord', cef_context_menu_params_t._callbacks[0]),
-    ('get_ycoord', cef_context_menu_params_t._callbacks[1]),
-    ('get_type_flags', cef_context_menu_params_t._callbacks[2]),
-    ('get_link_url', cef_context_menu_params_t._callbacks[3]),
-    ('get_unfiltered_link_url', cef_context_menu_params_t._callbacks[4]),
-    ('get_source_url', cef_context_menu_params_t._callbacks[5]),
-    ('has_image_contents', cef_context_menu_params_t._callbacks[6]),
-    ('get_title_text', cef_context_menu_params_t._callbacks[7]),
-    ('get_page_url', cef_context_menu_params_t._callbacks[8]),
-    ('get_frame_url', cef_context_menu_params_t._callbacks[9]),
-    ('get_frame_charset', cef_context_menu_params_t._callbacks[10]),
-    ('get_media_type', cef_context_menu_params_t._callbacks[11]),
-    ('get_media_state_flags', cef_context_menu_params_t._callbacks[12]),
-    ('get_selection_text', cef_context_menu_params_t._callbacks[13]),
-    ('get_misspelled_word', cef_context_menu_params_t._callbacks[14]),
-    ('get_dictionary_suggestions', cef_context_menu_params_t._callbacks[15]),
-    ('is_editable', cef_context_menu_params_t._callbacks[16]),
-    ('is_spell_check_enabled', cef_context_menu_params_t._callbacks[17]),
-    ('get_edit_state_flags', cef_context_menu_params_t._callbacks[18]),
-    ('is_custom_menu', cef_context_menu_params_t._callbacks[19]),
-)
-
-
-cef_cookie_manager_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_cookie_visitor_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), c_int, POINTER(cef_cookie_visitor_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_cookie_t), POINTER(cef_set_cookie_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_delete_cookies_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_completion_callback_t)),
-)
-cef_cookie_manager_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('visit_all_cookies', cef_cookie_manager_t._callbacks[0]),
-    ('visit_url_cookies', cef_cookie_manager_t._callbacks[1]),
-    ('set_cookie', cef_cookie_manager_t._callbacks[2]),
-    ('delete_cookies', cef_cookie_manager_t._callbacks[3]),
-    ('flush_store', cef_cookie_manager_t._callbacks[4]),
-)
-
-
-cef_cookie_visitor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_visitor_t), POINTER(cef_cookie_t), c_int, c_int, POINTER(c_int)),
-)
-cef_cookie_visitor_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('visit', cef_cookie_visitor_t._callbacks[0]),
-)
-
-
-cef_set_cookie_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_set_cookie_callback_t), c_int),
-)
-cef_set_cookie_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_complete', cef_set_cookie_callback_t._callbacks[0]),
-)
-
-
-cef_delete_cookies_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_delete_cookies_callback_t), c_int),
-)
-cef_delete_cookies_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_complete', cef_delete_cookies_callback_t._callbacks[0]),
-)
-
-
-cef_dev_tools_message_observer_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
-)
-cef_dev_tools_message_observer_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_dev_tools_message', cef_dev_tools_message_observer_t._callbacks[0]),
-    ('on_dev_tools_method_result', cef_dev_tools_message_observer_t._callbacks[1]),
-    ('on_dev_tools_event', cef_dev_tools_message_observer_t._callbacks[2]),
-    ('on_dev_tools_agent_attached', cef_dev_tools_message_observer_t._callbacks[3]),
-    ('on_dev_tools_agent_detached', cef_dev_tools_message_observer_t._callbacks[4]),
-)
-
-
-cef_file_dialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t)),
-)
-cef_file_dialog_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_file_dialog_callback_t._callbacks[0]),
-    ('cancel', cef_file_dialog_callback_t._callbacks[1]),
-)
-
-
-cef_dialog_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dialog_handler_t), POINTER(cef_browser_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_file_dialog_callback_t)),
-)
-cef_dialog_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_file_dialog', cef_dialog_handler_t._callbacks[0]),
-)
-
-
-cef_display_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_log_severity_t, POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_cursor_handle_t, cef_cursor_type_t, POINTER(cef_cursor_info_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int, c_int),
-)
-cef_display_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_address_change', cef_display_handler_t._callbacks[0]),
-    ('on_title_change', cef_display_handler_t._callbacks[1]),
-    ('on_favicon_urlchange', cef_display_handler_t._callbacks[2]),
-    ('on_fullscreen_mode_change', cef_display_handler_t._callbacks[3]),
-    ('on_tooltip', cef_display_handler_t._callbacks[4]),
-    ('on_status_message', cef_display_handler_t._callbacks[5]),
-    ('on_console_message', cef_display_handler_t._callbacks[6]),
-    ('on_auto_resize', cef_display_handler_t._callbacks[7]),
-    ('on_loading_progress_change', cef_display_handler_t._callbacks[8]),
-    ('on_cursor_change', cef_display_handler_t._callbacks[9]),
-    ('on_media_access_change', cef_display_handler_t._callbacks[10]),
-)
-
-
-cef_domvisitor_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_domvisitor_t), POINTER(cef_domdocument_t)),
-)
-cef_domvisitor_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('visit', cef_domvisitor_t._callbacks[0]),
-)
-
-
-cef_domdocument_t._callbacks = (
-    CFUNCTYPE(cef_dom_document_type_t, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
-)
-cef_domdocument_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_type', cef_domdocument_t._callbacks[0]),
-    ('get_document', cef_domdocument_t._callbacks[1]),
-    ('get_body', cef_domdocument_t._callbacks[2]),
-    ('get_head', cef_domdocument_t._callbacks[3]),
-    ('get_title', cef_domdocument_t._callbacks[4]),
-    ('get_element_by_id', cef_domdocument_t._callbacks[5]),
-    ('get_focused_node', cef_domdocument_t._callbacks[6]),
-    ('has_selection', cef_domdocument_t._callbacks[7]),
-    ('get_selection_start_offset', cef_domdocument_t._callbacks[8]),
-    ('get_selection_end_offset', cef_domdocument_t._callbacks[9]),
-    ('get_selection_as_markup', cef_domdocument_t._callbacks[10]),
-    ('get_selection_as_text', cef_domdocument_t._callbacks[11]),
-    ('get_base_url', cef_domdocument_t._callbacks[12]),
-    ('get_complete_url', cef_domdocument_t._callbacks[13]),
-)
-
-
-cef_domnode_t._callbacks = (
-    CFUNCTYPE(cef_dom_node_type_t, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_domnode_t), cef_string_map_t),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_domnode_t)),
-)
-cef_domnode_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_type', cef_domnode_t._callbacks[0]),
-    ('is_text', cef_domnode_t._callbacks[1]),
-    ('is_element', cef_domnode_t._callbacks[2]),
-    ('is_editable', cef_domnode_t._callbacks[3]),
-    ('is_form_control_element', cef_domnode_t._callbacks[4]),
-    ('get_form_control_element_type', cef_domnode_t._callbacks[5]),
-    ('is_same', cef_domnode_t._callbacks[6]),
-    ('get_name', cef_domnode_t._callbacks[7]),
-    ('get_value', cef_domnode_t._callbacks[8]),
-    ('set_value', cef_domnode_t._callbacks[9]),
-    ('get_as_markup', cef_domnode_t._callbacks[10]),
-    ('get_document', cef_domnode_t._callbacks[11]),
-    ('get_parent', cef_domnode_t._callbacks[12]),
-    ('get_previous_sibling', cef_domnode_t._callbacks[13]),
-    ('get_next_sibling', cef_domnode_t._callbacks[14]),
-    ('has_children', cef_domnode_t._callbacks[15]),
-    ('get_first_child', cef_domnode_t._callbacks[16]),
-    ('get_last_child', cef_domnode_t._callbacks[17]),
-    ('get_element_tag_name', cef_domnode_t._callbacks[18]),
-    ('has_element_attributes', cef_domnode_t._callbacks[19]),
-    ('has_element_attribute', cef_domnode_t._callbacks[20]),
-    ('get_element_attribute', cef_domnode_t._callbacks[21]),
-    ('get_element_attributes', cef_domnode_t._callbacks[22]),
-    ('set_element_attribute', cef_domnode_t._callbacks[23]),
-    ('get_element_inner_text', cef_domnode_t._callbacks[24]),
-    ('get_element_bounds', cef_domnode_t._callbacks[25]),
-)
-
-
-cef_before_download_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_before_download_callback_t), POINTER(cef_string_t), c_int),
-)
-cef_before_download_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_before_download_callback_t._callbacks[0]),
-)
-
-
-cef_download_item_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
-)
-cef_download_item_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cancel', cef_download_item_callback_t._callbacks[0]),
-    ('pause', cef_download_item_callback_t._callbacks[1]),
-    ('resume', cef_download_item_callback_t._callbacks[2]),
-)
-
-
-cef_download_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_string_t), POINTER(cef_before_download_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_download_item_callback_t)),
-)
-cef_download_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('can_download', cef_download_handler_t._callbacks[0]),
-    ('on_before_download', cef_download_handler_t._callbacks[1]),
-    ('on_download_updated', cef_download_handler_t._callbacks[2]),
-)
-
-
-cef_download_item_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(uint32, POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-)
-cef_download_item_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_download_item_t._callbacks[0]),
-    ('is_in_progress', cef_download_item_t._callbacks[1]),
-    ('is_complete', cef_download_item_t._callbacks[2]),
-    ('is_canceled', cef_download_item_t._callbacks[3]),
-    ('get_current_speed', cef_download_item_t._callbacks[4]),
-    ('get_percent_complete', cef_download_item_t._callbacks[5]),
-    ('get_total_bytes', cef_download_item_t._callbacks[6]),
-    ('get_received_bytes', cef_download_item_t._callbacks[7]),
-    ('get_start_time', cef_download_item_t._callbacks[8]),
-    ('get_end_time', cef_download_item_t._callbacks[9]),
-    ('get_full_path', cef_download_item_t._callbacks[10]),
-    ('get_id', cef_download_item_t._callbacks[11]),
-    ('get_url', cef_download_item_t._callbacks[12]),
-    ('get_original_url', cef_download_item_t._callbacks[13]),
-    ('get_suggested_file_name', cef_download_item_t._callbacks[14]),
-    ('get_content_disposition', cef_download_item_t._callbacks[15]),
-    ('get_mime_type', cef_download_item_t._callbacks[16]),
-)
-
-
-cef_drag_data_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(size_t, POINTER(cef_drag_data_t), POINTER(cef_stream_writer_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(cef_point_t, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-)
-cef_drag_data_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('clone', cef_drag_data_t._callbacks[0]),
-    ('is_read_only', cef_drag_data_t._callbacks[1]),
-    ('is_link', cef_drag_data_t._callbacks[2]),
-    ('is_fragment', cef_drag_data_t._callbacks[3]),
-    ('is_file', cef_drag_data_t._callbacks[4]),
-    ('get_link_url', cef_drag_data_t._callbacks[5]),
-    ('get_link_title', cef_drag_data_t._callbacks[6]),
-    ('get_link_metadata', cef_drag_data_t._callbacks[7]),
-    ('get_fragment_text', cef_drag_data_t._callbacks[8]),
-    ('get_fragment_html', cef_drag_data_t._callbacks[9]),
-    ('get_fragment_base_url', cef_drag_data_t._callbacks[10]),
-    ('get_file_name', cef_drag_data_t._callbacks[11]),
-    ('get_file_contents', cef_drag_data_t._callbacks[12]),
-    ('get_file_names', cef_drag_data_t._callbacks[13]),
-    ('set_link_url', cef_drag_data_t._callbacks[14]),
-    ('set_link_title', cef_drag_data_t._callbacks[15]),
-    ('set_link_metadata', cef_drag_data_t._callbacks[16]),
-    ('set_fragment_text', cef_drag_data_t._callbacks[17]),
-    ('set_fragment_html', cef_drag_data_t._callbacks[18]),
-    ('set_fragment_base_url', cef_drag_data_t._callbacks[19]),
-    ('reset_file_contents', cef_drag_data_t._callbacks[20]),
-    ('add_file', cef_drag_data_t._callbacks[21]),
-    ('clear_filenames', cef_drag_data_t._callbacks[22]),
-    ('get_image', cef_drag_data_t._callbacks[23]),
-    ('get_image_hotspot', cef_drag_data_t._callbacks[24]),
-    ('has_image', cef_drag_data_t._callbacks[25]),
-)
-
-
-cef_drag_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), size_t, POINTER(cef_draggable_region_t)),
-)
-cef_drag_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_drag_enter', cef_drag_handler_t._callbacks[0]),
-    ('on_draggable_regions_changed', cef_drag_handler_t._callbacks[1]),
-)
-
-
-cef_extension_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_t)),
-    CFUNCTYPE(c_void, POINTER(cef_extension_t)),
-)
-cef_extension_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_identifier', cef_extension_t._callbacks[0]),
-    ('get_path', cef_extension_t._callbacks[1]),
-    ('get_manifest', cef_extension_t._callbacks[2]),
-    ('is_same', cef_extension_t._callbacks[3]),
-    ('get_handler', cef_extension_t._callbacks[4]),
-    ('get_loader_context', cef_extension_t._callbacks[5]),
-    ('is_loaded', cef_extension_t._callbacks[6]),
-    ('unload', cef_extension_t._callbacks[7]),
-)
-
-
-cef_get_extension_resource_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t), POINTER(cef_stream_reader_t)),
-    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t)),
-)
-cef_get_extension_resource_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_get_extension_resource_callback_t._callbacks[0]),
-    ('cancel', cef_get_extension_resource_callback_t._callbacks[1]),
-)
-
-
-cef_extension_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), cef_errorcode_t),
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_string_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_get_extension_resource_callback_t)),
-)
-cef_extension_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_extension_load_failed', cef_extension_handler_t._callbacks[0]),
-    ('on_extension_loaded', cef_extension_handler_t._callbacks[1]),
-    ('on_extension_unloaded', cef_extension_handler_t._callbacks[2]),
-    ('on_before_background_browser', cef_extension_handler_t._callbacks[3]),
-    ('on_before_browser', cef_extension_handler_t._callbacks[4]),
-    ('get_active_browser', cef_extension_handler_t._callbacks[5]),
-    ('can_access_browser', cef_extension_handler_t._callbacks[6]),
-    ('get_extension_resource', cef_extension_handler_t._callbacks[7]),
-)
-
-
-cef_find_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_find_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(cef_rect_t), c_int, c_int),
-)
-cef_find_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_find_result', cef_find_handler_t._callbacks[0]),
-)
-
-
-cef_focus_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), cef_focus_source_t),
-    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t)),
-)
-cef_focus_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_take_focus', cef_focus_handler_t._callbacks[0]),
-    ('on_set_focus', cef_focus_handler_t._callbacks[1]),
-    ('on_got_focus', cef_focus_handler_t._callbacks[2]),
+    ('on_complete', cef_completion_callback_t._callbacks[0]),
 )
 
 
@@ -5215,219 +2264,50 @@ cef_frame_t._fields_ = (
 )
 
 
-cef_frame_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_frame_t)),
+cef_context_menu_params_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(cef_context_menu_type_flags_t, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(cef_context_menu_media_type_t, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(cef_context_menu_media_state_flags_t, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t), cef_string_list_t),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(cef_context_menu_edit_state_flags_t, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
 )
-cef_frame_handler_t._fields_ = (
+cef_context_menu_params_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('on_frame_created', cef_frame_handler_t._callbacks[0]),
-    ('on_frame_attached', cef_frame_handler_t._callbacks[1]),
-    ('on_frame_detached', cef_frame_handler_t._callbacks[2]),
-    ('on_main_frame_changed', cef_frame_handler_t._callbacks[3]),
-)
-
-
-cef_image_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, c_int, c_int, cef_color_type_t, cef_alpha_type_t, POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
-    CFUNCTYPE(size_t, POINTER(cef_image_t)),
-    CFUNCTYPE(size_t, POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(float), POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, cef_color_type_t, cef_alpha_type_t, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
-)
-cef_image_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_empty', cef_image_t._callbacks[0]),
-    ('is_same', cef_image_t._callbacks[1]),
-    ('add_bitmap', cef_image_t._callbacks[2]),
-    ('add_png', cef_image_t._callbacks[3]),
-    ('add_jpeg', cef_image_t._callbacks[4]),
-    ('get_width', cef_image_t._callbacks[5]),
-    ('get_height', cef_image_t._callbacks[6]),
-    ('has_representation', cef_image_t._callbacks[7]),
-    ('remove_representation', cef_image_t._callbacks[8]),
-    ('get_representation_info', cef_image_t._callbacks[9]),
-    ('get_as_bitmap', cef_image_t._callbacks[10]),
-    ('get_as_png', cef_image_t._callbacks[11]),
-    ('get_as_jpeg', cef_image_t._callbacks[12]),
-)
-
-
-cef_jsdialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_callback_t), c_int, POINTER(cef_string_t)),
-)
-cef_jsdialog_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_jsdialog_callback_t._callbacks[0]),
-)
-
-
-cef_jsdialog_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), cef_jsdialog_type_t, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_jsdialog_callback_t), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_jsdialog_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
-)
-cef_jsdialog_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_jsdialog', cef_jsdialog_handler_t._callbacks[0]),
-    ('on_before_unload_dialog', cef_jsdialog_handler_t._callbacks[1]),
-    ('on_reset_dialog_state', cef_jsdialog_handler_t._callbacks[2]),
-    ('on_dialog_closed', cef_jsdialog_handler_t._callbacks[3]),
-)
-
-
-cef_keyboard_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t, POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t),
-)
-cef_keyboard_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_pre_key_event', cef_keyboard_handler_t._callbacks[0]),
-    ('on_key_event', cef_keyboard_handler_t._callbacks[1]),
-)
-
-
-cef_life_span_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int, POINTER(cef_popup_features_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
-    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
-)
-cef_life_span_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_before_popup', cef_life_span_handler_t._callbacks[0]),
-    ('on_after_created', cef_life_span_handler_t._callbacks[1]),
-    ('do_close', cef_life_span_handler_t._callbacks[2]),
-    ('on_before_close', cef_life_span_handler_t._callbacks[3]),
-)
-
-
-cef_load_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), c_int, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_transition_type_t),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_string_t)),
-)
-cef_load_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_loading_state_change', cef_load_handler_t._callbacks[0]),
-    ('on_load_start', cef_load_handler_t._callbacks[1]),
-    ('on_load_end', cef_load_handler_t._callbacks[2]),
-    ('on_load_error', cef_load_handler_t._callbacks[3]),
-)
-
-
-cef_media_router_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_media_observer_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t), POINTER(cef_media_source_t), POINTER(cef_media_sink_t), POINTER(cef_media_route_create_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
-)
-cef_media_router_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('add_observer', cef_media_router_t._callbacks[0]),
-    ('get_source', cef_media_router_t._callbacks[1]),
-    ('notify_current_sinks', cef_media_router_t._callbacks[2]),
-    ('create_route', cef_media_router_t._callbacks[3]),
-    ('notify_current_routes', cef_media_router_t._callbacks[4]),
-)
-
-
-cef_media_observer_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_sink_t))),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_route_t))),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), cef_media_route_connection_state_t),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), POINTER(c_void), size_t),
-)
-cef_media_observer_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_sinks', cef_media_observer_t._callbacks[0]),
-    ('on_routes', cef_media_observer_t._callbacks[1]),
-    ('on_route_state_changed', cef_media_observer_t._callbacks[2]),
-    ('on_route_message_received', cef_media_observer_t._callbacks[3]),
-)
-
-
-cef_media_route_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_route_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_media_route_t)),
-)
-cef_media_route_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_id', cef_media_route_t._callbacks[0]),
-    ('get_source', cef_media_route_t._callbacks[1]),
-    ('get_sink', cef_media_route_t._callbacks[2]),
-    ('send_route_message', cef_media_route_t._callbacks[3]),
-    ('terminate', cef_media_route_t._callbacks[4]),
-)
-
-
-cef_media_route_create_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_route_create_callback_t), cef_media_route_create_result_t, POINTER(cef_string_t), POINTER(cef_media_route_t)),
-)
-cef_media_route_create_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_media_route_create_finished', cef_media_route_create_callback_t._callbacks[0]),
-)
-
-
-cef_media_sink_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(cef_media_sink_icon_type_t, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_sink_t), POINTER(cef_media_sink_device_info_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t), POINTER(cef_media_source_t)),
-)
-cef_media_sink_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_id', cef_media_sink_t._callbacks[0]),
-    ('get_name', cef_media_sink_t._callbacks[1]),
-    ('get_description', cef_media_sink_t._callbacks[2]),
-    ('get_icon_type', cef_media_sink_t._callbacks[3]),
-    ('get_device_info', cef_media_sink_t._callbacks[4]),
-    ('is_cast_sink', cef_media_sink_t._callbacks[5]),
-    ('is_dial_sink', cef_media_sink_t._callbacks[6]),
-    ('is_compatible_with', cef_media_sink_t._callbacks[7]),
-)
-
-
-cef_media_sink_device_info_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_sink_device_info_callback_t), POINTER(cef_media_sink_device_info_t)),
-)
-cef_media_sink_device_info_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_media_sink_device_info', cef_media_sink_device_info_callback_t._callbacks[0]),
-)
-
-
-cef_media_source_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_source_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
-)
-cef_media_source_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_id', cef_media_source_t._callbacks[0]),
-    ('is_cast_source', cef_media_source_t._callbacks[1]),
-    ('is_dial_source', cef_media_source_t._callbacks[2]),
+    ('get_xcoord', cef_context_menu_params_t._callbacks[0]),
+    ('get_ycoord', cef_context_menu_params_t._callbacks[1]),
+    ('get_type_flags', cef_context_menu_params_t._callbacks[2]),
+    ('get_link_url', cef_context_menu_params_t._callbacks[3]),
+    ('get_unfiltered_link_url', cef_context_menu_params_t._callbacks[4]),
+    ('get_source_url', cef_context_menu_params_t._callbacks[5]),
+    ('has_image_contents', cef_context_menu_params_t._callbacks[6]),
+    ('get_title_text', cef_context_menu_params_t._callbacks[7]),
+    ('get_page_url', cef_context_menu_params_t._callbacks[8]),
+    ('get_frame_url', cef_context_menu_params_t._callbacks[9]),
+    ('get_frame_charset', cef_context_menu_params_t._callbacks[10]),
+    ('get_media_type', cef_context_menu_params_t._callbacks[11]),
+    ('get_media_state_flags', cef_context_menu_params_t._callbacks[12]),
+    ('get_selection_text', cef_context_menu_params_t._callbacks[13]),
+    ('get_misspelled_word', cef_context_menu_params_t._callbacks[14]),
+    ('get_dictionary_suggestions', cef_context_menu_params_t._callbacks[15]),
+    ('is_editable', cef_context_menu_params_t._callbacks[16]),
+    ('is_spell_check_enabled', cef_context_menu_params_t._callbacks[17]),
+    ('get_edit_state_flags', cef_context_menu_params_t._callbacks[18]),
+    ('is_custom_menu', cef_context_menu_params_t._callbacks[19]),
 )
 
 
@@ -5550,292 +2430,46 @@ cef_menu_model_t._fields_ = (
 )
 
 
-cef_menu_model_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_string_t)),
+cef_run_context_menu_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t), c_int, cef_event_flags_t),
+    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t)),
 )
-cef_menu_model_delegate_t._fields_ = (
+cef_run_context_menu_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('execute_command', cef_menu_model_delegate_t._callbacks[0]),
-    ('mouse_outside_menu', cef_menu_model_delegate_t._callbacks[1]),
-    ('unhandled_open_submenu', cef_menu_model_delegate_t._callbacks[2]),
-    ('unhandled_close_submenu', cef_menu_model_delegate_t._callbacks[3]),
-    ('menu_will_show', cef_menu_model_delegate_t._callbacks[4]),
-    ('menu_closed', cef_menu_model_delegate_t._callbacks[5]),
-    ('format_label', cef_menu_model_delegate_t._callbacks[6]),
+    ('cont', cef_run_context_menu_callback_t._callbacks[0]),
+    ('cancel', cef_run_context_menu_callback_t._callbacks[1]),
 )
 
 
-cef_navigation_entry_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(cef_transition_type_t, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+cef_run_quick_menu_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t), c_int, cef_event_flags_t),
+    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t)),
 )
-cef_navigation_entry_t._fields_ = (
+cef_run_quick_menu_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_navigation_entry_t._callbacks[0]),
-    ('get_url', cef_navigation_entry_t._callbacks[1]),
-    ('get_display_url', cef_navigation_entry_t._callbacks[2]),
-    ('get_original_url', cef_navigation_entry_t._callbacks[3]),
-    ('get_title', cef_navigation_entry_t._callbacks[4]),
-    ('get_transition_type', cef_navigation_entry_t._callbacks[5]),
-    ('has_post_data', cef_navigation_entry_t._callbacks[6]),
-    ('get_completion_time', cef_navigation_entry_t._callbacks[7]),
-    ('get_http_status_code', cef_navigation_entry_t._callbacks[8]),
-    ('get_sslstatus', cef_navigation_entry_t._callbacks[9]),
+    ('cont', cef_run_quick_menu_callback_t._callbacks[0]),
+    ('cancel', cef_run_quick_menu_callback_t._callbacks[1]),
 )
 
 
-cef_media_access_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32),
-    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t)),
+cef_context_menu_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t), POINTER(cef_run_context_menu_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), c_int, cef_event_flags_t),
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_point_t), POINTER(cef_size_t), cef_quick_menu_edit_state_flags_t, POINTER(cef_run_quick_menu_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int, cef_event_flags_t),
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
 )
-cef_media_access_callback_t._fields_ = (
+cef_context_menu_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('cont', cef_media_access_callback_t._callbacks[0]),
-    ('cancel', cef_media_access_callback_t._callbacks[1]),
-)
-
-
-cef_permission_prompt_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_permission_prompt_callback_t), cef_permission_request_result_t),
-)
-cef_permission_prompt_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_permission_prompt_callback_t._callbacks[0]),
-)
-
-
-cef_permission_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32, POINTER(cef_media_access_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, POINTER(cef_string_t), uint32, POINTER(cef_permission_prompt_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, cef_permission_request_result_t),
-)
-cef_permission_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_request_media_access_permission', cef_permission_handler_t._callbacks[0]),
-    ('on_show_permission_prompt', cef_permission_handler_t._callbacks[1]),
-    ('on_dismiss_permission_prompt', cef_permission_handler_t._callbacks[2]),
-)
-
-
-cef_preference_registrar_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_preference_registrar_t), POINTER(cef_string_t), POINTER(cef_value_t)),
-)
-cef_preference_registrar_t._fields_ = (
-    ('_base', cef_base_scoped_t),
-    ('add_preference', cef_preference_registrar_t._callbacks[0]),
-)
-
-
-cef_preference_manager_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)),
-)
-cef_preference_manager_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('has_preference', cef_preference_manager_t._callbacks[0]),
-    ('get_preference', cef_preference_manager_t._callbacks[1]),
-    ('get_all_preferences', cef_preference_manager_t._callbacks[2]),
-    ('can_set_preference', cef_preference_manager_t._callbacks[3]),
-    ('set_preference', cef_preference_manager_t._callbacks[4]),
-)
-
-
-cef_print_dialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t), POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t)),
-)
-cef_print_dialog_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_print_dialog_callback_t._callbacks[0]),
-    ('cancel', cef_print_dialog_callback_t._callbacks[1]),
-)
-
-
-cef_print_job_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_job_callback_t)),
-)
-cef_print_job_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('cont', cef_print_job_callback_t._callbacks[0]),
-)
-
-
-cef_print_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_print_dialog_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_print_job_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int),
-)
-cef_print_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_print_start', cef_print_handler_t._callbacks[0]),
-    ('on_print_settings', cef_print_handler_t._callbacks[1]),
-    ('on_print_dialog', cef_print_handler_t._callbacks[2]),
-    ('on_print_job', cef_print_handler_t._callbacks[3]),
-    ('on_print_reset', cef_print_handler_t._callbacks[4]),
-    ('get_pdf_paper_size', cef_print_handler_t._callbacks[5]),
-)
-
-
-cef_print_settings_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_size_t), POINTER(cef_rect_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), size_t, POINTER(cef_range_t)),
-    CFUNCTYPE(size_t, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(size_t), POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_color_model_t),
-    CFUNCTYPE(cef_color_model_t, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_duplex_mode_t),
-    CFUNCTYPE(cef_duplex_mode_t, POINTER(cef_print_settings_t)),
-)
-cef_print_settings_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_print_settings_t._callbacks[0]),
-    ('is_read_only', cef_print_settings_t._callbacks[1]),
-    ('set_orientation', cef_print_settings_t._callbacks[2]),
-    ('is_landscape', cef_print_settings_t._callbacks[3]),
-    ('set_printer_printable_area', cef_print_settings_t._callbacks[4]),
-    ('set_device_name', cef_print_settings_t._callbacks[5]),
-    ('get_device_name', cef_print_settings_t._callbacks[6]),
-    ('set_dpi', cef_print_settings_t._callbacks[7]),
-    ('get_dpi', cef_print_settings_t._callbacks[8]),
-    ('set_page_ranges', cef_print_settings_t._callbacks[9]),
-    ('get_page_ranges_count', cef_print_settings_t._callbacks[10]),
-    ('get_page_ranges', cef_print_settings_t._callbacks[11]),
-    ('set_selection_only', cef_print_settings_t._callbacks[12]),
-    ('is_selection_only', cef_print_settings_t._callbacks[13]),
-    ('set_collate', cef_print_settings_t._callbacks[14]),
-    ('will_collate', cef_print_settings_t._callbacks[15]),
-    ('set_color_model', cef_print_settings_t._callbacks[16]),
-    ('get_color_model', cef_print_settings_t._callbacks[17]),
-    ('set_copies', cef_print_settings_t._callbacks[18]),
-    ('get_copies', cef_print_settings_t._callbacks[19]),
-    ('set_duplex_mode', cef_print_settings_t._callbacks[20]),
-    ('get_duplex_mode', cef_print_settings_t._callbacks[21]),
-)
-
-
-cef_process_message_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
-    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-)
-cef_process_message_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_process_message_t._callbacks[0]),
-    ('is_read_only', cef_process_message_t._callbacks[1]),
-    ('copy', cef_process_message_t._callbacks[2]),
-    ('get_name', cef_process_message_t._callbacks[3]),
-    ('get_argument_list', cef_process_message_t._callbacks[4]),
-    ('get_shared_memory_region', cef_process_message_t._callbacks[5]),
-)
-
-
-cef_registration_t._callbacks = (
-)
-cef_registration_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-)
-
-
-cef_render_handler_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_screen_info_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void), c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_horizontal_alignment_t, POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_touch_handle_state_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), double, double),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_range_t), size_t, POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_text_input_mode_t),
-)
-cef_render_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_accessibility_handler', cef_render_handler_t._callbacks[0]),
-    ('get_root_screen_rect', cef_render_handler_t._callbacks[1]),
-    ('get_view_rect', cef_render_handler_t._callbacks[2]),
-    ('get_screen_point', cef_render_handler_t._callbacks[3]),
-    ('get_screen_info', cef_render_handler_t._callbacks[4]),
-    ('on_popup_show', cef_render_handler_t._callbacks[5]),
-    ('on_popup_size', cef_render_handler_t._callbacks[6]),
-    ('on_paint', cef_render_handler_t._callbacks[7]),
-    ('on_accelerated_paint', cef_render_handler_t._callbacks[8]),
-    ('get_touch_handle_size', cef_render_handler_t._callbacks[9]),
-    ('on_touch_handle_state_changed', cef_render_handler_t._callbacks[10]),
-    ('start_dragging', cef_render_handler_t._callbacks[11]),
-    ('update_drag_cursor', cef_render_handler_t._callbacks[12]),
-    ('on_scroll_offset_changed', cef_render_handler_t._callbacks[13]),
-    ('on_ime_composition_range_changed', cef_render_handler_t._callbacks[14]),
-    ('on_text_selection_changed', cef_render_handler_t._callbacks[15]),
-    ('on_virtual_keyboard_requested', cef_render_handler_t._callbacks[16]),
-)
-
-
-cef_render_process_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_process_handler_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t), POINTER(cef_v8exception_t), POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
-)
-cef_render_process_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_web_kit_initialized', cef_render_process_handler_t._callbacks[0]),
-    ('on_browser_created', cef_render_process_handler_t._callbacks[1]),
-    ('on_browser_destroyed', cef_render_process_handler_t._callbacks[2]),
-    ('get_load_handler', cef_render_process_handler_t._callbacks[3]),
-    ('on_context_created', cef_render_process_handler_t._callbacks[4]),
-    ('on_context_released', cef_render_process_handler_t._callbacks[5]),
-    ('on_uncaught_exception', cef_render_process_handler_t._callbacks[6]),
-    ('on_focused_node_changed', cef_render_process_handler_t._callbacks[7]),
-    ('on_process_message_received', cef_render_process_handler_t._callbacks[8]),
+    ('on_before_context_menu', cef_context_menu_handler_t._callbacks[0]),
+    ('run_context_menu', cef_context_menu_handler_t._callbacks[1]),
+    ('on_context_menu_command', cef_context_menu_handler_t._callbacks[2]),
+    ('on_context_menu_dismissed', cef_context_menu_handler_t._callbacks[3]),
+    ('run_quick_menu', cef_context_menu_handler_t._callbacks[4]),
+    ('on_quick_menu_command', cef_context_menu_handler_t._callbacks[5]),
+    ('on_quick_menu_dismissed', cef_context_menu_handler_t._callbacks[6]),
 )
 
 
@@ -5890,24 +2524,944 @@ cef_request_t._fields_ = (
 )
 
 
-cef_post_data_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
-    CFUNCTYPE(size_t, POINTER(cef_post_data_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_t), POINTER(size_t), POINTER(POINTER(cef_post_data_element_t))),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_t)),
+cef_response_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_response_t)),
+    CFUNCTYPE(cef_errorcode_t, POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_errorcode_t),
+    CFUNCTYPE(c_int, POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
 )
-cef_post_data_t._fields_ = (
+cef_response_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('is_read_only', cef_post_data_t._callbacks[0]),
-    ('has_excluded_elements', cef_post_data_t._callbacks[1]),
-    ('get_element_count', cef_post_data_t._callbacks[2]),
-    ('get_elements', cef_post_data_t._callbacks[3]),
-    ('remove_element', cef_post_data_t._callbacks[4]),
-    ('add_element', cef_post_data_t._callbacks[5]),
-    ('remove_elements', cef_post_data_t._callbacks[6]),
+    ('is_read_only', cef_response_t._callbacks[0]),
+    ('get_error', cef_response_t._callbacks[1]),
+    ('set_error', cef_response_t._callbacks[2]),
+    ('get_status', cef_response_t._callbacks[3]),
+    ('set_status', cef_response_t._callbacks[4]),
+    ('get_status_text', cef_response_t._callbacks[5]),
+    ('set_status_text', cef_response_t._callbacks[6]),
+    ('get_mime_type', cef_response_t._callbacks[7]),
+    ('set_mime_type', cef_response_t._callbacks[8]),
+    ('get_charset', cef_response_t._callbacks[9]),
+    ('set_charset', cef_response_t._callbacks[10]),
+    ('get_header_by_name', cef_response_t._callbacks[11]),
+    ('set_header_by_name', cef_response_t._callbacks[12]),
+    ('get_header_map', cef_response_t._callbacks[13]),
+    ('set_header_map', cef_response_t._callbacks[14]),
+    ('get_url', cef_response_t._callbacks[15]),
+    ('set_url', cef_response_t._callbacks[16]),
+)
+
+
+cef_cookie_access_filter_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_cookie_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_cookie_t)),
+)
+cef_cookie_access_filter_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('can_send_cookie', cef_cookie_access_filter_t._callbacks[0]),
+    ('can_save_cookie', cef_cookie_access_filter_t._callbacks[1]),
+)
+
+
+cef_cookie_visitor_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_cookie_visitor_t), POINTER(cef_cookie_t), c_int, c_int, POINTER(c_int)),
+)
+cef_cookie_visitor_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('visit', cef_cookie_visitor_t._callbacks[0]),
+)
+
+
+cef_set_cookie_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_set_cookie_callback_t), c_int),
+)
+cef_set_cookie_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_complete', cef_set_cookie_callback_t._callbacks[0]),
+)
+
+
+cef_delete_cookies_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_delete_cookies_callback_t), c_int),
+)
+cef_delete_cookies_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_complete', cef_delete_cookies_callback_t._callbacks[0]),
+)
+
+
+cef_cookie_manager_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_cookie_visitor_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), c_int, POINTER(cef_cookie_visitor_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_cookie_t), POINTER(cef_set_cookie_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_delete_cookies_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_completion_callback_t)),
+)
+cef_cookie_manager_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('visit_all_cookies', cef_cookie_manager_t._callbacks[0]),
+    ('visit_url_cookies', cef_cookie_manager_t._callbacks[1]),
+    ('set_cookie', cef_cookie_manager_t._callbacks[2]),
+    ('delete_cookies', cef_cookie_manager_t._callbacks[3]),
+    ('flush_store', cef_cookie_manager_t._callbacks[4]),
+)
+
+
+cef_file_dialog_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t), cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t)),
+)
+cef_file_dialog_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_file_dialog_callback_t._callbacks[0]),
+    ('cancel', cef_file_dialog_callback_t._callbacks[1]),
+)
+
+
+cef_dialog_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_dialog_handler_t), POINTER(cef_browser_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_file_dialog_callback_t)),
+)
+cef_dialog_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_file_dialog', cef_dialog_handler_t._callbacks[0]),
+)
+
+
+cef_display_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_log_severity_t, POINTER(cef_string_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_size_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), double),
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_cursor_handle_t, cef_cursor_type_t, POINTER(cef_cursor_info_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int, c_int),
+)
+cef_display_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_address_change', cef_display_handler_t._callbacks[0]),
+    ('on_title_change', cef_display_handler_t._callbacks[1]),
+    ('on_favicon_urlchange', cef_display_handler_t._callbacks[2]),
+    ('on_fullscreen_mode_change', cef_display_handler_t._callbacks[3]),
+    ('on_tooltip', cef_display_handler_t._callbacks[4]),
+    ('on_status_message', cef_display_handler_t._callbacks[5]),
+    ('on_console_message', cef_display_handler_t._callbacks[6]),
+    ('on_auto_resize', cef_display_handler_t._callbacks[7]),
+    ('on_loading_progress_change', cef_display_handler_t._callbacks[8]),
+    ('on_cursor_change', cef_display_handler_t._callbacks[9]),
+    ('on_media_access_change', cef_display_handler_t._callbacks[10]),
+)
+
+
+cef_display_t._callbacks = (
+    CFUNCTYPE(int64, POINTER(cef_display_t)),
+    CFUNCTYPE(float, POINTER(cef_display_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)),
+    CFUNCTYPE(c_int, POINTER(cef_display_t)),
+)
+cef_display_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_id', cef_display_t._callbacks[0]),
+    ('get_device_scale_factor', cef_display_t._callbacks[1]),
+    ('convert_point_to_pixels', cef_display_t._callbacks[2]),
+    ('convert_point_from_pixels', cef_display_t._callbacks[3]),
+    ('get_bounds', cef_display_t._callbacks[4]),
+    ('get_work_area', cef_display_t._callbacks[5]),
+    ('get_rotation', cef_display_t._callbacks[6]),
+)
+
+
+cef_domdocument_t._callbacks = (
+    CFUNCTYPE(cef_dom_document_type_t, POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
+)
+cef_domdocument_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_type', cef_domdocument_t._callbacks[0]),
+    ('get_document', cef_domdocument_t._callbacks[1]),
+    ('get_body', cef_domdocument_t._callbacks[2]),
+    ('get_head', cef_domdocument_t._callbacks[3]),
+    ('get_title', cef_domdocument_t._callbacks[4]),
+    ('get_element_by_id', cef_domdocument_t._callbacks[5]),
+    ('get_focused_node', cef_domdocument_t._callbacks[6]),
+    ('has_selection', cef_domdocument_t._callbacks[7]),
+    ('get_selection_start_offset', cef_domdocument_t._callbacks[8]),
+    ('get_selection_end_offset', cef_domdocument_t._callbacks[9]),
+    ('get_selection_as_markup', cef_domdocument_t._callbacks[10]),
+    ('get_selection_as_text', cef_domdocument_t._callbacks[11]),
+    ('get_base_url', cef_domdocument_t._callbacks[12]),
+    ('get_complete_url', cef_domdocument_t._callbacks[13]),
+)
+
+
+cef_domnode_t._callbacks = (
+    CFUNCTYPE(cef_dom_node_type_t, POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_domnode_t), cef_string_map_t),
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_domnode_t)),
+)
+cef_domnode_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_type', cef_domnode_t._callbacks[0]),
+    ('is_text', cef_domnode_t._callbacks[1]),
+    ('is_element', cef_domnode_t._callbacks[2]),
+    ('is_editable', cef_domnode_t._callbacks[3]),
+    ('is_form_control_element', cef_domnode_t._callbacks[4]),
+    ('get_form_control_element_type', cef_domnode_t._callbacks[5]),
+    ('is_same', cef_domnode_t._callbacks[6]),
+    ('get_name', cef_domnode_t._callbacks[7]),
+    ('get_value', cef_domnode_t._callbacks[8]),
+    ('set_value', cef_domnode_t._callbacks[9]),
+    ('get_as_markup', cef_domnode_t._callbacks[10]),
+    ('get_document', cef_domnode_t._callbacks[11]),
+    ('get_parent', cef_domnode_t._callbacks[12]),
+    ('get_previous_sibling', cef_domnode_t._callbacks[13]),
+    ('get_next_sibling', cef_domnode_t._callbacks[14]),
+    ('has_children', cef_domnode_t._callbacks[15]),
+    ('get_first_child', cef_domnode_t._callbacks[16]),
+    ('get_last_child', cef_domnode_t._callbacks[17]),
+    ('get_element_tag_name', cef_domnode_t._callbacks[18]),
+    ('has_element_attributes', cef_domnode_t._callbacks[19]),
+    ('has_element_attribute', cef_domnode_t._callbacks[20]),
+    ('get_element_attribute', cef_domnode_t._callbacks[21]),
+    ('get_element_attributes', cef_domnode_t._callbacks[22]),
+    ('set_element_attribute', cef_domnode_t._callbacks[23]),
+    ('get_element_inner_text', cef_domnode_t._callbacks[24]),
+    ('get_element_bounds', cef_domnode_t._callbacks[25]),
+)
+
+
+cef_domvisitor_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_domvisitor_t), POINTER(cef_domdocument_t)),
+)
+cef_domvisitor_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('visit', cef_domvisitor_t._callbacks[0]),
+)
+
+
+cef_download_item_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(uint32, POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+)
+cef_download_item_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_download_item_t._callbacks[0]),
+    ('is_in_progress', cef_download_item_t._callbacks[1]),
+    ('is_complete', cef_download_item_t._callbacks[2]),
+    ('is_canceled', cef_download_item_t._callbacks[3]),
+    ('get_current_speed', cef_download_item_t._callbacks[4]),
+    ('get_percent_complete', cef_download_item_t._callbacks[5]),
+    ('get_total_bytes', cef_download_item_t._callbacks[6]),
+    ('get_received_bytes', cef_download_item_t._callbacks[7]),
+    ('get_start_time', cef_download_item_t._callbacks[8]),
+    ('get_end_time', cef_download_item_t._callbacks[9]),
+    ('get_full_path', cef_download_item_t._callbacks[10]),
+    ('get_id', cef_download_item_t._callbacks[11]),
+    ('get_url', cef_download_item_t._callbacks[12]),
+    ('get_original_url', cef_download_item_t._callbacks[13]),
+    ('get_suggested_file_name', cef_download_item_t._callbacks[14]),
+    ('get_content_disposition', cef_download_item_t._callbacks[15]),
+    ('get_mime_type', cef_download_item_t._callbacks[16]),
+)
+
+
+cef_download_item_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
+)
+cef_download_item_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cancel', cef_download_item_callback_t._callbacks[0]),
+    ('pause', cef_download_item_callback_t._callbacks[1]),
+    ('resume', cef_download_item_callback_t._callbacks[2]),
+)
+
+
+cef_download_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_string_t), POINTER(cef_before_download_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_download_item_callback_t)),
+)
+cef_download_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('can_download', cef_download_handler_t._callbacks[0]),
+    ('on_before_download', cef_download_handler_t._callbacks[1]),
+    ('on_download_updated', cef_download_handler_t._callbacks[2]),
+)
+
+
+cef_drag_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t),
+    CFUNCTYPE(c_void, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), size_t, POINTER(cef_draggable_region_t)),
+)
+cef_drag_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_drag_enter', cef_drag_handler_t._callbacks[0]),
+    ('on_draggable_regions_changed', cef_drag_handler_t._callbacks[1]),
+)
+
+
+cef_end_tracing_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_end_tracing_callback_t), POINTER(cef_string_t)),
+)
+cef_end_tracing_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_end_tracing_complete', cef_end_tracing_callback_t._callbacks[0]),
+)
+
+
+cef_extension_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
+    CFUNCTYPE(c_int, POINTER(cef_extension_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
+    CFUNCTYPE(c_int, POINTER(cef_extension_t)),
+    CFUNCTYPE(c_void, POINTER(cef_extension_t)),
+)
+cef_extension_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_identifier', cef_extension_t._callbacks[0]),
+    ('get_path', cef_extension_t._callbacks[1]),
+    ('get_manifest', cef_extension_t._callbacks[2]),
+    ('is_same', cef_extension_t._callbacks[3]),
+    ('get_handler', cef_extension_t._callbacks[4]),
+    ('get_loader_context', cef_extension_t._callbacks[5]),
+    ('is_loaded', cef_extension_t._callbacks[6]),
+    ('unload', cef_extension_t._callbacks[7]),
+)
+
+
+cef_get_extension_resource_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t), POINTER(cef_stream_reader_t)),
+    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t)),
+)
+cef_get_extension_resource_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_get_extension_resource_callback_t._callbacks[0]),
+    ('cancel', cef_get_extension_resource_callback_t._callbacks[1]),
+)
+
+
+cef_extension_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), cef_errorcode_t),
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_string_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int, POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_get_extension_resource_callback_t)),
+)
+cef_extension_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_extension_load_failed', cef_extension_handler_t._callbacks[0]),
+    ('on_extension_loaded', cef_extension_handler_t._callbacks[1]),
+    ('on_extension_unloaded', cef_extension_handler_t._callbacks[2]),
+    ('on_before_background_browser', cef_extension_handler_t._callbacks[3]),
+    ('on_before_browser', cef_extension_handler_t._callbacks[4]),
+    ('get_active_browser', cef_extension_handler_t._callbacks[5]),
+    ('can_access_browser', cef_extension_handler_t._callbacks[6]),
+    ('get_extension_resource', cef_extension_handler_t._callbacks[7]),
+)
+
+
+cef_fill_layout_t._callbacks = (
+)
+cef_fill_layout_t._fields_ = (
+    ('_base', cef_layout_t),
+)
+
+
+cef_find_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_find_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(cef_rect_t), c_int, c_int),
+)
+cef_find_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_find_result', cef_find_handler_t._callbacks[0]),
+)
+
+
+cef_focus_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), cef_focus_source_t),
+    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t)),
+)
+cef_focus_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_take_focus', cef_focus_handler_t._callbacks[0]),
+    ('on_set_focus', cef_focus_handler_t._callbacks[1]),
+    ('on_got_focus', cef_focus_handler_t._callbacks[2]),
+)
+
+
+cef_frame_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_frame_t)),
+)
+cef_frame_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_frame_created', cef_frame_handler_t._callbacks[0]),
+    ('on_frame_attached', cef_frame_handler_t._callbacks[1]),
+    ('on_frame_detached', cef_frame_handler_t._callbacks[2]),
+    ('on_main_frame_changed', cef_frame_handler_t._callbacks[3]),
+)
+
+
+cef_image_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_image_t)),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), POINTER(cef_image_t)),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, c_int, c_int, cef_color_type_t, cef_alpha_type_t, POINTER(c_void), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
+    CFUNCTYPE(size_t, POINTER(cef_image_t)),
+    CFUNCTYPE(size_t, POINTER(cef_image_t)),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(float), POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, cef_color_type_t, cef_alpha_type_t, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
+)
+cef_image_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_empty', cef_image_t._callbacks[0]),
+    ('is_same', cef_image_t._callbacks[1]),
+    ('add_bitmap', cef_image_t._callbacks[2]),
+    ('add_png', cef_image_t._callbacks[3]),
+    ('add_jpeg', cef_image_t._callbacks[4]),
+    ('get_width', cef_image_t._callbacks[5]),
+    ('get_height', cef_image_t._callbacks[6]),
+    ('has_representation', cef_image_t._callbacks[7]),
+    ('remove_representation', cef_image_t._callbacks[8]),
+    ('get_representation_info', cef_image_t._callbacks[9]),
+    ('get_as_bitmap', cef_image_t._callbacks[10]),
+    ('get_as_png', cef_image_t._callbacks[11]),
+    ('get_as_jpeg', cef_image_t._callbacks[12]),
+)
+
+
+cef_jsdialog_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_callback_t), c_int, POINTER(cef_string_t)),
+)
+cef_jsdialog_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_jsdialog_callback_t._callbacks[0]),
+)
+
+
+cef_jsdialog_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), cef_jsdialog_type_t, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_jsdialog_callback_t), POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_jsdialog_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
+)
+cef_jsdialog_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_jsdialog', cef_jsdialog_handler_t._callbacks[0]),
+    ('on_before_unload_dialog', cef_jsdialog_handler_t._callbacks[1]),
+    ('on_reset_dialog_state', cef_jsdialog_handler_t._callbacks[2]),
+    ('on_dialog_closed', cef_jsdialog_handler_t._callbacks[3]),
+)
+
+
+cef_keyboard_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t, POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t),
+)
+cef_keyboard_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_pre_key_event', cef_keyboard_handler_t._callbacks[0]),
+    ('on_key_event', cef_keyboard_handler_t._callbacks[1]),
+)
+
+
+cef_label_button_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, POINTER(cef_image_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t), cef_button_state_t),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, cef_color_t),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_color_t),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_horizontal_alignment_t),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)),
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)),
+)
+cef_label_button_t._fields_ = (
+    ('_base', cef_button_t),
+    ('as_menu_button', cef_label_button_t._callbacks[0]),
+    ('set_text', cef_label_button_t._callbacks[1]),
+    ('get_text', cef_label_button_t._callbacks[2]),
+    ('set_image', cef_label_button_t._callbacks[3]),
+    ('get_image', cef_label_button_t._callbacks[4]),
+    ('set_text_color', cef_label_button_t._callbacks[5]),
+    ('set_enabled_text_colors', cef_label_button_t._callbacks[6]),
+    ('set_font_list', cef_label_button_t._callbacks[7]),
+    ('set_horizontal_alignment', cef_label_button_t._callbacks[8]),
+    ('set_minimum_size', cef_label_button_t._callbacks[9]),
+    ('set_maximum_size', cef_label_button_t._callbacks[10]),
+)
+
+
+cef_life_span_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int, POINTER(cef_popup_features_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
+)
+cef_life_span_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_before_popup', cef_life_span_handler_t._callbacks[0]),
+    ('on_after_created', cef_life_span_handler_t._callbacks[1]),
+    ('do_close', cef_life_span_handler_t._callbacks[2]),
+    ('on_before_close', cef_life_span_handler_t._callbacks[3]),
+)
+
+
+cef_list_value_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(size_t, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(double, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, double),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_binary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_list_value_t)),
+)
+cef_list_value_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_list_value_t._callbacks[0]),
+    ('is_owned', cef_list_value_t._callbacks[1]),
+    ('is_read_only', cef_list_value_t._callbacks[2]),
+    ('is_same', cef_list_value_t._callbacks[3]),
+    ('is_equal', cef_list_value_t._callbacks[4]),
+    ('copy', cef_list_value_t._callbacks[5]),
+    ('set_size', cef_list_value_t._callbacks[6]),
+    ('get_size', cef_list_value_t._callbacks[7]),
+    ('clear', cef_list_value_t._callbacks[8]),
+    ('remove', cef_list_value_t._callbacks[9]),
+    ('get_type', cef_list_value_t._callbacks[10]),
+    ('get_value', cef_list_value_t._callbacks[11]),
+    ('get_bool', cef_list_value_t._callbacks[12]),
+    ('get_int', cef_list_value_t._callbacks[13]),
+    ('get_double', cef_list_value_t._callbacks[14]),
+    ('get_string', cef_list_value_t._callbacks[15]),
+    ('get_binary', cef_list_value_t._callbacks[16]),
+    ('get_dictionary', cef_list_value_t._callbacks[17]),
+    ('get_list', cef_list_value_t._callbacks[18]),
+    ('set_value', cef_list_value_t._callbacks[19]),
+    ('set_null', cef_list_value_t._callbacks[20]),
+    ('set_bool', cef_list_value_t._callbacks[21]),
+    ('set_int', cef_list_value_t._callbacks[22]),
+    ('set_double', cef_list_value_t._callbacks[23]),
+    ('set_string', cef_list_value_t._callbacks[24]),
+    ('set_binary', cef_list_value_t._callbacks[25]),
+    ('set_dictionary', cef_list_value_t._callbacks[26]),
+    ('set_list', cef_list_value_t._callbacks[27]),
+)
+
+
+cef_load_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), c_int, c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_transition_type_t),
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_string_t)),
+)
+cef_load_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_loading_state_change', cef_load_handler_t._callbacks[0]),
+    ('on_load_start', cef_load_handler_t._callbacks[1]),
+    ('on_load_end', cef_load_handler_t._callbacks[2]),
+    ('on_load_error', cef_load_handler_t._callbacks[3]),
+)
+
+
+cef_media_access_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32),
+    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t)),
+)
+cef_media_access_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_media_access_callback_t._callbacks[0]),
+    ('cancel', cef_media_access_callback_t._callbacks[1]),
+)
+
+
+cef_media_route_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_route_t), POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_media_route_t)),
+)
+cef_media_route_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_id', cef_media_route_t._callbacks[0]),
+    ('get_source', cef_media_route_t._callbacks[1]),
+    ('get_sink', cef_media_route_t._callbacks[2]),
+    ('send_route_message', cef_media_route_t._callbacks[3]),
+    ('terminate', cef_media_route_t._callbacks[4]),
+)
+
+
+cef_media_observer_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_sink_t))),
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_route_t))),
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), cef_media_route_connection_state_t),
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), POINTER(c_void), size_t),
+)
+cef_media_observer_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_sinks', cef_media_observer_t._callbacks[0]),
+    ('on_routes', cef_media_observer_t._callbacks[1]),
+    ('on_route_state_changed', cef_media_observer_t._callbacks[2]),
+    ('on_route_message_received', cef_media_observer_t._callbacks[3]),
+)
+
+
+cef_media_route_create_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_media_route_create_callback_t), cef_media_route_create_result_t, POINTER(cef_string_t), POINTER(cef_media_route_t)),
+)
+cef_media_route_create_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_media_route_create_finished', cef_media_route_create_callback_t._callbacks[0]),
+)
+
+
+cef_media_source_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_source_t)),
+    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
+    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
+)
+cef_media_source_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_id', cef_media_source_t._callbacks[0]),
+    ('is_cast_source', cef_media_source_t._callbacks[1]),
+    ('is_dial_source', cef_media_source_t._callbacks[2]),
+)
+
+
+cef_media_sink_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
+    CFUNCTYPE(cef_media_sink_icon_type_t, POINTER(cef_media_sink_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_sink_t), POINTER(cef_media_sink_device_info_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t), POINTER(cef_media_source_t)),
+)
+cef_media_sink_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_id', cef_media_sink_t._callbacks[0]),
+    ('get_name', cef_media_sink_t._callbacks[1]),
+    ('get_description', cef_media_sink_t._callbacks[2]),
+    ('get_icon_type', cef_media_sink_t._callbacks[3]),
+    ('get_device_info', cef_media_sink_t._callbacks[4]),
+    ('is_cast_sink', cef_media_sink_t._callbacks[5]),
+    ('is_dial_sink', cef_media_sink_t._callbacks[6]),
+    ('is_compatible_with', cef_media_sink_t._callbacks[7]),
+)
+
+
+cef_media_router_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_media_observer_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t), POINTER(cef_media_source_t), POINTER(cef_media_sink_t), POINTER(cef_media_route_create_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
+)
+cef_media_router_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('add_observer', cef_media_router_t._callbacks[0]),
+    ('get_source', cef_media_router_t._callbacks[1]),
+    ('notify_current_sinks', cef_media_router_t._callbacks[2]),
+    ('create_route', cef_media_router_t._callbacks[3]),
+    ('notify_current_routes', cef_media_router_t._callbacks[4]),
+)
+
+
+cef_media_sink_device_info_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_media_sink_device_info_callback_t), POINTER(cef_media_sink_device_info_t)),
+)
+cef_media_sink_device_info_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_media_sink_device_info', cef_media_sink_device_info_callback_t._callbacks[0]),
+)
+
+
+cef_menu_button_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t),
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_t)),
+)
+cef_menu_button_t._fields_ = (
+    ('_base', cef_label_button_t),
+    ('show_menu', cef_menu_button_t._callbacks[0]),
+    ('trigger_menu', cef_menu_button_t._callbacks[1]),
+)
+
+
+cef_menu_button_pressed_lock_t._callbacks = (
+)
+cef_menu_button_pressed_lock_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+)
+
+
+cef_menu_button_delegate_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_delegate_t), POINTER(cef_menu_button_t), POINTER(cef_point_t), POINTER(cef_menu_button_pressed_lock_t)),
+)
+cef_menu_button_delegate_t._fields_ = (
+    ('_base', cef_button_delegate_t),
+    ('on_menu_button_pressed', cef_menu_button_delegate_t._callbacks[0]),
+)
+
+
+cef_menu_model_delegate_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int, cef_event_flags_t),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_point_t)),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_string_t)),
+)
+cef_menu_model_delegate_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('execute_command', cef_menu_model_delegate_t._callbacks[0]),
+    ('mouse_outside_menu', cef_menu_model_delegate_t._callbacks[1]),
+    ('unhandled_open_submenu', cef_menu_model_delegate_t._callbacks[2]),
+    ('unhandled_close_submenu', cef_menu_model_delegate_t._callbacks[3]),
+    ('menu_will_show', cef_menu_model_delegate_t._callbacks[4]),
+    ('menu_closed', cef_menu_model_delegate_t._callbacks[5]),
+    ('format_label', cef_menu_model_delegate_t._callbacks[6]),
+)
+
+
+cef_navigation_entry_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(cef_transition_type_t, POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+)
+cef_navigation_entry_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_navigation_entry_t._callbacks[0]),
+    ('get_url', cef_navigation_entry_t._callbacks[1]),
+    ('get_display_url', cef_navigation_entry_t._callbacks[2]),
+    ('get_original_url', cef_navigation_entry_t._callbacks[3]),
+    ('get_title', cef_navigation_entry_t._callbacks[4]),
+    ('get_transition_type', cef_navigation_entry_t._callbacks[5]),
+    ('has_post_data', cef_navigation_entry_t._callbacks[6]),
+    ('get_completion_time', cef_navigation_entry_t._callbacks[7]),
+    ('get_http_status_code', cef_navigation_entry_t._callbacks[8]),
+    ('get_sslstatus', cef_navigation_entry_t._callbacks[9]),
+)
+
+
+cef_overlay_controller_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t), POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(cef_docking_mode_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_size_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_point_t)),
+    CFUNCTYPE(cef_point_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_insets_t)),
+    CFUNCTYPE(cef_insets_t, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
+)
+cef_overlay_controller_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_overlay_controller_t._callbacks[0]),
+    ('is_same', cef_overlay_controller_t._callbacks[1]),
+    ('get_contents_view', cef_overlay_controller_t._callbacks[2]),
+    ('get_window', cef_overlay_controller_t._callbacks[3]),
+    ('get_docking_mode', cef_overlay_controller_t._callbacks[4]),
+    ('destroy', cef_overlay_controller_t._callbacks[5]),
+    ('set_bounds', cef_overlay_controller_t._callbacks[6]),
+    ('get_bounds', cef_overlay_controller_t._callbacks[7]),
+    ('get_bounds_in_screen', cef_overlay_controller_t._callbacks[8]),
+    ('set_size', cef_overlay_controller_t._callbacks[9]),
+    ('get_size', cef_overlay_controller_t._callbacks[10]),
+    ('set_position', cef_overlay_controller_t._callbacks[11]),
+    ('get_position', cef_overlay_controller_t._callbacks[12]),
+    ('set_insets', cef_overlay_controller_t._callbacks[13]),
+    ('get_insets', cef_overlay_controller_t._callbacks[14]),
+    ('size_to_preferred_size', cef_overlay_controller_t._callbacks[15]),
+    ('set_visible', cef_overlay_controller_t._callbacks[16]),
+    ('is_visible', cef_overlay_controller_t._callbacks[17]),
+    ('is_drawn', cef_overlay_controller_t._callbacks[18]),
+)
+
+
+cef_panel_delegate_t._callbacks = (
+)
+cef_panel_delegate_t._fields_ = (
+    ('_base', cef_view_delegate_t),
+)
+
+
+cef_panel_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), POINTER(cef_box_layout_settings_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t)),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_panel_t)),
+    CFUNCTYPE(size_t, POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), c_int),
+)
+cef_panel_t._fields_ = (
+    ('_base', cef_view_t),
+    ('as_window', cef_panel_t._callbacks[0]),
+    ('set_to_fill_layout', cef_panel_t._callbacks[1]),
+    ('set_to_box_layout', cef_panel_t._callbacks[2]),
+    ('get_layout', cef_panel_t._callbacks[3]),
+    ('layout', cef_panel_t._callbacks[4]),
+    ('add_child_view', cef_panel_t._callbacks[5]),
+    ('add_child_view_at', cef_panel_t._callbacks[6]),
+    ('reorder_child_view', cef_panel_t._callbacks[7]),
+    ('remove_child_view', cef_panel_t._callbacks[8]),
+    ('remove_all_child_views', cef_panel_t._callbacks[9]),
+    ('get_child_view_count', cef_panel_t._callbacks[10]),
+    ('get_child_view_at', cef_panel_t._callbacks[11]),
+)
+
+
+cef_permission_prompt_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_permission_prompt_callback_t), cef_permission_request_result_t),
+)
+cef_permission_prompt_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_permission_prompt_callback_t._callbacks[0]),
+)
+
+
+cef_permission_handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32, POINTER(cef_media_access_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, POINTER(cef_string_t), uint32, POINTER(cef_permission_prompt_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, cef_permission_request_result_t),
+)
+cef_permission_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_request_media_access_permission', cef_permission_handler_t._callbacks[0]),
+    ('on_show_permission_prompt', cef_permission_handler_t._callbacks[1]),
+    ('on_dismiss_permission_prompt', cef_permission_handler_t._callbacks[2]),
 )
 
 
@@ -5934,12 +3488,301 @@ cef_post_data_element_t._fields_ = (
 )
 
 
-cef_resolve_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_resolve_callback_t), cef_errorcode_t, cef_string_list_t),
+cef_post_data_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
+    CFUNCTYPE(size_t, POINTER(cef_post_data_t)),
+    CFUNCTYPE(c_void, POINTER(cef_post_data_t), POINTER(size_t), POINTER(POINTER(cef_post_data_element_t))),
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
+    CFUNCTYPE(c_void, POINTER(cef_post_data_t)),
 )
-cef_resolve_callback_t._fields_ = (
+cef_post_data_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('on_resolve_completed', cef_resolve_callback_t._callbacks[0]),
+    ('is_read_only', cef_post_data_t._callbacks[0]),
+    ('has_excluded_elements', cef_post_data_t._callbacks[1]),
+    ('get_element_count', cef_post_data_t._callbacks[2]),
+    ('get_elements', cef_post_data_t._callbacks[3]),
+    ('remove_element', cef_post_data_t._callbacks[4]),
+    ('add_element', cef_post_data_t._callbacks[5]),
+    ('remove_elements', cef_post_data_t._callbacks[6]),
+)
+
+
+cef_preference_manager_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)),
+)
+cef_preference_manager_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('has_preference', cef_preference_manager_t._callbacks[0]),
+    ('get_preference', cef_preference_manager_t._callbacks[1]),
+    ('get_all_preferences', cef_preference_manager_t._callbacks[2]),
+    ('can_set_preference', cef_preference_manager_t._callbacks[3]),
+    ('set_preference', cef_preference_manager_t._callbacks[4]),
+)
+
+
+cef_print_settings_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_size_t), POINTER(cef_rect_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), size_t, POINTER(cef_range_t)),
+    CFUNCTYPE(size_t, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(size_t), POINTER(cef_range_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_color_model_t),
+    CFUNCTYPE(cef_color_model_t, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_duplex_mode_t),
+    CFUNCTYPE(cef_duplex_mode_t, POINTER(cef_print_settings_t)),
+)
+cef_print_settings_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_print_settings_t._callbacks[0]),
+    ('is_read_only', cef_print_settings_t._callbacks[1]),
+    ('set_orientation', cef_print_settings_t._callbacks[2]),
+    ('is_landscape', cef_print_settings_t._callbacks[3]),
+    ('set_printer_printable_area', cef_print_settings_t._callbacks[4]),
+    ('set_device_name', cef_print_settings_t._callbacks[5]),
+    ('get_device_name', cef_print_settings_t._callbacks[6]),
+    ('set_dpi', cef_print_settings_t._callbacks[7]),
+    ('get_dpi', cef_print_settings_t._callbacks[8]),
+    ('set_page_ranges', cef_print_settings_t._callbacks[9]),
+    ('get_page_ranges_count', cef_print_settings_t._callbacks[10]),
+    ('get_page_ranges', cef_print_settings_t._callbacks[11]),
+    ('set_selection_only', cef_print_settings_t._callbacks[12]),
+    ('is_selection_only', cef_print_settings_t._callbacks[13]),
+    ('set_collate', cef_print_settings_t._callbacks[14]),
+    ('will_collate', cef_print_settings_t._callbacks[15]),
+    ('set_color_model', cef_print_settings_t._callbacks[16]),
+    ('get_color_model', cef_print_settings_t._callbacks[17]),
+    ('set_copies', cef_print_settings_t._callbacks[18]),
+    ('get_copies', cef_print_settings_t._callbacks[19]),
+    ('set_duplex_mode', cef_print_settings_t._callbacks[20]),
+    ('get_duplex_mode', cef_print_settings_t._callbacks[21]),
+)
+
+
+cef_print_dialog_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t), POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t)),
+)
+cef_print_dialog_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_print_dialog_callback_t._callbacks[0]),
+    ('cancel', cef_print_dialog_callback_t._callbacks[1]),
+)
+
+
+cef_print_job_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_print_job_callback_t)),
+)
+cef_print_job_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('cont', cef_print_job_callback_t._callbacks[0]),
+)
+
+
+cef_print_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_print_settings_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_print_dialog_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_print_job_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int),
+)
+cef_print_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_print_start', cef_print_handler_t._callbacks[0]),
+    ('on_print_settings', cef_print_handler_t._callbacks[1]),
+    ('on_print_dialog', cef_print_handler_t._callbacks[2]),
+    ('on_print_job', cef_print_handler_t._callbacks[3]),
+    ('on_print_reset', cef_print_handler_t._callbacks[4]),
+    ('get_pdf_paper_size', cef_print_handler_t._callbacks[5]),
+)
+
+
+cef_process_message_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
+    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
+)
+cef_process_message_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_process_message_t._callbacks[0]),
+    ('is_read_only', cef_process_message_t._callbacks[1]),
+    ('copy', cef_process_message_t._callbacks[2]),
+    ('get_name', cef_process_message_t._callbacks[3]),
+    ('get_argument_list', cef_process_message_t._callbacks[4]),
+    ('get_shared_memory_region', cef_process_message_t._callbacks[5]),
+)
+
+
+cef_read_handler_t._callbacks = (
+    CFUNCTYPE(size_t, POINTER(cef_read_handler_t), POINTER(c_void), size_t, size_t),
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64, c_int),
+    CFUNCTYPE(int64, POINTER(cef_read_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
+)
+cef_read_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('read', cef_read_handler_t._callbacks[0]),
+    ('seek', cef_read_handler_t._callbacks[1]),
+    ('tell', cef_read_handler_t._callbacks[2]),
+    ('eof', cef_read_handler_t._callbacks[3]),
+    ('may_block', cef_read_handler_t._callbacks[4]),
+)
+
+
+cef_registration_t._callbacks = (
+)
+cef_registration_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+)
+
+
+cef_render_handler_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_screen_info_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void), c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_horizontal_alignment_t, POINTER(cef_size_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_touch_handle_state_t)),
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t, c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_drag_operations_mask_t),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), double, double),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_range_t), size_t, POINTER(cef_rect_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_range_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_text_input_mode_t),
+)
+cef_render_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_accessibility_handler', cef_render_handler_t._callbacks[0]),
+    ('get_root_screen_rect', cef_render_handler_t._callbacks[1]),
+    ('get_view_rect', cef_render_handler_t._callbacks[2]),
+    ('get_screen_point', cef_render_handler_t._callbacks[3]),
+    ('get_screen_info', cef_render_handler_t._callbacks[4]),
+    ('on_popup_show', cef_render_handler_t._callbacks[5]),
+    ('on_popup_size', cef_render_handler_t._callbacks[6]),
+    ('on_paint', cef_render_handler_t._callbacks[7]),
+    ('on_accelerated_paint', cef_render_handler_t._callbacks[8]),
+    ('get_touch_handle_size', cef_render_handler_t._callbacks[9]),
+    ('on_touch_handle_state_changed', cef_render_handler_t._callbacks[10]),
+    ('start_dragging', cef_render_handler_t._callbacks[11]),
+    ('update_drag_cursor', cef_render_handler_t._callbacks[12]),
+    ('on_scroll_offset_changed', cef_render_handler_t._callbacks[13]),
+    ('on_ime_composition_range_changed', cef_render_handler_t._callbacks[14]),
+    ('on_text_selection_changed', cef_render_handler_t._callbacks[15]),
+    ('on_virtual_keyboard_requested', cef_render_handler_t._callbacks[16]),
+)
+
+
+cef_v8context_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8exception_t))),
+)
+cef_v8context_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_task_runner', cef_v8context_t._callbacks[0]),
+    ('is_valid', cef_v8context_t._callbacks[1]),
+    ('get_browser', cef_v8context_t._callbacks[2]),
+    ('get_frame', cef_v8context_t._callbacks[3]),
+    ('get_global', cef_v8context_t._callbacks[4]),
+    ('enter', cef_v8context_t._callbacks[5]),
+    ('exit', cef_v8context_t._callbacks[6]),
+    ('is_same', cef_v8context_t._callbacks[7]),
+    ('eval', cef_v8context_t._callbacks[8]),
+)
+
+
+cef_v8exception_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+)
+cef_v8exception_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_message', cef_v8exception_t._callbacks[0]),
+    ('get_source_line', cef_v8exception_t._callbacks[1]),
+    ('get_script_resource_name', cef_v8exception_t._callbacks[2]),
+    ('get_line_number', cef_v8exception_t._callbacks[3]),
+    ('get_start_position', cef_v8exception_t._callbacks[4]),
+    ('get_end_position', cef_v8exception_t._callbacks[5]),
+    ('get_start_column', cef_v8exception_t._callbacks[6]),
+    ('get_end_column', cef_v8exception_t._callbacks[7]),
+)
+
+
+cef_v8stack_trace_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_trace_t), c_int),
+)
+cef_v8stack_trace_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('is_valid', cef_v8stack_trace_t._callbacks[0]),
+    ('get_frame_count', cef_v8stack_trace_t._callbacks[1]),
+    ('get_frame', cef_v8stack_trace_t._callbacks[2]),
+)
+
+
+cef_render_process_handler_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_dictionary_value_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_process_handler_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t), POINTER(cef_v8exception_t), POINTER(cef_v8stack_trace_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(c_int, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
+)
+cef_render_process_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('on_web_kit_initialized', cef_render_process_handler_t._callbacks[0]),
+    ('on_browser_created', cef_render_process_handler_t._callbacks[1]),
+    ('on_browser_destroyed', cef_render_process_handler_t._callbacks[2]),
+    ('get_load_handler', cef_render_process_handler_t._callbacks[3]),
+    ('on_context_created', cef_render_process_handler_t._callbacks[4]),
+    ('on_context_released', cef_render_process_handler_t._callbacks[5]),
+    ('on_uncaught_exception', cef_render_process_handler_t._callbacks[6]),
+    ('on_focused_node_changed', cef_render_process_handler_t._callbacks[7]),
+    ('on_process_message_received', cef_render_process_handler_t._callbacks[8]),
 )
 
 
@@ -5997,6 +3840,17 @@ cef_request_context_handler_t._fields_ = (
 )
 
 
+cef_sslinfo_t._callbacks = (
+    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslinfo_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslinfo_t)),
+)
+cef_sslinfo_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_cert_status', cef_sslinfo_t._callbacks[0]),
+    ('get_x509certificate', cef_sslinfo_t._callbacks[1]),
+)
+
+
 cef_select_client_certificate_callback_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_select_client_certificate_callback_t), POINTER(cef_x509certificate_t)),
 )
@@ -6031,16 +3885,12 @@ cef_request_handler_t._fields_ = (
 )
 
 
-cef_resource_bundle_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int, cef_scale_factor_t),
+cef_resolve_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_resolve_callback_t), cef_errorcode_t, cef_string_list_t),
 )
-cef_resource_bundle_t._fields_ = (
+cef_resolve_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('get_localized_string', cef_resource_bundle_t._callbacks[0]),
-    ('get_data_resource', cef_resource_bundle_t._callbacks[1]),
-    ('get_data_resource_for_scale', cef_resource_bundle_t._callbacks[2]),
+    ('on_resolve_completed', cef_resolve_callback_t._callbacks[0]),
 )
 
 
@@ -6054,6 +3904,19 @@ cef_resource_bundle_handler_t._fields_ = (
     ('get_localized_string', cef_resource_bundle_handler_t._callbacks[0]),
     ('get_data_resource', cef_resource_bundle_handler_t._callbacks[1]),
     ('get_data_resource_for_scale', cef_resource_bundle_handler_t._callbacks[2]),
+)
+
+
+cef_resource_bundle_t._callbacks = (
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int, cef_scale_factor_t),
+)
+cef_resource_bundle_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_localized_string', cef_resource_bundle_t._callbacks[0]),
+    ('get_data_resource', cef_resource_bundle_t._callbacks[1]),
+    ('get_data_resource_for_scale', cef_resource_bundle_t._callbacks[2]),
 )
 
 
@@ -6119,58 +3982,6 @@ cef_resource_request_handler_t._fields_ = (
 )
 
 
-cef_cookie_access_filter_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_cookie_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_cookie_t)),
-)
-cef_cookie_access_filter_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('can_send_cookie', cef_cookie_access_filter_t._callbacks[0]),
-    ('can_save_cookie', cef_cookie_access_filter_t._callbacks[1]),
-)
-
-
-cef_response_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_response_t)),
-    CFUNCTYPE(cef_errorcode_t, POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_errorcode_t),
-    CFUNCTYPE(c_int, POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-)
-cef_response_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_read_only', cef_response_t._callbacks[0]),
-    ('get_error', cef_response_t._callbacks[1]),
-    ('set_error', cef_response_t._callbacks[2]),
-    ('get_status', cef_response_t._callbacks[3]),
-    ('set_status', cef_response_t._callbacks[4]),
-    ('get_status_text', cef_response_t._callbacks[5]),
-    ('set_status_text', cef_response_t._callbacks[6]),
-    ('get_mime_type', cef_response_t._callbacks[7]),
-    ('set_mime_type', cef_response_t._callbacks[8]),
-    ('get_charset', cef_response_t._callbacks[9]),
-    ('set_charset', cef_response_t._callbacks[10]),
-    ('get_header_by_name', cef_response_t._callbacks[11]),
-    ('set_header_by_name', cef_response_t._callbacks[12]),
-    ('get_header_map', cef_response_t._callbacks[13]),
-    ('set_header_map', cef_response_t._callbacks[14]),
-    ('get_url', cef_response_t._callbacks[15]),
-    ('set_url', cef_response_t._callbacks[16]),
-)
-
-
 cef_response_filter_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_response_filter_t)),
     CFUNCTYPE(cef_response_filter_status_t, POINTER(cef_response_filter_t), POINTER(c_void), size_t, POINTER(size_t), POINTER(c_void), size_t, POINTER(size_t)),
@@ -6182,21 +3993,33 @@ cef_response_filter_t._fields_ = (
 )
 
 
-cef_scheme_registrar_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_scheme_registrar_t), POINTER(cef_string_t), c_int),
-)
-cef_scheme_registrar_t._fields_ = (
-    ('_base', cef_base_scoped_t),
-    ('add_custom_scheme', cef_scheme_registrar_t._callbacks[0]),
-)
-
-
 cef_scheme_handler_factory_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_scheme_handler_factory_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_request_t)),
 )
 cef_scheme_handler_factory_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('create', cef_scheme_handler_factory_t._callbacks[0]),
+)
+
+
+cef_scroll_view_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_scroll_view_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
+)
+cef_scroll_view_t._fields_ = (
+    ('_base', cef_view_t),
+    ('set_content_view', cef_scroll_view_t._callbacks[0]),
+    ('get_content_view', cef_scroll_view_t._callbacks[1]),
+    ('get_visible_content_rect', cef_scroll_view_t._callbacks[2]),
+    ('has_horizontal_scrollbar', cef_scroll_view_t._callbacks[3]),
+    ('get_horizontal_scrollbar_height', cef_scroll_view_t._callbacks[4]),
+    ('has_vertical_scrollbar', cef_scroll_view_t._callbacks[5]),
+    ('get_vertical_scrollbar_width', cef_scroll_view_t._callbacks[6]),
 )
 
 
@@ -6284,17 +4107,6 @@ cef_shared_process_message_builder_t._fields_ = (
 )
 
 
-cef_sslinfo_t._callbacks = (
-    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslinfo_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslinfo_t)),
-)
-cef_sslinfo_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_cert_status', cef_sslinfo_t._callbacks[0]),
-    ('get_x509certificate', cef_sslinfo_t._callbacks[1]),
-)
-
-
 cef_sslstatus_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_sslstatus_t)),
     CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslstatus_t)),
@@ -6312,23 +4124,6 @@ cef_sslstatus_t._fields_ = (
 )
 
 
-cef_read_handler_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_read_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_read_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
-)
-cef_read_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('read', cef_read_handler_t._callbacks[0]),
-    ('seek', cef_read_handler_t._callbacks[1]),
-    ('tell', cef_read_handler_t._callbacks[2]),
-    ('eof', cef_read_handler_t._callbacks[3]),
-    ('may_block', cef_read_handler_t._callbacks[4]),
-)
-
-
 cef_stream_reader_t._callbacks = (
     CFUNCTYPE(size_t, POINTER(cef_stream_reader_t), POINTER(c_void), size_t, size_t),
     CFUNCTYPE(c_int, POINTER(cef_stream_reader_t), int64, c_int),
@@ -6343,23 +4138,6 @@ cef_stream_reader_t._fields_ = (
     ('tell', cef_stream_reader_t._callbacks[2]),
     ('eof', cef_stream_reader_t._callbacks[3]),
     ('may_block', cef_stream_reader_t._callbacks[4]),
-)
-
-
-cef_write_handler_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_write_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_write_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
-)
-cef_write_handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('write', cef_write_handler_t._callbacks[0]),
-    ('seek', cef_write_handler_t._callbacks[1]),
-    ('tell', cef_write_handler_t._callbacks[2]),
-    ('flush', cef_write_handler_t._callbacks[3]),
-    ('may_block', cef_write_handler_t._callbacks[4]),
 )
 
 
@@ -6415,6 +4193,86 @@ cef_task_runner_t._fields_ = (
 )
 
 
+cef_textfield_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t)),
+    CFUNCTYPE(cef_range_t, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_range_t)),
+    CFUNCTYPE(size_t, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t, POINTER(cef_range_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_style_t, c_int, POINTER(cef_range_t)),
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t), cef_text_field_commands_t),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_field_commands_t),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+)
+cef_textfield_t._fields_ = (
+    ('_base', cef_view_t),
+    ('set_password_input', cef_textfield_t._callbacks[0]),
+    ('is_password_input', cef_textfield_t._callbacks[1]),
+    ('set_read_only', cef_textfield_t._callbacks[2]),
+    ('is_read_only', cef_textfield_t._callbacks[3]),
+    ('get_text', cef_textfield_t._callbacks[4]),
+    ('set_text', cef_textfield_t._callbacks[5]),
+    ('append_text', cef_textfield_t._callbacks[6]),
+    ('insert_or_replace_text', cef_textfield_t._callbacks[7]),
+    ('has_selection', cef_textfield_t._callbacks[8]),
+    ('get_selected_text', cef_textfield_t._callbacks[9]),
+    ('select_all', cef_textfield_t._callbacks[10]),
+    ('clear_selection', cef_textfield_t._callbacks[11]),
+    ('get_selected_range', cef_textfield_t._callbacks[12]),
+    ('select_range', cef_textfield_t._callbacks[13]),
+    ('get_cursor_position', cef_textfield_t._callbacks[14]),
+    ('set_text_color', cef_textfield_t._callbacks[15]),
+    ('get_text_color', cef_textfield_t._callbacks[16]),
+    ('set_selection_text_color', cef_textfield_t._callbacks[17]),
+    ('get_selection_text_color', cef_textfield_t._callbacks[18]),
+    ('set_selection_background_color', cef_textfield_t._callbacks[19]),
+    ('get_selection_background_color', cef_textfield_t._callbacks[20]),
+    ('set_font_list', cef_textfield_t._callbacks[21]),
+    ('apply_text_color', cef_textfield_t._callbacks[22]),
+    ('apply_text_style', cef_textfield_t._callbacks[23]),
+    ('is_command_enabled', cef_textfield_t._callbacks[24]),
+    ('execute_command', cef_textfield_t._callbacks[25]),
+    ('clear_edit_history', cef_textfield_t._callbacks[26]),
+    ('set_placeholder_text', cef_textfield_t._callbacks[27]),
+    ('get_placeholder_text', cef_textfield_t._callbacks[28]),
+    ('set_placeholder_text_color', cef_textfield_t._callbacks[29]),
+    ('set_accessible_name', cef_textfield_t._callbacks[30]),
+)
+
+
+cef_textfield_delegate_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t), POINTER(cef_key_event_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t)),
+)
+cef_textfield_delegate_t._fields_ = (
+    ('_base', cef_view_delegate_t),
+    ('on_key_event', cef_textfield_delegate_t._callbacks[0]),
+    ('on_after_user_action', cef_textfield_delegate_t._callbacks[1]),
+)
+
+
 cef_thread_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_thread_t)),
     CFUNCTYPE(cef_platform_thread_id_t, POINTER(cef_thread_t)),
@@ -6427,15 +4285,6 @@ cef_thread_t._fields_ = (
     ('get_platform_thread_id', cef_thread_t._callbacks[1]),
     ('stop', cef_thread_t._callbacks[2]),
     ('is_running', cef_thread_t._callbacks[3]),
-)
-
-
-cef_end_tracing_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_end_tracing_callback_t), POINTER(cef_string_t)),
-)
-cef_end_tracing_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('on_end_tracing_complete', cef_end_tracing_callback_t._callbacks[0]),
 )
 
 
@@ -6474,98 +4323,6 @@ cef_urlrequest_client_t._fields_ = (
     ('on_download_progress', cef_urlrequest_client_t._callbacks[2]),
     ('on_download_data', cef_urlrequest_client_t._callbacks[3]),
     ('get_auth_credentials', cef_urlrequest_client_t._callbacks[4]),
-)
-
-
-cef_v8context_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8exception_t))),
-)
-cef_v8context_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_task_runner', cef_v8context_t._callbacks[0]),
-    ('is_valid', cef_v8context_t._callbacks[1]),
-    ('get_browser', cef_v8context_t._callbacks[2]),
-    ('get_frame', cef_v8context_t._callbacks[3]),
-    ('get_global', cef_v8context_t._callbacks[4]),
-    ('enter', cef_v8context_t._callbacks[5]),
-    ('exit', cef_v8context_t._callbacks[6]),
-    ('is_same', cef_v8context_t._callbacks[7]),
-    ('eval', cef_v8context_t._callbacks[8]),
-)
-
-
-cef_v8handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8handler_t), POINTER(cef_string_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-)
-cef_v8handler_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('execute', cef_v8handler_t._callbacks[0]),
-)
-
-
-cef_v8accessor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
-)
-cef_v8accessor_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get', cef_v8accessor_t._callbacks[0]),
-    ('set', cef_v8accessor_t._callbacks[1]),
-)
-
-
-cef_v8interceptor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
-)
-cef_v8interceptor_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_byname', cef_v8interceptor_t._callbacks[0]),
-    ('get_byindex', cef_v8interceptor_t._callbacks[1]),
-    ('set_byname', cef_v8interceptor_t._callbacks[2]),
-    ('set_byindex', cef_v8interceptor_t._callbacks[3]),
-)
-
-
-cef_v8exception_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-)
-cef_v8exception_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('get_message', cef_v8exception_t._callbacks[0]),
-    ('get_source_line', cef_v8exception_t._callbacks[1]),
-    ('get_script_resource_name', cef_v8exception_t._callbacks[2]),
-    ('get_line_number', cef_v8exception_t._callbacks[3]),
-    ('get_start_position', cef_v8exception_t._callbacks[4]),
-    ('get_end_position', cef_v8exception_t._callbacks[5]),
-    ('get_start_column', cef_v8exception_t._callbacks[6]),
-    ('get_end_column', cef_v8exception_t._callbacks[7]),
-)
-
-
-cef_v8array_buffer_release_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_v8array_buffer_release_callback_t), POINTER(c_void)),
-)
-cef_v8array_buffer_release_callback_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('release_buffer', cef_v8array_buffer_release_callback_t._callbacks[0]),
 )
 
 
@@ -6676,16 +4433,47 @@ cef_v8value_t._fields_ = (
 )
 
 
-cef_v8stack_trace_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_trace_t), c_int),
+cef_v8accessor_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
 )
-cef_v8stack_trace_t._fields_ = (
+cef_v8accessor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_v8stack_trace_t._callbacks[0]),
-    ('get_frame_count', cef_v8stack_trace_t._callbacks[1]),
-    ('get_frame', cef_v8stack_trace_t._callbacks[2]),
+    ('get', cef_v8accessor_t._callbacks[0]),
+    ('set', cef_v8accessor_t._callbacks[1]),
+)
+
+
+cef_v8array_buffer_release_callback_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_v8array_buffer_release_callback_t), POINTER(c_void)),
+)
+cef_v8array_buffer_release_callback_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('release_buffer', cef_v8array_buffer_release_callback_t._callbacks[0]),
+)
+
+
+cef_v8handler_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_v8handler_t), POINTER(cef_string_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
+)
+cef_v8handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('execute', cef_v8handler_t._callbacks[0]),
+)
+
+
+cef_v8interceptor_t._callbacks = (
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
+)
+cef_v8interceptor_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('get_byname', cef_v8interceptor_t._callbacks[0]),
+    ('get_byindex', cef_v8interceptor_t._callbacks[1]),
+    ('set_byname', cef_v8interceptor_t._callbacks[2]),
+    ('set_byindex', cef_v8interceptor_t._callbacks[3]),
 )
 
 
@@ -6712,206 +4500,6 @@ cef_v8stack_frame_t._fields_ = (
 )
 
 
-cef_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(double, POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_list_value_t)),
-)
-cef_value_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_value_t._callbacks[0]),
-    ('is_owned', cef_value_t._callbacks[1]),
-    ('is_read_only', cef_value_t._callbacks[2]),
-    ('is_same', cef_value_t._callbacks[3]),
-    ('is_equal', cef_value_t._callbacks[4]),
-    ('copy', cef_value_t._callbacks[5]),
-    ('get_type', cef_value_t._callbacks[6]),
-    ('get_bool', cef_value_t._callbacks[7]),
-    ('get_int', cef_value_t._callbacks[8]),
-    ('get_double', cef_value_t._callbacks[9]),
-    ('get_string', cef_value_t._callbacks[10]),
-    ('get_binary', cef_value_t._callbacks[11]),
-    ('get_dictionary', cef_value_t._callbacks[12]),
-    ('get_list', cef_value_t._callbacks[13]),
-    ('set_null', cef_value_t._callbacks[14]),
-    ('set_bool', cef_value_t._callbacks[15]),
-    ('set_int', cef_value_t._callbacks[16]),
-    ('set_double', cef_value_t._callbacks[17]),
-    ('set_string', cef_value_t._callbacks[18]),
-    ('set_binary', cef_value_t._callbacks[19]),
-    ('set_dictionary', cef_value_t._callbacks[20]),
-    ('set_list', cef_value_t._callbacks[21]),
-)
-
-
-cef_binary_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(size_t, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(size_t, POINTER(cef_binary_value_t), POINTER(c_void), size_t, size_t),
-)
-cef_binary_value_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_binary_value_t._callbacks[0]),
-    ('is_owned', cef_binary_value_t._callbacks[1]),
-    ('is_same', cef_binary_value_t._callbacks[2]),
-    ('is_equal', cef_binary_value_t._callbacks[3]),
-    ('copy', cef_binary_value_t._callbacks[4]),
-    ('get_size', cef_binary_value_t._callbacks[5]),
-    ('get_data', cef_binary_value_t._callbacks[6]),
-)
-
-
-cef_dictionary_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), c_int),
-    CFUNCTYPE(size_t, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(double, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_list_value_t)),
-)
-cef_dictionary_value_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_dictionary_value_t._callbacks[0]),
-    ('is_owned', cef_dictionary_value_t._callbacks[1]),
-    ('is_read_only', cef_dictionary_value_t._callbacks[2]),
-    ('is_same', cef_dictionary_value_t._callbacks[3]),
-    ('is_equal', cef_dictionary_value_t._callbacks[4]),
-    ('copy', cef_dictionary_value_t._callbacks[5]),
-    ('get_size', cef_dictionary_value_t._callbacks[6]),
-    ('clear', cef_dictionary_value_t._callbacks[7]),
-    ('has_key', cef_dictionary_value_t._callbacks[8]),
-    ('get_keys', cef_dictionary_value_t._callbacks[9]),
-    ('remove', cef_dictionary_value_t._callbacks[10]),
-    ('get_type', cef_dictionary_value_t._callbacks[11]),
-    ('get_value', cef_dictionary_value_t._callbacks[12]),
-    ('get_bool', cef_dictionary_value_t._callbacks[13]),
-    ('get_int', cef_dictionary_value_t._callbacks[14]),
-    ('get_double', cef_dictionary_value_t._callbacks[15]),
-    ('get_string', cef_dictionary_value_t._callbacks[16]),
-    ('get_binary', cef_dictionary_value_t._callbacks[17]),
-    ('get_dictionary', cef_dictionary_value_t._callbacks[18]),
-    ('get_list', cef_dictionary_value_t._callbacks[19]),
-    ('set_value', cef_dictionary_value_t._callbacks[20]),
-    ('set_null', cef_dictionary_value_t._callbacks[21]),
-    ('set_bool', cef_dictionary_value_t._callbacks[22]),
-    ('set_int', cef_dictionary_value_t._callbacks[23]),
-    ('set_double', cef_dictionary_value_t._callbacks[24]),
-    ('set_string', cef_dictionary_value_t._callbacks[25]),
-    ('set_binary', cef_dictionary_value_t._callbacks[26]),
-    ('set_dictionary', cef_dictionary_value_t._callbacks[27]),
-    ('set_list', cef_dictionary_value_t._callbacks[28]),
-)
-
-
-cef_list_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(size_t, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(double, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, double),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_list_value_t)),
-)
-cef_list_value_t._fields_ = (
-    ('_base', cef_base_ref_counted_t),
-    ('is_valid', cef_list_value_t._callbacks[0]),
-    ('is_owned', cef_list_value_t._callbacks[1]),
-    ('is_read_only', cef_list_value_t._callbacks[2]),
-    ('is_same', cef_list_value_t._callbacks[3]),
-    ('is_equal', cef_list_value_t._callbacks[4]),
-    ('copy', cef_list_value_t._callbacks[5]),
-    ('set_size', cef_list_value_t._callbacks[6]),
-    ('get_size', cef_list_value_t._callbacks[7]),
-    ('clear', cef_list_value_t._callbacks[8]),
-    ('remove', cef_list_value_t._callbacks[9]),
-    ('get_type', cef_list_value_t._callbacks[10]),
-    ('get_value', cef_list_value_t._callbacks[11]),
-    ('get_bool', cef_list_value_t._callbacks[12]),
-    ('get_int', cef_list_value_t._callbacks[13]),
-    ('get_double', cef_list_value_t._callbacks[14]),
-    ('get_string', cef_list_value_t._callbacks[15]),
-    ('get_binary', cef_list_value_t._callbacks[16]),
-    ('get_dictionary', cef_list_value_t._callbacks[17]),
-    ('get_list', cef_list_value_t._callbacks[18]),
-    ('set_value', cef_list_value_t._callbacks[19]),
-    ('set_null', cef_list_value_t._callbacks[20]),
-    ('set_bool', cef_list_value_t._callbacks[21]),
-    ('set_int', cef_list_value_t._callbacks[22]),
-    ('set_double', cef_list_value_t._callbacks[23]),
-    ('set_string', cef_list_value_t._callbacks[24]),
-    ('set_binary', cef_list_value_t._callbacks[25]),
-    ('set_dictionary', cef_list_value_t._callbacks[26]),
-    ('set_list', cef_list_value_t._callbacks[27]),
-)
-
-
 cef_waitable_event_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
     CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
@@ -6926,6 +4514,141 @@ cef_waitable_event_t._fields_ = (
     ('is_signaled', cef_waitable_event_t._callbacks[2]),
     ('wait', cef_waitable_event_t._callbacks[3]),
     ('timed_wait', cef_waitable_event_t._callbacks[4]),
+)
+
+
+cef_window_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_size_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), size_t, POINTER(cef_draggable_region_t)),
+    CFUNCTYPE(cef_window_handle_t, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, uint32),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), cef_mouse_button_type_t, c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int, c_int, c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+)
+cef_window_t._fields_ = (
+    ('_base', cef_panel_t),
+    ('show', cef_window_t._callbacks[0]),
+    ('hide', cef_window_t._callbacks[1]),
+    ('center_window', cef_window_t._callbacks[2]),
+    ('close', cef_window_t._callbacks[3]),
+    ('is_closed', cef_window_t._callbacks[4]),
+    ('activate', cef_window_t._callbacks[5]),
+    ('deactivate', cef_window_t._callbacks[6]),
+    ('is_active', cef_window_t._callbacks[7]),
+    ('bring_to_top', cef_window_t._callbacks[8]),
+    ('set_always_on_top', cef_window_t._callbacks[9]),
+    ('is_always_on_top', cef_window_t._callbacks[10]),
+    ('maximize', cef_window_t._callbacks[11]),
+    ('minimize', cef_window_t._callbacks[12]),
+    ('restore', cef_window_t._callbacks[13]),
+    ('set_fullscreen', cef_window_t._callbacks[14]),
+    ('is_maximized', cef_window_t._callbacks[15]),
+    ('is_minimized', cef_window_t._callbacks[16]),
+    ('is_fullscreen', cef_window_t._callbacks[17]),
+    ('set_title', cef_window_t._callbacks[18]),
+    ('get_title', cef_window_t._callbacks[19]),
+    ('set_window_icon', cef_window_t._callbacks[20]),
+    ('get_window_icon', cef_window_t._callbacks[21]),
+    ('set_window_app_icon', cef_window_t._callbacks[22]),
+    ('get_window_app_icon', cef_window_t._callbacks[23]),
+    ('add_overlay_view', cef_window_t._callbacks[24]),
+    ('show_menu', cef_window_t._callbacks[25]),
+    ('cancel_menu', cef_window_t._callbacks[26]),
+    ('get_display', cef_window_t._callbacks[27]),
+    ('get_client_area_bounds_in_screen', cef_window_t._callbacks[28]),
+    ('set_draggable_regions', cef_window_t._callbacks[29]),
+    ('get_window_handle', cef_window_t._callbacks[30]),
+    ('send_key_press', cef_window_t._callbacks[31]),
+    ('send_mouse_move', cef_window_t._callbacks[32]),
+    ('send_mouse_events', cef_window_t._callbacks[33]),
+    ('set_accelerator', cef_window_t._callbacks[34]),
+    ('remove_accelerator', cef_window_t._callbacks[35]),
+    ('remove_all_accelerators', cef_window_t._callbacks[36]),
+)
+
+
+cef_window_delegate_t._callbacks = (
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(cef_rect_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(cef_show_state_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_key_event_t)),
+)
+cef_window_delegate_t._fields_ = (
+    ('_base', cef_panel_delegate_t),
+    ('on_window_created', cef_window_delegate_t._callbacks[0]),
+    ('on_window_closing', cef_window_delegate_t._callbacks[1]),
+    ('on_window_destroyed', cef_window_delegate_t._callbacks[2]),
+    ('on_window_activation_changed', cef_window_delegate_t._callbacks[3]),
+    ('on_window_bounds_changed', cef_window_delegate_t._callbacks[4]),
+    ('get_parent_window', cef_window_delegate_t._callbacks[5]),
+    ('get_initial_bounds', cef_window_delegate_t._callbacks[6]),
+    ('get_initial_show_state', cef_window_delegate_t._callbacks[7]),
+    ('is_frameless', cef_window_delegate_t._callbacks[8]),
+    ('can_resize', cef_window_delegate_t._callbacks[9]),
+    ('can_maximize', cef_window_delegate_t._callbacks[10]),
+    ('can_minimize', cef_window_delegate_t._callbacks[11]),
+    ('can_close', cef_window_delegate_t._callbacks[12]),
+    ('on_accelerator', cef_window_delegate_t._callbacks[13]),
+    ('on_key_event', cef_window_delegate_t._callbacks[14]),
+)
+
+
+cef_write_handler_t._callbacks = (
+    CFUNCTYPE(size_t, POINTER(cef_write_handler_t), POINTER(c_void), size_t, size_t),
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64, c_int),
+    CFUNCTYPE(int64, POINTER(cef_write_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
+)
+cef_write_handler_t._fields_ = (
+    ('_base', cef_base_ref_counted_t),
+    ('write', cef_write_handler_t._callbacks[0]),
+    ('seek', cef_write_handler_t._callbacks[1]),
+    ('tell', cef_write_handler_t._callbacks[2]),
+    ('flush', cef_write_handler_t._callbacks[3]),
+    ('may_block', cef_write_handler_t._callbacks[4]),
 )
 
 
