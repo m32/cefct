@@ -9,7 +9,6 @@ libcefdef.LoadLibrary(os.path.join(top, "libcef" + libcefdef.dllext))
 from cefct import libcef as cef
 from cefct import libcefinternal as cefi
 from cefct import libcefsizes
-from cefct import libcefver
 
 print("cef_version_info {}.{}.{}.{}".format(
     cefi.cef_version_info(0),
@@ -29,14 +28,14 @@ for i in range(3):
     v = bytes(cefi.cef_api_hash(i)[:40]).decode("ascii")
     print("hash({})= {}".format(hashname[i], v))
 
-assert libcefver.CEF_VERSION_MAJOR == cefi.cef_version_info(0)
-assert libcefver.CEF_VERSION_MINOR == cefi.cef_version_info(1)
-assert libcefver.CEF_VERSION_PATCH == cefi.cef_version_info(2)
-assert libcefver.CEF_COMMIT_NUMBER == cefi.cef_version_info(3)
+assert cefi.CEF_VERSION_MAJOR == cefi.cef_version_info(0)
+assert cefi.CEF_VERSION_MINOR == cefi.cef_version_info(1)
+assert cefi.CEF_VERSION_PATCH == cefi.cef_version_info(2)
+assert cefi.CEF_COMMIT_NUMBER == cefi.cef_version_info(3)
 
-assert libcefver.CHROME_VERSION_MAJOR == cefi.cef_version_info(4)
-assert libcefver.CHROME_VERSION_MINOR == cefi.cef_version_info(5)
-assert libcefver.CHROME_VERSION_BUILD == cefi.cef_version_info(6)
-assert libcefver.CHROME_VERSION_PATCH == cefi.cef_version_info(7)
+assert cefi.CHROME_VERSION_MAJOR == cefi.cef_version_info(4)
+assert cefi.CHROME_VERSION_MINOR == cefi.cef_version_info(5)
+assert cefi.CHROME_VERSION_BUILD == cefi.cef_version_info(6)
+assert cefi.CHROME_VERSION_PATCH == cefi.cef_version_info(7)
 
-assert libcefver.CEF_COMMIT_HASH == bytes(cefi.cef_api_hash(2)[:40]).decode("ascii")
+assert cefi.CEF_COMMIT_HASH == bytes(cefi.cef_api_hash(2)[:40]).decode("ascii")
