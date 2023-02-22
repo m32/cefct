@@ -406,7 +406,7 @@ if 1:
             "cef_version.h",
         ]
         for fname in sorted(fnames):
-            fqname = "cef/include/" + fname
+            fqname = os.path.join(self.ceftop, "include/" + fname)
             self.parseFile(fqname)
         self.parseDecl()
         self.parseSizes()
