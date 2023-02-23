@@ -182,6 +182,6 @@ cefsizesok &= cefchecksize("cef_point_t", cef_point_t, 8)
 cefsizesok &= cefchecksize("cef_rect_t", cef_rect_t, 16)
 cefsizesok &= cefchecksize("cef_size_t", cef_size_t, 8)
 cefsizesok &= cefchecksize("cef_insets_t", cef_insets_t, 16)
-cefsizesok &= cefchecksize("cef_main_args_t", cef_main_args_t, 16)
-cefsizesok &= cefchecksize("cef_window_info_t", cef_window_info_t, 72)
+cefsizesok &= cefchecksize("cef_main_args_t", cef_main_args_t, 8)
+cefsizesok &= cefchecksize("cef_window_info_t", cef_window_info_t, 96)
 assert cefsizesok == 1

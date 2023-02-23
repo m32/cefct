@@ -8,6 +8,18 @@ from cefct.libcefinternal_t import *
 #
 # https://v4.chriskrycho.com/2015/ctypes-structures-and-dll-exports.html
 #
+
+CEF_VERSION = "109.1.11+g6d4fdb2+chromium-109.0.5414.87"
+CEF_VERSION_MAJOR = 109
+CEF_VERSION_MINOR = 1
+CEF_VERSION_PATCH = 11
+CEF_COMMIT_NUMBER = 2712
+CEF_COMMIT_HASH = "6d4fdb2ef32ad9ae399df126d7a9c5d0d6ada5fa"
+CHROME_VERSION_MAJOR = 109
+CHROME_VERSION_MINOR = 0
+CHROME_VERSION_BUILD = 5414
+CHROME_VERSION_PATCH = 87
+
 import enum
 class IntEnum(enum.IntEnum):
     """A ctypes-compatible IntEnum superclass."""
@@ -1332,23 +1344,25 @@ class cef_touch_handle_state_t(Structure):
         ('alpha', float),
     )
 
-if linux:
+if win:
 
     class cef_main_args_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
-            ('argc', c_int),
-            ('argv', POINTER(POINTER(char))),
+            ('instance', HINSTANCE),
         )
 
-if linux:
+if win:
 
     class cef_window_info_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
+            ('ex_style', DWORD),
             ('window_name', cef_string_t),
+            ('style', DWORD),
             ('bounds', cef_rect_t),
             ('parent_window', cef_window_handle_t),
+            ('menu', HMENU),
             ('windowless_rendering_enabled', c_int),
             ('shared_texture_enabled', c_int),
             ('external_begin_frame_enabled', c_int),
@@ -1455,8 +1469,12 @@ def cef_trace_event_async_step_past(category, name, id, step, arg1_name, arg1_va
 def cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy):
     return cef_trace_event_async_end._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy)
 
-if linux:
-    #XDisplay* cef_get_xdisplay(void);
-    @CEFENTRY(POINTER(XDisplay), "cef_get_xdisplay")
-    def cef_get_xdisplay():
-        return cef_get_xdisplay._api_()
+#char* cef_api_hash(int entry);
+@CEFENTRY(POINTER(char), "cef_api_hash", c_int)
+def cef_api_hash(entry):
+    return cef_api_hash._api_(entry)
+
+#int cef_version_info(int entry);
+@CEFENTRY(c_int, "cef_version_info", c_int)
+def cef_version_info(entry):
+    return cef_version_info._api_(entry)
