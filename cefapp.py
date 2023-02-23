@@ -1,8 +1,6 @@
 #!/usr/bin/env vpython3
 import os
-import sys
 import gc
-import time
 
 top = os.path.join(os.getcwd(), "bin")
 # os.chdir(top)
@@ -185,5 +183,4 @@ class AppSetup:
         gc.collect()
         print("libcef.shutdown")
         cef.cef_shutdown()
-        #time.sleep(2)
         print("done")
