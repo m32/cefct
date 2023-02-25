@@ -9,16 +9,13 @@ import win32con
 
 useTimer = False
 useTimer = True
-URL = "https://www.trisoft.com.pl/"
-URL = "http://html5test.com/"
 
-if 1:
-    URL = "http://127.0.0.1:5000/"
-    import threading
-    import appflask
+URL = "http://127.0.0.1:5000/"
+import threading
+import appflask
 
-    tflask = threading.Thread(target=appflask.app.run, daemon=True)
-    tflask.start()
+tflask = threading.Thread(target=appflask.app.run, daemon=True)
+tflask.start()
 
 class CefBph(cef.cef_browser_process_handler_t):
     def __init__(self, app):
@@ -52,11 +49,6 @@ class CefApp(cef.cef_app_t):
         v = ct.addressof(self.bph)
         return v
 
-    def py_get_render_process_handler(self, this):
-        print('CefApp.py_get_render_process_handler')
-        v = ct.addressof(self.rph)
-        return v
-
 class CefLoadHandler(cef.cef_load_handler_t):
     pass
 
@@ -68,9 +60,6 @@ class CefLifeSpanHandler(cef.cef_life_span_handler_t):
         print('CefLifeSpanHandler.OnBeforeClose')
         # if browser is None:
         cef.cef_quit_message_loop()
-
-class CefRendererHandler(cef.cef_render_handler_t):
-    pass
 
 class CefHandler(cef.cef_client_t):
     def __init__(self, win):
@@ -89,20 +78,39 @@ class CefHandler(cef.cef_client_t):
         ret = ct.addressof(self.load_handler)
         return ret
 
-    def py_get_render_handler(self, *args):
-        print('CefHandler.py_get_render_handler')
-        ret = ct.addressof(self.render_handler)
-        return ret
-
-class JSHandler(cef.cef_v8handler_t):
-    def __init__(self):
-        super().__init__()
-        self._base.c_init()
-        self._base.size = ct.sizeof(self)
-        self.execute = self._callbacks[0](self.py_execute)
-
-    def py_execute(self, this, name, obj, argc, argv, rv, xc):
-        print('JSHandler', name, obj, argc, argv, rv, xc)
+    def py_on_process_message_received(self, xself, browser, frame, source_process, message):
+        print('CefHandler.py_on_process_message_received', browser, frame, source_process, message)
+        print('is_valid', message.contents.is_valid(message)),
+        print('is_read_only', message.contents.is_read_only(message)),
+        name = message.contents.get_name(message)
+        name = cef.cast(name, cef.POINTER(cef.cef_string_userfree_t))
+        print('get_name', name.contents.ToString()),
+        name.contents.Free()
+        args = message.contents.get_argument_list(message)
+        args = cef.cast(args, cef.POINTER(cef.cef_list_value_t))
+        print('get_argument_list.is_valid', args.contents.is_valid(args)),
+        argc = args.contents.get_size(args)
+        print('get_argument_list.get_size', argc),
+        # [0]=context_id
+        # [1]=request_id
+        # [2]=request
+        # [3]=persistent
+        for i in range(argc):
+            t = args.contents.get_type(args, i)
+            if t == cef.VTYPE_INT:
+                v = args.contents.get_int(args, i)
+            elif t == cef.VTYPE_BOOL:
+                v = args.contents.get_bool(args, i)
+            elif t == cef.VTYPE_STRING:
+                vp = args.contents.get_string(args, i)
+                vp = cef.cast(vp, cef.POINTER(cef.cef_string_userfree_t))
+                v = vp.contents.ToString()
+                vp.contents.Free()
+            else:
+                v = None
+            print('    {}: t={} v={}'.format(i, t, v))
+        print('get_shared_memory_region', message.contents.get_shared_memory_region(message)),
+        # new CallbackImpl(this, browser_id, query_id, persistent));
         return 0
 
 class Main(wx.Frame):
@@ -129,27 +137,22 @@ class Main(wx.Frame):
         szv.Add(szh)
 
         self.browserWindow = wx.Window(self, wx.ID_ANY, size=self.size, style=wx.WANTS_CHARS)
-        #self.browserWindow.SetMinSize(size)
         self.browserWindow.Bind(wx.EVT_SET_FOCUS, self.OnBrowserWindowSetFocus)
         self.browserWindow.Bind(wx.EVT_SIZE, self.OnBrowserWindowSize)
         szv.Add(self.browserWindow, 1, wx.EXPAND | wx.ALL, 2)
 
-        #sz.CalcMin()
         self.SetAutoLayout(True)
         self.SetSizer(szv)
-        #self.Layout()
 
         self.Centre()
 
         btBrowser.Bind(wx.EVT_BUTTON, self.OnBrowser)
         btZoom.Bind(wx.EVT_BUTTON, self.OnZoom)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        # wx.CallLater(100, self.embed_browser)
 
         self.btZoom = btZoom
 
         if useTimer:
-            # set up periodic screen capture
             self.timer = wx.Timer(self)
             self.timer.Start(100)
             self.Bind(wx.EVT_TIMER, self.on_timer)
@@ -162,6 +165,7 @@ class Main(wx.Frame):
     def OnClose(self, event):
         print('Main.OnClose')
         if self.browser is None:
+            # buggy when not using timer - second close click will close window
             if self.timer:
                 self.timer.Stop()
                 self.timer = None
@@ -235,33 +239,6 @@ class Main(wx.Frame):
             extra_info,
             request_context
         )
-
-        return
-        print('jscallback')
-        ename = cef.cef_string_t('python')
-        ecode = cef.cef_string_t('''\
-console.log('create example callback')
-if( !example )
-    example = {}
-if( !example.test )
-    example.test = {}
-(function(){
-    example.test.myfunction = function(){
-        native function MyFunction();
-        return MyFunction();
-    };
-    var myint = 0;
-    example.test.incr = function() {
-        myint += 1
-        return myint;
-    }
-})();
-console.log('example callback created')
-''')
-        self.ehandler = JSHandler()
-        print('jscallback.1')
-        rc = cef.cef_register_extension(ename, ecode, self.ehandler)
-        print('jscallback=', rc)
 
     zoom = 1
     def OnZoom(self, event):
