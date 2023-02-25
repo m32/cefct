@@ -12,6 +12,14 @@ useTimer = True
 URL = "https://www.trisoft.com.pl/"
 URL = "http://html5test.com/"
 
+if 1:
+    URL = "http://127.0.0.1:5000/"
+    import threading
+    import appflask
+
+    tflask = threading.Thread(target=appflask.app.run, daemon=True)
+    tflask.start()
+
 class CefBph(cef.cef_browser_process_handler_t):
     def __init__(self, app):
         super().__init__()
@@ -25,10 +33,16 @@ class CefBph(cef.cef_browser_process_handler_t):
         print('CefBph.py_get_default_client')
         return None
 
+class CefRph(cef.cef_render_process_handler_t):
+    def __init__(self, app):
+        super().__init__()
+        self.app = app
+
 class CefApp(cef.cef_app_t):
     def __init__(self):
         super().__init__()
         self.bph = CefBph(self)
+        self.rph = CefRph(self)
 
     def on_context_initialized(self):
         print('CefApp.on_context_initialized')
@@ -36,6 +50,11 @@ class CefApp(cef.cef_app_t):
     def py_get_browser_process_handler(self, this):
         print('CefApp.py_get_browser_process_handler')
         v = ct.addressof(self.bph)
+        return v
+
+    def py_get_render_process_handler(self, this):
+        print('CefApp.py_get_render_process_handler')
+        v = ct.addressof(self.rph)
         return v
 
 class CefLoadHandler(cef.cef_load_handler_t):
@@ -49,6 +68,9 @@ class CefLifeSpanHandler(cef.cef_life_span_handler_t):
         print('CefLifeSpanHandler.OnBeforeClose')
         # if browser is None:
         cef.cef_quit_message_loop()
+
+class CefRendererHandler(cef.cef_render_handler_t):
+    pass
 
 class CefHandler(cef.cef_client_t):
     def __init__(self, win):
@@ -66,6 +88,22 @@ class CefHandler(cef.cef_client_t):
         print('CefHandler.py_get_load_handler')
         ret = ct.addressof(self.load_handler)
         return ret
+
+    def py_get_render_handler(self, *args):
+        print('CefHandler.py_get_render_handler')
+        ret = ct.addressof(self.render_handler)
+        return ret
+
+class JSHandler(cef.cef_v8handler_t):
+    def __init__(self):
+        super().__init__()
+        self._base.c_init()
+        self._base.size = ct.sizeof(self)
+        self.execute = self._callbacks[0](self.py_execute)
+
+    def py_execute(self, this, name, obj, argc, argv, rv, xc):
+        print('JSHandler', name, obj, argc, argv, rv, xc)
+        return 0
 
 class Main(wx.Frame):
     def __init__(self, parent, cefapp):
@@ -197,6 +235,33 @@ class Main(wx.Frame):
             extra_info,
             request_context
         )
+
+        return
+        print('jscallback')
+        ename = cef.cef_string_t('python')
+        ecode = cef.cef_string_t('''\
+console.log('create example callback')
+if( !example )
+    example = {}
+if( !example.test )
+    example.test = {}
+(function(){
+    example.test.myfunction = function(){
+        native function MyFunction();
+        return MyFunction();
+    };
+    var myint = 0;
+    example.test.incr = function() {
+        myint += 1
+        return myint;
+    }
+})();
+console.log('example callback created')
+''')
+        self.ehandler = JSHandler()
+        print('jscallback.1')
+        rc = cef.cef_register_extension(ename, ecode, self.ehandler)
+        print('jscallback=', rc)
 
     zoom = 1
     def OnZoom(self, event):

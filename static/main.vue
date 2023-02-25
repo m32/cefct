@@ -1,4 +1,5 @@
 <template>
+    <xbutton />
     <mycomponent :name="'circle' + (index % 2)" />
     <clock />
 </template>
@@ -7,11 +8,13 @@
 import { ref } from 'vue';
 import mycomponent from './myComponent.vue';
 import clock from './clock.vue';
+import xbutton from './button.vue';
 
 export default {
     components: {
         mycomponent,
-        clock
+        clock,
+        xbutton
     },
     setup() {
         const index = ref(0);
