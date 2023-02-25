@@ -30,16 +30,10 @@ class CefBph(cef.cef_browser_process_handler_t):
         print('CefBph.py_get_default_client')
         return None
 
-class CefRph(cef.cef_render_process_handler_t):
-    def __init__(self, app):
-        super().__init__()
-        self.app = app
-
 class CefApp(cef.cef_app_t):
     def __init__(self):
         super().__init__()
         self.bph = CefBph(self)
-        self.rph = CefRph(self)
 
     def on_context_initialized(self):
         print('CefApp.on_context_initialized')
@@ -165,7 +159,8 @@ class Main(wx.Frame):
     def OnClose(self, event):
         print('Main.OnClose')
         if self.browser is None:
-            # buggy when not using timer - second close click will close window
+            # - no browser was started
+            # - buggy when not using timer - second close click will close window
             if self.timer:
                 self.timer.Stop()
                 self.timer = None
@@ -175,6 +170,7 @@ class Main(wx.Frame):
             event.Skip()
             print('wx.Destroy.0')
             self.Destroy()
+            # when not using timer will not exit from app without this call
             cef.cef_quit_message_loop()
             return
 
