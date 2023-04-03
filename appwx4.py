@@ -72,29 +72,27 @@ class CefHandler(cef.cef_client_t):
         ret = ct.addressof(self.load_handler)
         return ret
 
-    def py_on_process_message_received(self, xself, browser, frame, source_process, message):
-        print('CefHandler.py_on_process_message_received', browser, frame, source_process, message)
-        print('is_valid', message.contents.is_valid(message)),
-        print('is_read_only', message.contents.is_read_only(message)),
+    def x_showmsg(self, message):
+        print('*'*20, 'process_message')
+        print('\tis_valid', message.contents.is_valid(message)),
+        print('\tis_read_only', message.contents.is_read_only(message)),
         name = message.contents.get_name(message)
         name = cef.cast(name, cef.POINTER(cef.cef_string_userfree_t))
-        print('get_name', name.contents.ToString()),
+        sname = name.contents.ToString()
+        print('\tget_name', sname),
         name.contents.Free()
         args = message.contents.get_argument_list(message)
         args = cef.cast(args, cef.POINTER(cef.cef_list_value_t))
-        print('get_argument_list.is_valid', args.contents.is_valid(args)),
+        print('\tget_argument_list.is_valid', args.contents.is_valid(args)),
         argc = args.contents.get_size(args)
-        print('get_argument_list.get_size', argc),
-        # [0]=context_id
-        # [1]=request_id
-        # [2]=request
-        # [3]=persistent
+        print('\tget_argument_list.get_size', argc),
+        print('\tget_shared_memory_region', message.contents.get_shared_memory_region(message)),
         for i in range(argc):
             t = args.contents.get_type(args, i)
             if t == cef.VTYPE_INT:
                 v = args.contents.get_int(args, i)
             elif t == cef.VTYPE_BOOL:
-                v = args.contents.get_bool(args, i)
+                v = args.contents.get_int(args, i)
             elif t == cef.VTYPE_STRING:
                 vp = args.contents.get_string(args, i)
                 vp = cef.cast(vp, cef.POINTER(cef.cef_string_userfree_t))
@@ -102,10 +100,47 @@ class CefHandler(cef.cef_client_t):
                 vp.contents.Free()
             else:
                 v = None
-            print('    {}: t={} v={}'.format(i, t, v))
-        print('get_shared_memory_region', message.contents.get_shared_memory_region(message)),
-        # new CallbackImpl(this, browser_id, query_id, persistent));
-        return 0
+            print('\ti={} t={} v={}'.format(i, t, v))
+        return sname, args
+
+    def py_on_process_message_received(self, xself, browser, frame, source_process, message):
+        print('CefHandler.py_on_process_message_received', browser, frame, source_process, message)
+        name, args = self.x_showmsg(message)
+        context_id = args.contents.get_int(args, 0)
+        request_id = args.contents.get_int(args, 1)
+        vp = args.contents.get_string(args, 2)
+        vp = cef.cast(vp, cef.POINTER(cef.cef_string_userfree_t))
+        request = vp.contents.ToString()
+        vp.contents.Free()
+        persistent = args.contents.get_int(args, 3)
+        print(name, context_id, request_id, request, persistent)
+        #import pdb; pdb.set_trace()
+
+        error_code = 1
+        error_msg = cef.cef_string_t("some error")
+        msg = cef.cef_process_message_create(cef.cef_string_t("cefQueryMsg"))
+        self.x_showmsg(msg)
+        args = message.contents.get_argument_list(msg)
+        args = cef.cast(args, cef.POINTER(cef.cef_list_value_t))
+        args.contents.set_int(args, 0, context_id)
+        args.contents.set_int(args, 1, request_id)
+        args.contents.set_bool(args, 2, 0) # failure
+        args.contents.set_int(args, 3, error_code)
+        args.contents.set_string(args, 4, error_msg)
+
+        class xtask(cef.cef_task_t):
+            def py_execute(self, this):
+                print('xtask.py_execute')
+
+        
+        #frame.contents.send_process_message(frame, cef.PID_RENDERER, msg)
+        #    base::BindOnce(
+        #        &CefMessageRouterRendererSideImpl::ExecuteSuccessCallback, this,
+        #        browser->GetIdentifier(), content.context_id,
+        #        content.request_id, content.message));
+        cef.cef_post_task(cef.TID_RENDERER, xtask())
+
+        return 1
 
 class Main(wx.Frame):
     def __init__(self, parent, cefapp):
@@ -184,7 +219,7 @@ class Main(wx.Frame):
             print('skip')
             event.Veto()
             return
-        event.Skip()
+        #event.Skip()
         self.browser = None
         self.Destroy()
         if self.timer:

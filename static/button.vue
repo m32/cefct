@@ -6,7 +6,6 @@ export default {
     methods: {
         onClick() {
             console.log("button click");
-            alert("click");
             let data = {
                 'string': 'text',
                 'int': 1,
