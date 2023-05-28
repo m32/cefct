@@ -30,7 +30,7 @@ static void fix_default_x11_visual(GtkWidget* widget) {
     #endif
 }
 
-void FillWindowInfo(cef_window_info_t *wi, int xid, int x, int y, int width, int height)
+extern "C" void FillWindowInfo(cef_window_info_t *wi, int xid, int x, int y, int width, int height)
 {
 #if 0
     //GtkWidget *widget = GTK_WIDGET(w);
@@ -45,13 +45,13 @@ void FillWindowInfo(cef_window_info_t *wi, int xid, int x, int y, int width, int
     wi->bounds.height = height;
 }
 
-void FixGtk(void *window)
+extern "C" void FixGtk(void *window)
 {
     GtkWidget *widget = GTK_WIDGET(window);
     fix_default_x11_visual(widget);
 }
 
-void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int width, int height)
+extern "C" void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int width, int height)
 {
     XWindowChanges changes = {0};
     changes.x = x;
@@ -61,7 +61,7 @@ void SetX11WindowBounds(Window xwindow, Display *xdisplay, int x, int y, int wid
     XConfigureWindow(xdisplay, xwindow, CWX | CWY | CWHeight | CWWidth, &changes);
 }
 
-void DebugBreak()
+extern "C" void DebugBreak()
 {
     raise(SIGINT);
 }
