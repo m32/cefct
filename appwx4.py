@@ -14,12 +14,13 @@ URL = "http://127.0.0.1:5000/"
 import threading
 import appflask
 
-tflask = threading.Thread(target=appflask.app.run, daemon=True)
+tflask = threading.Thread(target=appflask.app.run)
+tflask.daemon=True
 tflask.start()
 
 class CefBph(cef.cef_browser_process_handler_t):
     def __init__(self, app):
-        super().__init__()
+        cef.cef_browser_process_handler_t.__init__(self)
         self.app = app
 
     def py_on_context_initialized(self, xself):
@@ -32,7 +33,7 @@ class CefBph(cef.cef_browser_process_handler_t):
 
 class CefApp(cef.cef_app_t):
     def __init__(self):
-        super().__init__()
+        cef.cef_app_t.__init__(self)
         self.bph = CefBph(self)
 
     def on_context_initialized(self):
@@ -57,7 +58,7 @@ class CefLifeSpanHandler(cef.cef_life_span_handler_t):
 
 class CefHandler(cef.cef_client_t):
     def __init__(self, win):
-        super().__init__()
+        cef.cef_client_t.__init__(self)
         self.life_span_handler = CefLifeSpanHandler()
         self.load_handler = CefLoadHandler()
         self.win = win
@@ -322,7 +323,7 @@ class App(wx.App):
         self.cefapp = capp
         self.cefcls = cefcls
         print('wxApp.__init__')
-        super().__init__(False)
+        wx.App.__init__(self, False)
 
     def OnClose(self):
         print('wxApp.OnClose')

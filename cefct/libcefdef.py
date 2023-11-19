@@ -26,6 +26,16 @@ longlong = c_longlong
 char = c_ubyte
 UINT_MAX = 0xFFFFFFFF
 
+int16_t = c_int16
+uint16_t = uint16
+
+int32_t = int32
+uint32_t = uint32
+
+int64_t = int64
+uint64_t = uint64
+
+char16_t = c_int16
 
 def LoadLibrary(fqname):
     global libcefdll

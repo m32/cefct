@@ -14,10 +14,10 @@ class cef_string_userfree_t(Structure):
     def Alloc():
         return string_userfree_utf8_alloc()
 
-    def Free(self) -> None:
+    def Free(self):
         string_userfree_free(self)
 
-    def ToString(self, decode=True) -> str:
+    def ToString(self, decode=True):
         if self._str == None:
             return None
         size = self.size * 2 - 2 # null terminated

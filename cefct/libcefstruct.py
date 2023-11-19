@@ -17,7 +17,7 @@ class cef_accessibility_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -34,7 +34,7 @@ class cef_app_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -60,7 +60,7 @@ class cef_audio_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -106,7 +106,7 @@ class cef_browser_process_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -156,7 +156,7 @@ class cef_client_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -224,13 +224,25 @@ class cef_command_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
         self.on_chrome_command = self._callbacks[0](self.py_on_chrome_command)
+        self.is_chrome_app_menu_item_visible = self._callbacks[1](self.py_is_chrome_app_menu_item_visible)
+        self.is_chrome_app_menu_item_enabled = self._callbacks[2](self.py_is_chrome_app_menu_item_enabled)
+        self.is_chrome_page_action_icon_visible = self._callbacks[3](self.py_is_chrome_page_action_icon_visible)
+        self.is_chrome_toolbar_button_visible = self._callbacks[4](self.py_is_chrome_toolbar_button_visible)
 
     def py_on_chrome_command(self, xself, browser, command_id, disposition):
+        return 0
+    def py_is_chrome_app_menu_item_visible(self, xself, browser, command_id):
+        return 0
+    def py_is_chrome_app_menu_item_enabled(self, xself, browser, command_id):
+        return 0
+    def py_is_chrome_page_action_icon_visible(self, xself, icon_type):
+        return 0
+    def py_is_chrome_toolbar_button_visible(self, xself, button_type):
         return 0
 
 
@@ -246,7 +258,7 @@ class cef_context_menu_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -302,7 +314,7 @@ class cef_dialog_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -320,7 +332,7 @@ class cef_display_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -380,7 +392,7 @@ class cef_download_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -416,7 +428,7 @@ class cef_drag_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -437,7 +449,7 @@ class cef_extension_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -484,7 +496,7 @@ class cef_find_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -498,7 +510,7 @@ class cef_focus_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -518,7 +530,7 @@ class cef_frame_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -557,7 +569,7 @@ class cef_jsdialog_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -580,7 +592,7 @@ class cef_keyboard_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -605,16 +617,19 @@ class cef_life_span_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
         self.on_before_popup = self._callbacks[0](self.py_on_before_popup)
-        self.on_after_created = self._callbacks[1](self.py_on_after_created)
-        self.do_close = self._callbacks[2](self.py_do_close)
-        self.on_before_close = self._callbacks[3](self.py_on_before_close)
+        self.on_before_dev_tools_popup = self._callbacks[1](self.py_on_before_dev_tools_popup)
+        self.on_after_created = self._callbacks[2](self.py_on_after_created)
+        self.do_close = self._callbacks[3](self.py_do_close)
+        self.on_before_close = self._callbacks[4](self.py_on_before_close)
 
     def py_on_before_popup(self, xself, browser, frame, target_url, target_frame_name, target_disposition, user_gesture, popupFeatures, windowInfo, client, settings, extra_info, no_javascript_access):
+        return 0
+    def py_on_before_dev_tools_popup(self, xself, browser, windowInfo, client, settings, extra_info, use_default_window):
         return 0
     def py_on_after_created(self, xself, browser):
         return 0
@@ -632,7 +647,7 @@ class cef_load_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -731,7 +746,7 @@ class cef_permission_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -775,7 +790,7 @@ class cef_print_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -816,7 +831,7 @@ class cef_read_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -846,7 +861,7 @@ class cef_render_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -908,7 +923,7 @@ class cef_render_process_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -946,7 +961,7 @@ class cef_request_context_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -967,7 +982,7 @@ class cef_request_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1013,7 +1028,7 @@ class cef_resource_bundle_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1037,7 +1052,7 @@ class cef_resource_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1073,7 +1088,7 @@ class cef_resource_request_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1148,7 +1163,7 @@ class cef_server_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1307,7 +1322,7 @@ class cef_write_handler_t(Structure):
     _align_ = CEFALIGN
 
     def __init__(self):
-        super().__init__()
+        Structure.__init__(self)
         # _base = cef_base_ref_counted_t
         self._base.c_init()
         self._base.size = sizeof(self)
@@ -1497,10 +1512,10 @@ cef_browser_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_browser_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), int64),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), int64_t),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), POINTER(cef_string_t)),
     CFUNCTYPE(size_t, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t), POINTER(size_t), POINTER(int64)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_t), POINTER(size_t), POINTER(int64_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_t), cef_string_list_t),
 )
 cef_browser_t._fields_ = (
@@ -1532,7 +1547,7 @@ cef_browser_t._fields_ = (
 cef_audio_handler_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t)),
     CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64),
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64_t),
     CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t)),
     CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
 )
@@ -1572,6 +1587,7 @@ cef_binary_value_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
     CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
     CFUNCTYPE(size_t, POINTER(cef_binary_value_t)),
     CFUNCTYPE(size_t, POINTER(cef_binary_value_t), POINTER(c_void), size_t, size_t),
 )
@@ -1582,8 +1598,9 @@ cef_binary_value_t._fields_ = (
     ('is_same', cef_binary_value_t._callbacks[2]),
     ('is_equal', cef_binary_value_t._callbacks[3]),
     ('copy', cef_binary_value_t._callbacks[4]),
-    ('get_size', cef_binary_value_t._callbacks[5]),
-    ('get_data', cef_binary_value_t._callbacks[6]),
+    ('get_raw_data', cef_binary_value_t._callbacks[5]),
+    ('get_size', cef_binary_value_t._callbacks[6]),
+    ('get_data', cef_binary_value_t._callbacks[7]),
 )
 
 
@@ -1896,6 +1913,7 @@ cef_drag_data_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
     CFUNCTYPE(size_t, POINTER(cef_drag_data_t), POINTER(cef_stream_writer_t)),
     CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
     CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
     CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
     CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
@@ -1925,18 +1943,19 @@ cef_drag_data_t._fields_ = (
     ('get_file_name', cef_drag_data_t._callbacks[11]),
     ('get_file_contents', cef_drag_data_t._callbacks[12]),
     ('get_file_names', cef_drag_data_t._callbacks[13]),
-    ('set_link_url', cef_drag_data_t._callbacks[14]),
-    ('set_link_title', cef_drag_data_t._callbacks[15]),
-    ('set_link_metadata', cef_drag_data_t._callbacks[16]),
-    ('set_fragment_text', cef_drag_data_t._callbacks[17]),
-    ('set_fragment_html', cef_drag_data_t._callbacks[18]),
-    ('set_fragment_base_url', cef_drag_data_t._callbacks[19]),
-    ('reset_file_contents', cef_drag_data_t._callbacks[20]),
-    ('add_file', cef_drag_data_t._callbacks[21]),
-    ('clear_filenames', cef_drag_data_t._callbacks[22]),
-    ('get_image', cef_drag_data_t._callbacks[23]),
-    ('get_image_hotspot', cef_drag_data_t._callbacks[24]),
-    ('has_image', cef_drag_data_t._callbacks[25]),
+    ('get_file_paths', cef_drag_data_t._callbacks[14]),
+    ('set_link_url', cef_drag_data_t._callbacks[15]),
+    ('set_link_title', cef_drag_data_t._callbacks[16]),
+    ('set_link_metadata', cef_drag_data_t._callbacks[17]),
+    ('set_fragment_text', cef_drag_data_t._callbacks[18]),
+    ('set_fragment_html', cef_drag_data_t._callbacks[19]),
+    ('set_fragment_base_url', cef_drag_data_t._callbacks[20]),
+    ('reset_file_contents', cef_drag_data_t._callbacks[21]),
+    ('add_file', cef_drag_data_t._callbacks[22]),
+    ('clear_filenames', cef_drag_data_t._callbacks[23]),
+    ('get_image', cef_drag_data_t._callbacks[24]),
+    ('get_image_hotspot', cef_drag_data_t._callbacks[25]),
+    ('has_image', cef_drag_data_t._callbacks[26]),
 )
 
 
@@ -1950,11 +1969,14 @@ cef_browser_host_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), cef_zoom_command_t),
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_zoom_command_t),
+    CFUNCTYPE(double, POINTER(cef_browser_host_t)),
     CFUNCTYPE(double, POINTER(cef_browser_host_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), double),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_run_file_dialog_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, uint32, c_int, POINTER(cef_download_image_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, uint32_t, c_int, POINTER(cef_download_image_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), POINTER(cef_pdf_print_settings_t), POINTER(cef_pdf_print_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, c_int, c_int),
@@ -2000,6 +2022,10 @@ cef_browser_host_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
     CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, cef_window_open_disposition_t),
 )
 cef_browser_host_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2012,56 +2038,63 @@ cef_browser_host_t._fields_ = (
     ('has_view', cef_browser_host_t._callbacks[6]),
     ('get_client', cef_browser_host_t._callbacks[7]),
     ('get_request_context', cef_browser_host_t._callbacks[8]),
-    ('get_zoom_level', cef_browser_host_t._callbacks[9]),
-    ('set_zoom_level', cef_browser_host_t._callbacks[10]),
-    ('run_file_dialog', cef_browser_host_t._callbacks[11]),
-    ('start_download', cef_browser_host_t._callbacks[12]),
-    ('download_image', cef_browser_host_t._callbacks[13]),
-    ('print', cef_browser_host_t._callbacks[14]),
-    ('print_to_pdf', cef_browser_host_t._callbacks[15]),
-    ('find', cef_browser_host_t._callbacks[16]),
-    ('stop_finding', cef_browser_host_t._callbacks[17]),
-    ('show_dev_tools', cef_browser_host_t._callbacks[18]),
-    ('close_dev_tools', cef_browser_host_t._callbacks[19]),
-    ('has_dev_tools', cef_browser_host_t._callbacks[20]),
-    ('send_dev_tools_message', cef_browser_host_t._callbacks[21]),
-    ('execute_dev_tools_method', cef_browser_host_t._callbacks[22]),
-    ('add_dev_tools_message_observer', cef_browser_host_t._callbacks[23]),
-    ('get_navigation_entries', cef_browser_host_t._callbacks[24]),
-    ('replace_misspelling', cef_browser_host_t._callbacks[25]),
-    ('add_word_to_dictionary', cef_browser_host_t._callbacks[26]),
-    ('is_window_rendering_disabled', cef_browser_host_t._callbacks[27]),
-    ('was_resized', cef_browser_host_t._callbacks[28]),
-    ('was_hidden', cef_browser_host_t._callbacks[29]),
-    ('notify_screen_info_changed', cef_browser_host_t._callbacks[30]),
-    ('invalidate', cef_browser_host_t._callbacks[31]),
-    ('send_external_begin_frame', cef_browser_host_t._callbacks[32]),
-    ('send_key_event', cef_browser_host_t._callbacks[33]),
-    ('send_mouse_click_event', cef_browser_host_t._callbacks[34]),
-    ('send_mouse_move_event', cef_browser_host_t._callbacks[35]),
-    ('send_mouse_wheel_event', cef_browser_host_t._callbacks[36]),
-    ('send_touch_event', cef_browser_host_t._callbacks[37]),
-    ('send_capture_lost_event', cef_browser_host_t._callbacks[38]),
-    ('notify_move_or_resize_started', cef_browser_host_t._callbacks[39]),
-    ('get_windowless_frame_rate', cef_browser_host_t._callbacks[40]),
-    ('set_windowless_frame_rate', cef_browser_host_t._callbacks[41]),
-    ('ime_set_composition', cef_browser_host_t._callbacks[42]),
-    ('ime_commit_text', cef_browser_host_t._callbacks[43]),
-    ('ime_finish_composing_text', cef_browser_host_t._callbacks[44]),
-    ('ime_cancel_composition', cef_browser_host_t._callbacks[45]),
-    ('drag_target_drag_enter', cef_browser_host_t._callbacks[46]),
-    ('drag_target_drag_over', cef_browser_host_t._callbacks[47]),
-    ('drag_target_drag_leave', cef_browser_host_t._callbacks[48]),
-    ('drag_target_drop', cef_browser_host_t._callbacks[49]),
-    ('drag_source_ended_at', cef_browser_host_t._callbacks[50]),
-    ('drag_source_system_drag_ended', cef_browser_host_t._callbacks[51]),
-    ('get_visible_navigation_entry', cef_browser_host_t._callbacks[52]),
-    ('set_accessibility_state', cef_browser_host_t._callbacks[53]),
-    ('set_auto_resize_enabled', cef_browser_host_t._callbacks[54]),
-    ('get_extension', cef_browser_host_t._callbacks[55]),
-    ('is_background_host', cef_browser_host_t._callbacks[56]),
-    ('set_audio_muted', cef_browser_host_t._callbacks[57]),
-    ('is_audio_muted', cef_browser_host_t._callbacks[58]),
+    ('can_zoom', cef_browser_host_t._callbacks[9]),
+    ('zoom', cef_browser_host_t._callbacks[10]),
+    ('get_default_zoom_level', cef_browser_host_t._callbacks[11]),
+    ('get_zoom_level', cef_browser_host_t._callbacks[12]),
+    ('set_zoom_level', cef_browser_host_t._callbacks[13]),
+    ('run_file_dialog', cef_browser_host_t._callbacks[14]),
+    ('start_download', cef_browser_host_t._callbacks[15]),
+    ('download_image', cef_browser_host_t._callbacks[16]),
+    ('print', cef_browser_host_t._callbacks[17]),
+    ('print_to_pdf', cef_browser_host_t._callbacks[18]),
+    ('find', cef_browser_host_t._callbacks[19]),
+    ('stop_finding', cef_browser_host_t._callbacks[20]),
+    ('show_dev_tools', cef_browser_host_t._callbacks[21]),
+    ('close_dev_tools', cef_browser_host_t._callbacks[22]),
+    ('has_dev_tools', cef_browser_host_t._callbacks[23]),
+    ('send_dev_tools_message', cef_browser_host_t._callbacks[24]),
+    ('execute_dev_tools_method', cef_browser_host_t._callbacks[25]),
+    ('add_dev_tools_message_observer', cef_browser_host_t._callbacks[26]),
+    ('get_navigation_entries', cef_browser_host_t._callbacks[27]),
+    ('replace_misspelling', cef_browser_host_t._callbacks[28]),
+    ('add_word_to_dictionary', cef_browser_host_t._callbacks[29]),
+    ('is_window_rendering_disabled', cef_browser_host_t._callbacks[30]),
+    ('was_resized', cef_browser_host_t._callbacks[31]),
+    ('was_hidden', cef_browser_host_t._callbacks[32]),
+    ('notify_screen_info_changed', cef_browser_host_t._callbacks[33]),
+    ('invalidate', cef_browser_host_t._callbacks[34]),
+    ('send_external_begin_frame', cef_browser_host_t._callbacks[35]),
+    ('send_key_event', cef_browser_host_t._callbacks[36]),
+    ('send_mouse_click_event', cef_browser_host_t._callbacks[37]),
+    ('send_mouse_move_event', cef_browser_host_t._callbacks[38]),
+    ('send_mouse_wheel_event', cef_browser_host_t._callbacks[39]),
+    ('send_touch_event', cef_browser_host_t._callbacks[40]),
+    ('send_capture_lost_event', cef_browser_host_t._callbacks[41]),
+    ('notify_move_or_resize_started', cef_browser_host_t._callbacks[42]),
+    ('get_windowless_frame_rate', cef_browser_host_t._callbacks[43]),
+    ('set_windowless_frame_rate', cef_browser_host_t._callbacks[44]),
+    ('ime_set_composition', cef_browser_host_t._callbacks[45]),
+    ('ime_commit_text', cef_browser_host_t._callbacks[46]),
+    ('ime_finish_composing_text', cef_browser_host_t._callbacks[47]),
+    ('ime_cancel_composition', cef_browser_host_t._callbacks[48]),
+    ('drag_target_drag_enter', cef_browser_host_t._callbacks[49]),
+    ('drag_target_drag_over', cef_browser_host_t._callbacks[50]),
+    ('drag_target_drag_leave', cef_browser_host_t._callbacks[51]),
+    ('drag_target_drop', cef_browser_host_t._callbacks[52]),
+    ('drag_source_ended_at', cef_browser_host_t._callbacks[53]),
+    ('drag_source_system_drag_ended', cef_browser_host_t._callbacks[54]),
+    ('get_visible_navigation_entry', cef_browser_host_t._callbacks[55]),
+    ('set_accessibility_state', cef_browser_host_t._callbacks[56]),
+    ('set_auto_resize_enabled', cef_browser_host_t._callbacks[57]),
+    ('get_extension', cef_browser_host_t._callbacks[58]),
+    ('is_background_host', cef_browser_host_t._callbacks[59]),
+    ('set_audio_muted', cef_browser_host_t._callbacks[60]),
+    ('is_audio_muted', cef_browser_host_t._callbacks[61]),
+    ('is_fullscreen', cef_browser_host_t._callbacks[62]),
+    ('exit_fullscreen', cef_browser_host_t._callbacks[63]),
+    ('can_execute_chrome_command', cef_browser_host_t._callbacks[64]),
+    ('execute_chrome_command', cef_browser_host_t._callbacks[65]),
 )
 
 
@@ -2078,7 +2111,7 @@ cef_browser_process_handler_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), cef_preferences_type_t, POINTER(cef_preference_registrar_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t)),
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64),
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64_t),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_process_handler_t)),
 )
 cef_browser_process_handler_t._fields_ = (
@@ -2136,7 +2169,9 @@ cef_browser_view_delegate_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_settings_t), POINTER(cef_client_t), c_int),
     CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_view_t), c_int),
-    CFUNCTYPE(cef_chrome_toolbar_type_t, POINTER(cef_browser_view_delegate_t)),
+    CFUNCTYPE(cef_chrome_toolbar_type_t, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), cef_gesture_command_t),
 )
 cef_browser_view_delegate_t._fields_ = (
     ('_base', cef_view_delegate_t),
@@ -2145,6 +2180,8 @@ cef_browser_view_delegate_t._fields_ = (
     ('get_delegate_for_popup_browser_view', cef_browser_view_delegate_t._callbacks[2]),
     ('on_popup_browser_view_created', cef_browser_view_delegate_t._callbacks[3]),
     ('get_chrome_toolbar_type', cef_browser_view_delegate_t._callbacks[4]),
+    ('use_frameless_window_for_picture_in_picture', cef_browser_view_delegate_t._callbacks[5]),
+    ('on_gesture_command', cef_browser_view_delegate_t._callbacks[6]),
 )
 
 
@@ -2191,10 +2228,18 @@ cef_callback_t._fields_ = (
 
 cef_command_handler_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int, cef_window_open_disposition_t),
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_page_action_icon_type_t),
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_toolbar_button_type_t),
 )
 cef_command_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('on_chrome_command', cef_command_handler_t._callbacks[0]),
+    ('is_chrome_app_menu_item_visible', cef_command_handler_t._callbacks[1]),
+    ('is_chrome_app_menu_item_enabled', cef_command_handler_t._callbacks[2]),
+    ('is_chrome_page_action_icon_visible', cef_command_handler_t._callbacks[3]),
+    ('is_chrome_toolbar_button_visible', cef_command_handler_t._callbacks[4]),
 )
 
 
@@ -2225,7 +2270,7 @@ cef_frame_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_frame_t)),
     CFUNCTYPE(c_int, POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(int64, POINTER(cef_frame_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
@@ -2495,7 +2540,7 @@ cef_request_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)),
     CFUNCTYPE(cef_resource_type_t, POINTER(cef_request_t)),
     CFUNCTYPE(cef_transition_type_t, POINTER(cef_request_t)),
-    CFUNCTYPE(uint64, POINTER(cef_request_t)),
+    CFUNCTYPE(uint64_t, POINTER(cef_request_t)),
 )
 cef_request_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2670,7 +2715,7 @@ cef_display_handler_t._fields_ = (
 
 
 cef_display_t._callbacks = (
-    CFUNCTYPE(int64, POINTER(cef_display_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_display_t)),
     CFUNCTYPE(float, POINTER(cef_display_t)),
     CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
     CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
@@ -2731,7 +2776,7 @@ cef_domnode_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
     CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
     CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
+    CFUNCTYPE(cef_dom_form_control_type_t, POINTER(cef_domnode_t)),
     CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
@@ -2798,14 +2843,16 @@ cef_download_item_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
     CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
     CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
     CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64, POINTER(cef_download_item_t)),
+    CFUNCTYPE(cef_download_interrupt_reason_t, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
     CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
     CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(uint32, POINTER(cef_download_item_t)),
+    CFUNCTYPE(uint32_t, POINTER(cef_download_item_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
@@ -2818,19 +2865,21 @@ cef_download_item_t._fields_ = (
     ('is_in_progress', cef_download_item_t._callbacks[1]),
     ('is_complete', cef_download_item_t._callbacks[2]),
     ('is_canceled', cef_download_item_t._callbacks[3]),
-    ('get_current_speed', cef_download_item_t._callbacks[4]),
-    ('get_percent_complete', cef_download_item_t._callbacks[5]),
-    ('get_total_bytes', cef_download_item_t._callbacks[6]),
-    ('get_received_bytes', cef_download_item_t._callbacks[7]),
-    ('get_start_time', cef_download_item_t._callbacks[8]),
-    ('get_end_time', cef_download_item_t._callbacks[9]),
-    ('get_full_path', cef_download_item_t._callbacks[10]),
-    ('get_id', cef_download_item_t._callbacks[11]),
-    ('get_url', cef_download_item_t._callbacks[12]),
-    ('get_original_url', cef_download_item_t._callbacks[13]),
-    ('get_suggested_file_name', cef_download_item_t._callbacks[14]),
-    ('get_content_disposition', cef_download_item_t._callbacks[15]),
-    ('get_mime_type', cef_download_item_t._callbacks[16]),
+    ('is_interrupted', cef_download_item_t._callbacks[4]),
+    ('get_interrupt_reason', cef_download_item_t._callbacks[5]),
+    ('get_current_speed', cef_download_item_t._callbacks[6]),
+    ('get_percent_complete', cef_download_item_t._callbacks[7]),
+    ('get_total_bytes', cef_download_item_t._callbacks[8]),
+    ('get_received_bytes', cef_download_item_t._callbacks[9]),
+    ('get_start_time', cef_download_item_t._callbacks[10]),
+    ('get_end_time', cef_download_item_t._callbacks[11]),
+    ('get_full_path', cef_download_item_t._callbacks[12]),
+    ('get_id', cef_download_item_t._callbacks[13]),
+    ('get_url', cef_download_item_t._callbacks[14]),
+    ('get_original_url', cef_download_item_t._callbacks[15]),
+    ('get_suggested_file_name', cef_download_item_t._callbacks[16]),
+    ('get_content_disposition', cef_download_item_t._callbacks[17]),
+    ('get_mime_type', cef_download_item_t._callbacks[18]),
 )
 
 
@@ -3080,6 +3129,7 @@ cef_label_button_t._fields_ = (
 
 cef_life_span_handler_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int, POINTER(cef_popup_features_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
     CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
     CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
     CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
@@ -3087,9 +3137,10 @@ cef_life_span_handler_t._callbacks = (
 cef_life_span_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('on_before_popup', cef_life_span_handler_t._callbacks[0]),
-    ('on_after_created', cef_life_span_handler_t._callbacks[1]),
-    ('do_close', cef_life_span_handler_t._callbacks[2]),
-    ('on_before_close', cef_life_span_handler_t._callbacks[3]),
+    ('on_before_dev_tools_popup', cef_life_span_handler_t._callbacks[1]),
+    ('on_after_created', cef_life_span_handler_t._callbacks[2]),
+    ('do_close', cef_life_span_handler_t._callbacks[3]),
+    ('on_before_close', cef_life_span_handler_t._callbacks[4]),
 )
 
 
@@ -3172,7 +3223,7 @@ cef_load_handler_t._fields_ = (
 
 
 cef_media_access_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32),
+    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32_t),
     CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t)),
 )
 cef_media_access_callback_t._fields_ = (
@@ -3239,7 +3290,6 @@ cef_media_source_t._fields_ = (
 cef_media_sink_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
     CFUNCTYPE(cef_media_sink_icon_type_t, POINTER(cef_media_sink_t)),
     CFUNCTYPE(c_void, POINTER(cef_media_sink_t), POINTER(cef_media_sink_device_info_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
@@ -3250,12 +3300,11 @@ cef_media_sink_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('get_id', cef_media_sink_t._callbacks[0]),
     ('get_name', cef_media_sink_t._callbacks[1]),
-    ('get_description', cef_media_sink_t._callbacks[2]),
-    ('get_icon_type', cef_media_sink_t._callbacks[3]),
-    ('get_device_info', cef_media_sink_t._callbacks[4]),
-    ('is_cast_sink', cef_media_sink_t._callbacks[5]),
-    ('is_dial_sink', cef_media_sink_t._callbacks[6]),
-    ('is_compatible_with', cef_media_sink_t._callbacks[7]),
+    ('get_icon_type', cef_media_sink_t._callbacks[2]),
+    ('get_device_info', cef_media_sink_t._callbacks[3]),
+    ('is_cast_sink', cef_media_sink_t._callbacks[4]),
+    ('is_dial_sink', cef_media_sink_t._callbacks[5]),
+    ('is_compatible_with', cef_media_sink_t._callbacks[6]),
 )
 
 
@@ -3453,9 +3502,9 @@ cef_permission_prompt_callback_t._fields_ = (
 
 
 cef_permission_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32, POINTER(cef_media_access_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, POINTER(cef_string_t), uint32, POINTER(cef_permission_prompt_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64, cef_permission_request_result_t),
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32_t, POINTER(cef_media_access_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, POINTER(cef_string_t), uint32_t, POINTER(cef_permission_prompt_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, cef_permission_request_result_t),
 )
 cef_permission_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3637,8 +3686,8 @@ cef_process_message_t._fields_ = (
 
 cef_read_handler_t._callbacks = (
     CFUNCTYPE(size_t, POINTER(cef_read_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_read_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64_t, c_int),
+    CFUNCTYPE(int64_t, POINTER(cef_read_handler_t)),
     CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
     CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
 )
@@ -3805,6 +3854,10 @@ cef_request_context_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_request_context_t), cef_string_list_t),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t),
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, POINTER(cef_value_t)),
+    CFUNCTYPE(cef_content_setting_values_t, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t),
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, cef_content_setting_values_t),
 )
 cef_request_context_t._fields_ = (
     ('_base', cef_preference_manager_t),
@@ -3826,6 +3879,10 @@ cef_request_context_t._fields_ = (
     ('get_extensions', cef_request_context_t._callbacks[15]),
     ('get_extension', cef_request_context_t._callbacks[16]),
     ('get_media_router', cef_request_context_t._callbacks[17]),
+    ('get_website_setting', cef_request_context_t._callbacks[18]),
+    ('set_website_setting', cef_request_context_t._callbacks[19]),
+    ('get_content_setting', cef_request_context_t._callbacks[20]),
+    ('set_content_setting', cef_request_context_t._callbacks[21]),
 )
 
 
@@ -3921,7 +3978,7 @@ cef_resource_bundle_t._fields_ = (
 
 
 cef_resource_skip_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_resource_skip_callback_t), int64),
+    CFUNCTYPE(c_void, POINTER(cef_resource_skip_callback_t), int64_t),
 )
 cef_resource_skip_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3941,8 +3998,8 @@ cef_resource_read_callback_t._fields_ = (
 cef_resource_handler_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(c_int), POINTER(cef_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t), POINTER(cef_response_t), POINTER(int64), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), int64, POINTER(int64), POINTER(cef_resource_skip_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t), POINTER(cef_response_t), POINTER(int64_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), int64_t, POINTER(int64_t), POINTER(cef_resource_skip_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_resource_read_callback_t)),
     CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_callback_t)),
     CFUNCTYPE(c_void, POINTER(cef_resource_handler_t)),
@@ -3966,7 +4023,7 @@ cef_resource_request_handler_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_string_t)),
     CFUNCTYPE(c_int, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), cef_urlrequest_status_t, int64),
+    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), cef_urlrequest_status_t, int64_t),
     CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(c_int)),
 )
 cef_resource_request_handler_t._fields_ = (
@@ -4033,7 +4090,7 @@ cef_server_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(c_void), size_t),
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int),
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, c_int, POINTER(cef_string_t), int64, cef_string_multimap_t),
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, c_int, POINTER(cef_string_t), int64_t, cef_string_multimap_t),
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t),
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int),
     CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t),
@@ -4126,8 +4183,8 @@ cef_sslstatus_t._fields_ = (
 
 cef_stream_reader_t._callbacks = (
     CFUNCTYPE(size_t, POINTER(cef_stream_reader_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_stream_reader_t)),
+    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t), int64_t, c_int),
+    CFUNCTYPE(int64_t, POINTER(cef_stream_reader_t)),
     CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)),
     CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)),
 )
@@ -4143,8 +4200,8 @@ cef_stream_reader_t._fields_ = (
 
 cef_stream_writer_t._callbacks = (
     CFUNCTYPE(size_t, POINTER(cef_stream_writer_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_stream_writer_t)),
+    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t), int64_t, c_int),
+    CFUNCTYPE(int64_t, POINTER(cef_stream_writer_t)),
     CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)),
     CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)),
 )
@@ -4181,7 +4238,7 @@ cef_task_runner_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_task_runner_t)),
     CFUNCTYPE(c_int, POINTER(cef_task_runner_t), cef_thread_id_t),
     CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t)),
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t), int64),
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t), int64_t),
 )
 cef_task_runner_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4311,8 +4368,8 @@ cef_urlrequest_t._fields_ = (
 
 cef_urlrequest_client_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64, int64),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64, int64),
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t),
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t),
     CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), POINTER(c_void), size_t),
     CFUNCTYPE(c_int, POINTER(cef_urlrequest_client_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)),
 )
@@ -4343,8 +4400,8 @@ cef_v8value_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(int32, POINTER(cef_v8value_t)),
-    CFUNCTYPE(uint32, POINTER(cef_v8value_t)),
+    CFUNCTYPE(int32_t, POINTER(cef_v8value_t)),
+    CFUNCTYPE(uint32_t, POINTER(cef_v8value_t)),
     CFUNCTYPE(double, POINTER(cef_v8value_t)),
     CFUNCTYPE(cef_basetime_t, POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
@@ -4371,6 +4428,8 @@ cef_v8value_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
     CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
+    CFUNCTYPE(size_t, POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
@@ -4424,12 +4483,14 @@ cef_v8value_t._fields_ = (
     ('get_array_length', cef_v8value_t._callbacks[41]),
     ('get_array_buffer_release_callback', cef_v8value_t._callbacks[42]),
     ('neuter_array_buffer', cef_v8value_t._callbacks[43]),
-    ('get_function_name', cef_v8value_t._callbacks[44]),
-    ('get_function_handler', cef_v8value_t._callbacks[45]),
-    ('execute_function', cef_v8value_t._callbacks[46]),
-    ('execute_function_with_context', cef_v8value_t._callbacks[47]),
-    ('resolve_promise', cef_v8value_t._callbacks[48]),
-    ('reject_promise', cef_v8value_t._callbacks[49]),
+    ('get_array_buffer_byte_length', cef_v8value_t._callbacks[44]),
+    ('get_array_buffer_data', cef_v8value_t._callbacks[45]),
+    ('get_function_name', cef_v8value_t._callbacks[46]),
+    ('get_function_handler', cef_v8value_t._callbacks[47]),
+    ('execute_function', cef_v8value_t._callbacks[48]),
+    ('execute_function_with_context', cef_v8value_t._callbacks[49]),
+    ('resolve_promise', cef_v8value_t._callbacks[50]),
+    ('reject_promise', cef_v8value_t._callbacks[51]),
 )
 
 
@@ -4505,7 +4566,7 @@ cef_waitable_event_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
     CFUNCTYPE(c_int, POINTER(cef_waitable_event_t)),
     CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
-    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t), int64),
+    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t), int64_t),
 )
 cef_waitable_event_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4519,6 +4580,7 @@ cef_waitable_event_t._fields_ = (
 
 cef_window_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_browser_view_t)),
     CFUNCTYPE(c_void, POINTER(cef_window_t)),
     CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_size_t)),
     CFUNCTYPE(c_void, POINTER(cef_window_t)),
@@ -4549,52 +4611,53 @@ cef_window_t._callbacks = (
     CFUNCTYPE(cef_rect_t, POINTER(cef_window_t)),
     CFUNCTYPE(c_void, POINTER(cef_window_t), size_t, POINTER(cef_draggable_region_t)),
     CFUNCTYPE(cef_window_handle_t, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, uint32),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, uint32_t),
     CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int),
     CFUNCTYPE(c_void, POINTER(cef_window_t), cef_mouse_button_type_t, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int, c_int, c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int, c_int, c_int, c_int, c_int),
     CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
     CFUNCTYPE(c_void, POINTER(cef_window_t)),
 )
 cef_window_t._fields_ = (
     ('_base', cef_panel_t),
     ('show', cef_window_t._callbacks[0]),
-    ('hide', cef_window_t._callbacks[1]),
-    ('center_window', cef_window_t._callbacks[2]),
-    ('close', cef_window_t._callbacks[3]),
-    ('is_closed', cef_window_t._callbacks[4]),
-    ('activate', cef_window_t._callbacks[5]),
-    ('deactivate', cef_window_t._callbacks[6]),
-    ('is_active', cef_window_t._callbacks[7]),
-    ('bring_to_top', cef_window_t._callbacks[8]),
-    ('set_always_on_top', cef_window_t._callbacks[9]),
-    ('is_always_on_top', cef_window_t._callbacks[10]),
-    ('maximize', cef_window_t._callbacks[11]),
-    ('minimize', cef_window_t._callbacks[12]),
-    ('restore', cef_window_t._callbacks[13]),
-    ('set_fullscreen', cef_window_t._callbacks[14]),
-    ('is_maximized', cef_window_t._callbacks[15]),
-    ('is_minimized', cef_window_t._callbacks[16]),
-    ('is_fullscreen', cef_window_t._callbacks[17]),
-    ('set_title', cef_window_t._callbacks[18]),
-    ('get_title', cef_window_t._callbacks[19]),
-    ('set_window_icon', cef_window_t._callbacks[20]),
-    ('get_window_icon', cef_window_t._callbacks[21]),
-    ('set_window_app_icon', cef_window_t._callbacks[22]),
-    ('get_window_app_icon', cef_window_t._callbacks[23]),
-    ('add_overlay_view', cef_window_t._callbacks[24]),
-    ('show_menu', cef_window_t._callbacks[25]),
-    ('cancel_menu', cef_window_t._callbacks[26]),
-    ('get_display', cef_window_t._callbacks[27]),
-    ('get_client_area_bounds_in_screen', cef_window_t._callbacks[28]),
-    ('set_draggable_regions', cef_window_t._callbacks[29]),
-    ('get_window_handle', cef_window_t._callbacks[30]),
-    ('send_key_press', cef_window_t._callbacks[31]),
-    ('send_mouse_move', cef_window_t._callbacks[32]),
-    ('send_mouse_events', cef_window_t._callbacks[33]),
-    ('set_accelerator', cef_window_t._callbacks[34]),
-    ('remove_accelerator', cef_window_t._callbacks[35]),
-    ('remove_all_accelerators', cef_window_t._callbacks[36]),
+    ('show_as_browser_modal_dialog', cef_window_t._callbacks[1]),
+    ('hide', cef_window_t._callbacks[2]),
+    ('center_window', cef_window_t._callbacks[3]),
+    ('close', cef_window_t._callbacks[4]),
+    ('is_closed', cef_window_t._callbacks[5]),
+    ('activate', cef_window_t._callbacks[6]),
+    ('deactivate', cef_window_t._callbacks[7]),
+    ('is_active', cef_window_t._callbacks[8]),
+    ('bring_to_top', cef_window_t._callbacks[9]),
+    ('set_always_on_top', cef_window_t._callbacks[10]),
+    ('is_always_on_top', cef_window_t._callbacks[11]),
+    ('maximize', cef_window_t._callbacks[12]),
+    ('minimize', cef_window_t._callbacks[13]),
+    ('restore', cef_window_t._callbacks[14]),
+    ('set_fullscreen', cef_window_t._callbacks[15]),
+    ('is_maximized', cef_window_t._callbacks[16]),
+    ('is_minimized', cef_window_t._callbacks[17]),
+    ('is_fullscreen', cef_window_t._callbacks[18]),
+    ('set_title', cef_window_t._callbacks[19]),
+    ('get_title', cef_window_t._callbacks[20]),
+    ('set_window_icon', cef_window_t._callbacks[21]),
+    ('get_window_icon', cef_window_t._callbacks[22]),
+    ('set_window_app_icon', cef_window_t._callbacks[23]),
+    ('get_window_app_icon', cef_window_t._callbacks[24]),
+    ('add_overlay_view', cef_window_t._callbacks[25]),
+    ('show_menu', cef_window_t._callbacks[26]),
+    ('cancel_menu', cef_window_t._callbacks[27]),
+    ('get_display', cef_window_t._callbacks[28]),
+    ('get_client_area_bounds_in_screen', cef_window_t._callbacks[29]),
+    ('set_draggable_regions', cef_window_t._callbacks[30]),
+    ('get_window_handle', cef_window_t._callbacks[31]),
+    ('send_key_press', cef_window_t._callbacks[32]),
+    ('send_mouse_move', cef_window_t._callbacks[33]),
+    ('send_mouse_events', cef_window_t._callbacks[34]),
+    ('set_accelerator', cef_window_t._callbacks[35]),
+    ('remove_accelerator', cef_window_t._callbacks[36]),
+    ('remove_all_accelerators', cef_window_t._callbacks[37]),
 )
 
 
@@ -4604,10 +4667,14 @@ cef_window_delegate_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
     CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_rect_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(cef_rect_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(cef_show_state_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(float)),
     CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
     CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
@@ -4622,23 +4689,27 @@ cef_window_delegate_t._fields_ = (
     ('on_window_destroyed', cef_window_delegate_t._callbacks[2]),
     ('on_window_activation_changed', cef_window_delegate_t._callbacks[3]),
     ('on_window_bounds_changed', cef_window_delegate_t._callbacks[4]),
-    ('get_parent_window', cef_window_delegate_t._callbacks[5]),
-    ('get_initial_bounds', cef_window_delegate_t._callbacks[6]),
-    ('get_initial_show_state', cef_window_delegate_t._callbacks[7]),
-    ('is_frameless', cef_window_delegate_t._callbacks[8]),
-    ('can_resize', cef_window_delegate_t._callbacks[9]),
-    ('can_maximize', cef_window_delegate_t._callbacks[10]),
-    ('can_minimize', cef_window_delegate_t._callbacks[11]),
-    ('can_close', cef_window_delegate_t._callbacks[12]),
-    ('on_accelerator', cef_window_delegate_t._callbacks[13]),
-    ('on_key_event', cef_window_delegate_t._callbacks[14]),
+    ('on_window_fullscreen_transition', cef_window_delegate_t._callbacks[5]),
+    ('get_parent_window', cef_window_delegate_t._callbacks[6]),
+    ('is_window_modal_dialog', cef_window_delegate_t._callbacks[7]),
+    ('get_initial_bounds', cef_window_delegate_t._callbacks[8]),
+    ('get_initial_show_state', cef_window_delegate_t._callbacks[9]),
+    ('is_frameless', cef_window_delegate_t._callbacks[10]),
+    ('with_standard_window_buttons', cef_window_delegate_t._callbacks[11]),
+    ('get_titlebar_height', cef_window_delegate_t._callbacks[12]),
+    ('can_resize', cef_window_delegate_t._callbacks[13]),
+    ('can_maximize', cef_window_delegate_t._callbacks[14]),
+    ('can_minimize', cef_window_delegate_t._callbacks[15]),
+    ('can_close', cef_window_delegate_t._callbacks[16]),
+    ('on_accelerator', cef_window_delegate_t._callbacks[17]),
+    ('on_key_event', cef_window_delegate_t._callbacks[18]),
 )
 
 
 cef_write_handler_t._callbacks = (
     CFUNCTYPE(size_t, POINTER(cef_write_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64, c_int),
-    CFUNCTYPE(int64, POINTER(cef_write_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64_t, c_int),
+    CFUNCTYPE(int64_t, POINTER(cef_write_handler_t)),
     CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
     CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
 )
@@ -4660,8 +4731,6 @@ cef_x509cert_principal_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
     CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
     CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
 )
 cef_x509cert_principal_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4670,10 +4739,8 @@ cef_x509cert_principal_t._fields_ = (
     ('get_locality_name', cef_x509cert_principal_t._callbacks[2]),
     ('get_state_or_province_name', cef_x509cert_principal_t._callbacks[3]),
     ('get_country_name', cef_x509cert_principal_t._callbacks[4]),
-    ('get_street_addresses', cef_x509cert_principal_t._callbacks[5]),
-    ('get_organization_names', cef_x509cert_principal_t._callbacks[6]),
-    ('get_organization_unit_names', cef_x509cert_principal_t._callbacks[7]),
-    ('get_domain_components', cef_x509cert_principal_t._callbacks[8]),
+    ('get_organization_names', cef_x509cert_principal_t._callbacks[5]),
+    ('get_organization_unit_names', cef_x509cert_principal_t._callbacks[6]),
 )
 
 
@@ -4775,12 +4842,12 @@ cef_zip_reader_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t), c_int),
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(int64, POINTER(cef_zip_reader_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)),
     CFUNCTYPE(cef_basetime_t, POINTER(cef_zip_reader_t)),
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t)),
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(c_void), size_t),
-    CFUNCTYPE(int64, POINTER(cef_zip_reader_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)),
     CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
 )
 cef_zip_reader_t._fields_ = (

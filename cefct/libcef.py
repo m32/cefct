@@ -357,8 +357,8 @@ def cef_clear_scheme_handler_factories():
     return cef_clear_scheme_handler_factories._api_()
 
 
-#void cef_server_create(cef_string_t* address, uint16 port, int backlog, cef_server_handler_t* handler);
-@CEFENTRY(c_void, "cef_server_create", POINTER(cef_string_t), uint16, c_int, POINTER(cef_server_handler_t))
+#void cef_server_create(cef_string_t* address, uint16_t port, int backlog, cef_server_handler_t* handler);
+@CEFENTRY(c_void, "cef_server_create", POINTER(cef_string_t), uint16_t, c_int, POINTER(cef_server_handler_t))
 def cef_server_create(address, port, backlog, handler):
     return cef_server_create._api_(address, port, backlog, handler)
 
@@ -429,8 +429,8 @@ def cef_post_task(threadId, task):
     return cef_post_task._api_(threadId, task)
 
 
-#int cef_post_delayed_task(cef_thread_id_t threadId, cef_task_t* task, int64 delay_ms);
-@CEFENTRY(c_int, "cef_post_delayed_task", cef_thread_id_t, POINTER(cef_task_t), int64)
+#int cef_post_delayed_task(cef_thread_id_t threadId, cef_task_t* task, int64_t delay_ms);
+@CEFENTRY(c_int, "cef_post_delayed_task", cef_thread_id_t, POINTER(cef_task_t), int64_t)
 def cef_post_delayed_task(threadId, task, delay_ms):
     return cef_post_delayed_task._api_(threadId, task, delay_ms)
 
@@ -453,8 +453,8 @@ def cef_end_tracing(tracing_file, callback):
     return cef_end_tracing._api_(tracing_file, callback)
 
 
-#int64 cef_now_from_system_trace_time(void);
-@CEFENTRY(int64, "cef_now_from_system_trace_time")
+#int64_t cef_now_from_system_trace_time(void);
+@CEFENTRY(int64_t, "cef_now_from_system_trace_time")
 def cef_now_from_system_trace_time():
     return cef_now_from_system_trace_time._api_()
 
@@ -501,14 +501,14 @@ def cef_v8value_create_bool(value):
     return cef_v8value_create_bool._api_(value)
 
 
-#cef_v8value_t* cef_v8value_create_int(int32 value);
-@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_int", int32)
+#cef_v8value_t* cef_v8value_create_int(int32_t value);
+@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_int", int32_t)
 def cef_v8value_create_int(value):
     return cef_v8value_create_int._api_(value)
 
 
-#cef_v8value_t* cef_v8value_create_uint(uint32 value);
-@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_uint", uint32)
+#cef_v8value_t* cef_v8value_create_uint(uint32_t value);
+@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_uint", uint32_t)
 def cef_v8value_create_uint(value):
     return cef_v8value_create_uint._api_(value)
 

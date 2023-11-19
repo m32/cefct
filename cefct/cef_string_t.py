@@ -9,15 +9,15 @@ class cef_string_t(Structure):
         ("_dtor", CEFCALLBACK(POINTER(c_void))),
     ]
 
-    def __init__(self, src: str = None):
-        super().__init__()
+    def __init__(self, src = None):
+        Structure.__init__(self)
         if src is not None:
             self.Copy(src)
 
     def clear(self):
         string_clear(self)
 
-    def Copy(self, src: str) -> None:
+    def Copy(self, src):
         if src is None:
             string_set(None, 0, self, 1)
         else:
@@ -26,7 +26,7 @@ class cef_string_t(Structure):
             src1 = src1[2:] # skip boom
             string_set(src1, len(src), byref(self), 1) # 1=Copy
 
-    def ToString(self, decode=True) -> str:
+    def ToString(self, decode=True):
         if self._str == None:
             return None
         #size = self.size * 2 - 2 # null terminated

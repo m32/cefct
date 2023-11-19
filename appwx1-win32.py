@@ -146,7 +146,7 @@ class Main(wx.Frame):
         elif zoom == 0:
             self.zoom = 1
         zoom = zoom + self.zoom
-        self.btZoom.SetLabel(f'Zoom: {zoom}')
+        self.btZoom.SetLabel('Zoom: %d'%self.zoom)
         host.contents.set_zoom_level(host, zoom)
 
     def OnBrowserWindowSetFocus(self, event):

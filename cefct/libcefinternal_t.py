@@ -85,6 +85,9 @@ cef_platform_thread_handle_t = c_int
 cef_channel_layout_t = c_int
 cef_key_event_type_t = c_int
 
+cef_content_setting_types_t = c_int
+cef_content_setting_values_t = c_int
+
 time_t = c_uint64
 char16 = c_uint16
 XDisplay = c_long

@@ -63,7 +63,7 @@ loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
     def py_on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
-        print('CefLoadHandler._on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
+        print('CefLoadHandler._on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward))
         if not isLoading:
             global loaded
             loaded = True
@@ -72,7 +72,7 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
         print("CefLoadHandler._on_load_error: Failed to load url: {url}, Error code: {code}".format(
             url=failedurl,
             code=errorCode
-        ), flush=True)
+        ))
         if not frame.is_main(frame):
             return
         stopbrowser(browser)
@@ -93,7 +93,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
             self.n -= 1
             if self.n != 0:
                 return
-            print('CefRendererHandler(browser, {}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height), flush=True)
+            print('CefRendererHandler(browser, {}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height))
             try:
                 save_screenshot((width, height), buffer)
             finally:
@@ -101,7 +101,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
 
 class Client(cef.cef_client_t):
     def __init__(self):
-        super().__init__()
+        cef.cef_client_t.__init__(self)
         self.life_span_handler = cefappcommon.CefLifeSpanHandler()
         self.load_handler = CefLoadHandler()
         self.render_handler = CefRendererHandler()

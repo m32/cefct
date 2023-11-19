@@ -27,6 +27,8 @@ hashname = ["platform", "universal", "commit"]
 for i in range(3):
     v = bytes(cefi.cef_api_hash(i)[:40]).decode("ascii")
     print("hash({})= {}".format(hashname[i], v))
+for i in range(8):
+    print(cefi.cef_version_info(i))
 
 assert cefi.CEF_VERSION_MAJOR == cefi.cef_version_info(0)
 assert cefi.CEF_VERSION_MINOR == cefi.cef_version_info(1)

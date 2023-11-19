@@ -41,7 +41,7 @@ def CefMainArgs(argv):
 
 class App(cef.cef_app_t):
     def __init__(self, switches=None):
-        super().__init__()
+        cef.cef_app_t.__init__(self)
         self.bph = cef.cef_browser_process_handler_t()
         self.switches = switches
 

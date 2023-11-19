@@ -9,10 +9,9 @@ cef_string_multimap_t = c_void_p
 
 
 class cef_string_multimap(object):
-    _map: cef_string_multimap_t = None
+    _map = None
 
-    def __init__(self, src: cef_string_multimap_t = None):
-        super().__init__()
+    def __init__(self, src = None):
         if src is None:
             src = string_multimap_alloc()
         self._map = src
@@ -23,12 +22,12 @@ class cef_string_multimap(object):
     def free(self):
         string_multimap_free(self._map)
 
-    def __setitem__(self, key: str, value: str) -> None:
+    def __setitem__(self, key, value):
         key = cef_string_t(key)
         value = cef_string_t(value)
         string_multimap_append(self._map, key, value)
 
-    def __getitem__(self, key: str) -> str:
+    def __getitem__(self, key):
         key = cef_string_t(key)
         n = string_multimap_find_count(self._map, key)
         if not n:
@@ -40,7 +39,7 @@ class cef_string_multimap(object):
             result.append(value.ToString())
         return result
 
-    def __dict__(self) -> dict:
+    def __dict__(self):
         if self._map is None:
             return None
 

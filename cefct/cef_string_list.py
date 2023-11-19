@@ -9,18 +9,17 @@ cef_string_list_t = c_void_p
 
 
 class cef_string_list(object):
-    _clist: cef_string_list_t = None
+    _clist = None
 
     def __init__(self):
-        super().__init__()
         self._clist = string_list_alloc()
 
-    def __len__(self) -> int:
+    def __len__(self):
         if self._clist is None:
             return 0
         return string_list_size(self._clist)
 
-    def __getitem__(self, n) -> str:
+    def __getitem__(self, n):
         assert n < len(self)
         n_value = cef_string_t()
         string_list_value(
@@ -34,7 +33,7 @@ class cef_string_list(object):
     def free(self):
         string_list_free(self._clist)
 
-    def ToArray(self) -> Tuple[str]:
+    def ToArray(self):
         if self._clist is None:
             return None
 
@@ -49,14 +48,14 @@ class cef_string_list(object):
         n_value.clear()
         return result
 
-    def From(self, list: Tuple[str]) -> None:
+    def From(self, list):
         self._clist = string_list_alloc()
 
         for s in list:
             n_item = cef_string_t(s)
             string_list_append(self._clist, n_item)
 
-    def append(self, s: str) -> None:
+    def append(self, s):
         n_item = cef_string_t(s)
         string_list_append(self._clist, n_item)
 

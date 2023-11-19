@@ -9,9 +9,10 @@ import string
 class Element(object):
     def parseArg(self, arg):
         arg = arg.strip()
-        atype = re.match("\w+", arg)[0]
+        print('arg=', arg)
+        atype = re.match(r"\w+", arg)[0]
         aname = arg[len(atype) :].strip()
-        atype1 = re.match("\w+", aname)
+        atype1 = re.match(r"\w+", aname)
         if atype == "long" and atype1 and atype1[0] == "long":
             aname = aname[len(atype) :].strip()
             atype = "longlong"
@@ -138,7 +139,7 @@ class Parser(object):
         # self.struct = re.findall('struct (_cef_\w+);', data)
 
         start = 0
-        pat = re.compile("typedef struct (_cef_\w+) \{")
+        pat = re.compile(r"typedef struct (_cef_\w+) \{")
         while True:
             m = pat.search(data, start)
             if m is None:

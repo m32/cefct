@@ -9,10 +9,9 @@ cef_string_map_t = c_void_p
 
 
 class cef_string_map(object):
-    _map: cef_string_map_t = None
+    _map = None
 
-    def __init__(self, src: cef_string_map_t = None):
-        super().__init__()
+    def __init__(self, src = None):
         if src is None:
             src = string_map_alloc()
         self._map = src
@@ -23,12 +22,12 @@ class cef_string_map(object):
     def free(self):
         string_map_free(self._map)
 
-    def __setitem__(self, key: str, value: str) -> None:
+    def __setitem__(self, key, value):
         key = cef_string_t(key)
         value = cef_string_t(value)
         string_map_append(self._map, key, value)
 
-    def __getitem__(self, key: str) -> str:
+    def __getitem__(self, key):
         key = cef_string_t(key)
         value = cef_string_t()
         n = string_map_find(self._map, key, value)
@@ -36,7 +35,7 @@ class cef_string_map(object):
             return None
         return value.ToString()
 
-    def __dict__(self) -> dict:
+    def __dict__(self):
         if self._map is None:
             return None
 

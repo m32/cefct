@@ -16,7 +16,7 @@ def save_screenshot(size, buff):
     size = (size[0], size[1]//4)
     #open('screenshot.bin', 'wb').write(t.contents)
     image = Image.frombytes("RGBA", size, t.contents, "raw", "RGBA", 0, 1)
-    image.save('screenshot.png', "PNG")
+    image.save('screenshot-2.png', "PNG")
     # See comments in exit_app() why PostTask must be used
     #cef.PostTask(cef.TID_UI, exit_app, browser)
 
@@ -70,7 +70,7 @@ loaded = False
 
 class CefLoadHandler(cefappcommon.CefLoadHandler):
     def py_on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
-        print('_on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward), flush=True)
+        print('_on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward))
         if not isLoading:
             global loaded
             loaded = True
@@ -79,7 +79,7 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
         print("ERROR: Failed to load url: {url}, Error code: {code}".format(
             url=failedurl,
             code=errorCode
-        ), flush=True)
+        ))
         if not frame.is_main(frame):
             return
         browser.contents._base.add_ref(browser.contents._base)
@@ -119,7 +119,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
             self.n -= 1
             if self.n != 0:
                 return
-            print('CefRendererHandler({}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height), flush=True)
+            print('CefRendererHandler({}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height))
             try:
                 save_screenshot((width, height), buffer)
             finally:
@@ -159,7 +159,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
 
 class Client(cef.cef_client_t):
     def __init__(self):
-        super().__init__()
+        cef.cef_client_t.__init__(self)
         self.life_span_handler = cefappcommon.CefLifeSpanHandler()
         self.load_handler = CefLoadHandler()
         self.render_handler = CefRendererHandler()

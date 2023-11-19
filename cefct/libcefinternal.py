@@ -9,16 +9,16 @@ from cefct.libcefinternal_t import *
 # https://v4.chriskrycho.com/2015/ctypes-structures-and-dll-exports.html
 #
 
-CEF_VERSION = "109.1.11+g6d4fdb2+chromium-109.0.5414.87"
-CEF_VERSION_MAJOR = 109
-CEF_VERSION_MINOR = 1
-CEF_VERSION_PATCH = 11
-CEF_COMMIT_NUMBER = 2712
-CEF_COMMIT_HASH = "6d4fdb2ef32ad9ae399df126d7a9c5d0d6ada5fa"
-CHROME_VERSION_MAJOR = 109
+CEF_VERSION = "119.4.3+gc76a3b9+chromium-119.0.6045.159"
+CEF_VERSION_MAJOR = 119
+CEF_VERSION_MINOR = 4
+CEF_VERSION_PATCH = 3
+CEF_COMMIT_NUMBER = 2864
+CEF_COMMIT_HASH = "c76a3b9f2e3fd582512e89fd0e901368bac1a822"
+CHROME_VERSION_MAJOR = 119
 CHROME_VERSION_MINOR = 0
-CHROME_VERSION_BUILD = 5414
-CHROME_VERSION_PATCH = 87
+CHROME_VERSION_BUILD = 6045
+CHROME_VERSION_PATCH = 159
 
 import enum
 class IntEnum(enum.IntEnum):
@@ -43,6 +43,15 @@ if 1:
     LOGSEVERITY_ERROR = 5
     LOGSEVERITY_FATAL = 6
     LOGSEVERITY_DISABLE = 99
+
+
+#class cef_log_items_t(enum):
+    LOG_ITEMS_DEFAULT = 0
+    LOG_ITEMS_NONE = 1
+    LOG_ITEMS_FLAG_PROCESS_ID = 2
+    LOG_ITEMS_FLAG_THREAD_ID = 4
+    LOG_ITEMS_FLAG_TIME_STAMP = 8
+    LOG_ITEMS_FLAG_TICK_COUNT = 16
 
 
 #class cef_state_t(enum):
@@ -120,18 +129,19 @@ if 1:
 
 
 #class cef_window_open_disposition_t(enum):
-    WOD_UNKNOWN = 1
-    WOD_CURRENT_TAB = 2
-    WOD_SINGLETON_TAB = 3
-    WOD_NEW_FOREGROUND_TAB = 4
-    WOD_NEW_BACKGROUND_TAB = 5
-    WOD_NEW_POPUP = 6
-    WOD_NEW_WINDOW = 7
-    WOD_SAVE_TO_DISK = 8
-    WOD_OFF_THE_RECORD = 9
-    WOD_IGNORE_ACTION = 10
-    WOD_SWITCH_TO_TAB = 11
-    WOD_NEW_PICTURE_IN_PICTURE = 12
+    CEF_WOD_UNKNOWN = 1
+    CEF_WOD_CURRENT_TAB = 2
+    CEF_WOD_SINGLETON_TAB = 3
+    CEF_WOD_NEW_FOREGROUND_TAB = 4
+    CEF_WOD_NEW_BACKGROUND_TAB = 5
+    CEF_WOD_NEW_POPUP = 6
+    CEF_WOD_NEW_WINDOW = 7
+    CEF_WOD_SAVE_TO_DISK = 8
+    CEF_WOD_OFF_THE_RECORD = 9
+    CEF_WOD_IGNORE_ACTION = 10
+    CEF_WOD_SWITCH_TO_TAB = 11
+    CEF_WOD_NEW_PICTURE_IN_PICTURE = 12
+    CEF_WOD_MAX_VALUE = 12
 
 
 #class cef_drag_operations_mask_t(enum):
@@ -530,6 +540,42 @@ if 1:
     DOM_NODE_TYPE_DOCUMENT_FRAGMENT = 9
 
 
+#class cef_dom_form_control_type_t(enum):
+    DOM_FORM_CONTROL_TYPE_UNSUPPORTED = 0
+    DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON = 1
+    DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT = 2
+    DOM_FORM_CONTROL_TYPE_BUTTON_RESET = 3
+    DOM_FORM_CONTROL_TYPE_BUTTON_SELECT_LIST = 4
+    DOM_FORM_CONTROL_TYPE_FIELDSET = 5
+    DOM_FORM_CONTROL_TYPE_INPUT_BUTTON = 6
+    DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX = 7
+    DOM_FORM_CONTROL_TYPE_INPUT_COLOR = 8
+    DOM_FORM_CONTROL_TYPE_INPUT_DATE = 9
+    DOM_FORM_CONTROL_TYPE_INPUT_DATETIME_LOCAL = 10
+    DOM_FORM_CONTROL_TYPE_INPUT_EMAIL = 11
+    DOM_FORM_CONTROL_TYPE_INPUT_FILE = 12
+    DOM_FORM_CONTROL_TYPE_INPUT_HIDDEN = 13
+    DOM_FORM_CONTROL_TYPE_INPUT_IMAGE = 14
+    DOM_FORM_CONTROL_TYPE_INPUT_MONTH = 15
+    DOM_FORM_CONTROL_TYPE_INPUT_NUMBER = 16
+    DOM_FORM_CONTROL_TYPE_INPUT_PASSWORD = 17
+    DOM_FORM_CONTROL_TYPE_INPUT_RADIO = 18
+    DOM_FORM_CONTROL_TYPE_INPUT_RANGE = 19
+    DOM_FORM_CONTROL_TYPE_INPUT_RESET = 20
+    DOM_FORM_CONTROL_TYPE_INPUT_SEARCH = 21
+    DOM_FORM_CONTROL_TYPE_INPUT_SUBMIT = 22
+    DOM_FORM_CONTROL_TYPE_INPUT_TELEPHONE = 23
+    DOM_FORM_CONTROL_TYPE_INPUT_TEXT = 24
+    DOM_FORM_CONTROL_TYPE_INPUT_TIME = 25
+    DOM_FORM_CONTROL_TYPE_INPUT_URL = 26
+    DOM_FORM_CONTROL_TYPE_INPUT_WEEK = 27
+    DOM_FORM_CONTROL_TYPE_OUTPUT = 28
+    DOM_FORM_CONTROL_TYPE_SELECT_ONE = 29
+    DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE = 30
+    DOM_FORM_CONTROL_TYPE_SELECT_LIST = 31
+    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 32
+
+
 #class cef_file_dialog_mode_t(enum):
     FILE_DIALOG_OPEN = 0
     FILE_DIALOG_OPEN_MULTIPLE = 1
@@ -862,6 +908,45 @@ if 1:
     CEF_CTT_LOCATION = 3
 
 
+#class cef_chrome_page_action_icon_type_t(enum):
+    CEF_CPAIT_BOOKMARK_STAR = 0
+    CEF_CPAIT_CLICK_TO_CALL = 1
+    CEF_CPAIT_COOKIE_CONTROLS = 2
+    CEF_CPAIT_FILE_SYSTEM_ACCESS = 3
+    CEF_CPAIT_FIND = 4
+    CEF_CPAIT_HIGH_EFFICIENCY = 5
+    CEF_CPAIT_INTENT_PICKER = 6
+    CEF_CPAIT_LOCAL_CARD_MIGRATION = 7
+    CEF_CPAIT_MANAGE_PASSWORDS = 8
+    CEF_CPAIT_PAYMENTS_OFFER_NOTIFICATION = 9
+    CEF_CPAIT_PRICE_TRACKING = 10
+    CEF_CPAIT_PWA_INSTALL = 11
+    CEF_CPAIT_QR_CODE_GENERATOR = 12
+    CEF_CPAIT_READER_MODE = 13
+    CEF_CPAIT_SAVE_AUTOFILL_ADDRESS = 14
+    CEF_CPAIT_SAVE_CARD = 15
+    CEF_CPAIT_SEND_TAB_TO_SELF = 16
+    CEF_CPAIT_SHARING_HUB = 17
+    CEF_CPAIT_SIDE_SEARCH = 18
+    CEF_CPAIT_SMS_REMOTE_FETCHER = 19
+    CEF_CPAIT_TRANSLATE = 20
+    CEF_CPAIT_VIRTUAL_CARD_ENROLL = 21
+    CEF_CPAIT_VIRTUAL_CARD_MANUAL_FALLBACK = 22
+    CEF_CPAIT_ZOOM = 23
+    CEF_CPAIT_SAVE_IBAN = 24
+    CEF_CPAIT_MANDATORY_REAUTH = 25
+    CEF_CPAIT_PRICE_INSIGHTS = 26
+    CEF_CPAIT_MAX_VALUE = 26
+
+
+#class cef_chrome_toolbar_button_type_t(enum):
+    CEF_CTBT_CAST = 0
+    CEF_CTBT_DOWNLOAD = 1
+    CEF_CTBT_SEND_TAB_TO_SELF = 2
+    CEF_CTBT_SIDE_PANEL = 3
+    CEF_CTBT_MAX_VALUE = 3
+
+
 #class cef_docking_mode_t(enum):
     CEF_DOCKING_MODE_TOP_LEFT = 1
     CEF_DOCKING_MODE_TOP_RIGHT = 2
@@ -900,19 +985,19 @@ if 1:
     CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 4
     CEF_PERMISSION_TYPE_CAMERA_STREAM = 8
     CEF_PERMISSION_TYPE_CLIPBOARD = 16
-    CEF_PERMISSION_TYPE_DISK_QUOTA = 32
-    CEF_PERMISSION_TYPE_LOCAL_FONTS = 64
-    CEF_PERMISSION_TYPE_GEOLOCATION = 128
-    CEF_PERMISSION_TYPE_IDLE_DETECTION = 256
-    CEF_PERMISSION_TYPE_MIC_STREAM = 512
-    CEF_PERMISSION_TYPE_MIDI_SYSEX = 1024
-    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 2048
-    CEF_PERMISSION_TYPE_NOTIFICATIONS = 4096
-    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 8192
-    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 16384
-    CEF_PERMISSION_TYPE_SECURITY_ATTESTATION = 32768
-    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 65536
-    CEF_PERMISSION_TYPE_U2F_API_REQUEST = 131072
+    CEF_PERMISSION_TYPE_TOP_LEVEL_STORAGE_ACCESS = 32
+    CEF_PERMISSION_TYPE_DISK_QUOTA = 64
+    CEF_PERMISSION_TYPE_LOCAL_FONTS = 128
+    CEF_PERMISSION_TYPE_GEOLOCATION = 256
+    CEF_PERMISSION_TYPE_IDLE_DETECTION = 512
+    CEF_PERMISSION_TYPE_MIC_STREAM = 1024
+    CEF_PERMISSION_TYPE_MIDI = 2048
+    CEF_PERMISSION_TYPE_MIDI_SYSEX = 4096
+    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 8192
+    CEF_PERMISSION_TYPE_NOTIFICATIONS = 16384
+    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 32768
+    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 65536
+    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 131072
     CEF_PERMISSION_TYPE_VR_SESSION = 262144
     CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 524288
 
@@ -934,7 +1019,52 @@ if 1:
     CEF_PREFERENCES_TYPE_GLOBAL = 1
     CEF_PREFERENCES_TYPE_REQUEST_CONTEXT = 2
 
+
+#class cef_download_interrupt_reason_t(enum):
+    CEF_DOWNLOAD_INTERRUPT_REASON_NONE = 0
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_FAILED = 1
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_ACCESS_DENIED = 2
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_NO_SPACE = 3
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_NAME_TOO_LONG = 5
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_TOO_LARGE = 6
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_VIRUS_INFECTED = 7
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_TRANSIENT_ERROR = 10
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_BLOCKED = 11
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_SECURITY_CHECK_FAILED = 12
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_TOO_SHORT = 13
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_HASH_MISMATCH = 14
+    CEF_DOWNLOAD_INTERRUPT_REASON_FILE_SAME_AS_SOURCE = 15
+    CEF_DOWNLOAD_INTERRUPT_REASON_NETWORK_FAILED = 20
+    CEF_DOWNLOAD_INTERRUPT_REASON_NETWORK_TIMEOUT = 21
+    CEF_DOWNLOAD_INTERRUPT_REASON_NETWORK_DISCONNECTED = 22
+    CEF_DOWNLOAD_INTERRUPT_REASON_NETWORK_SERVER_DOWN = 23
+    CEF_DOWNLOAD_INTERRUPT_REASON_NETWORK_INVALID_REQUEST = 24
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_FAILED = 30
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_NO_RANGE = 31
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_BAD_CONTENT = 33
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_UNAUTHORIZED = 34
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_CERT_PROBLEM = 35
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_FORBIDDEN = 36
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_UNREACHABLE = 37
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_CONTENT_LENGTH_MISMATCH = 38
+    CEF_DOWNLOAD_INTERRUPT_REASON_SERVER_CROSS_ORIGIN_REDIRECT = 39
+    CEF_DOWNLOAD_INTERRUPT_REASON_USER_CANCELED = 40
+    CEF_DOWNLOAD_INTERRUPT_REASON_USER_SHUTDOWN = 41
+    CEF_DOWNLOAD_INTERRUPT_REASON_CRASH = 50
+
+
+#class cef_gesture_command_t(enum):
+    CEF_GESTURE_COMMAND_BACK = 1
+    CEF_GESTURE_COMMAND_FORWARD = 2
+
+
+#class cef_zoom_command_t(enum):
+    CEF_ZOOM_COMMAND_OUT = 1
+    CEF_ZOOM_COMMAND_RESET = 2
+    CEF_ZOOM_COMMAND_IN = 3
+
 cef_log_severity_t = c_int
+cef_log_items_t = c_int
 cef_state_t = c_int
 cef_return_value_t = c_int
 cef_cookie_priority_t = c_int
@@ -982,6 +1112,7 @@ cef_dom_document_type_t = c_int
 cef_dom_event_category_t = c_int
 cef_dom_event_phase_t = c_int
 cef_dom_node_type_t = c_int
+cef_dom_form_control_type_t = c_int
 cef_file_dialog_mode_t = c_int
 cef_color_model_t = c_int
 cef_duplex_mode_t = c_int
@@ -1012,6 +1143,8 @@ cef_media_route_connection_state_t = c_int
 cef_media_sink_icon_type_t = c_int
 cef_text_field_commands_t = c_int
 cef_chrome_toolbar_type_t = c_int
+cef_chrome_page_action_icon_type_t = c_int
+cef_chrome_toolbar_button_type_t = c_int
 cef_docking_mode_t = c_int
 cef_show_state_t = c_int
 cef_touch_handle_state_flags_t = c_int
@@ -1020,6 +1153,9 @@ cef_permission_request_types_t = c_int
 cef_permission_request_result_t = c_int
 cef_test_cert_type_t = c_int
 cef_preferences_type_t = c_int
+cef_download_interrupt_reason_t = c_int
+cef_gesture_command_t = c_int
+cef_zoom_command_t = c_int
 
 class cef_point_t(Structure):
     _align_ = CEFALIGN
@@ -1056,7 +1192,7 @@ class cef_insets_t(Structure):
 class cef_basetime_t(Structure):
     _align_ = CEFALIGN
     _fields_ = (
-        ('val', int64),
+        ('val', int64_t),
     )
 
 class cef_time_t(Structure):
@@ -1087,7 +1223,6 @@ class cef_settings_t(Structure):
         ('command_line_args_disabled', c_int),
         ('cache_path', cef_string_t),
         ('root_cache_path', cef_string_t),
-        ('user_data_path', cef_string_t),
         ('persist_session_cookies', c_int),
         ('persist_user_preferences', c_int),
         ('user_agent', cef_string_t),
@@ -1095,6 +1230,7 @@ class cef_settings_t(Structure):
         ('locale', cef_string_t),
         ('log_file', cef_string_t),
         ('log_severity', cef_log_severity_t),
+        ('log_items', cef_log_items_t),
         ('javascript_flags', cef_string_t),
         ('resources_dir_path', cef_string_t),
         ('locales_dir_path', cef_string_t),
@@ -1105,6 +1241,7 @@ class cef_settings_t(Structure):
         ('accept_language_list', cef_string_t),
         ('cookieable_schemes_list', cef_string_t),
         ('cookieable_schemes_exclude_defaults', c_int),
+        ('chrome_policy_id', cef_string_t),
     )
 
 class cef_request_context_settings_t(Structure):
@@ -1148,8 +1285,8 @@ class cef_browser_settings_t(Structure):
         ('databases', cef_state_t),
         ('webgl', cef_state_t),
         ('background_color', cef_color_t),
-        ('accept_language_list', cef_string_t),
         ('chrome_status_bubble', cef_state_t),
+        ('chrome_zoom_bubble', cef_state_t),
     )
 
 class cef_urlparts_t(Structure):
@@ -1207,7 +1344,7 @@ class cef_mouse_event_t(Structure):
     _fields_ = (
         ('x', c_int),
         ('y', c_int),
-        ('modifiers', uint32),
+        ('modifiers', uint32_t),
     )
 
 class cef_touch_event_t(Structure):
@@ -1221,7 +1358,7 @@ class cef_touch_event_t(Structure):
         ('rotation_angle', float),
         ('pressure', float),
         ('type', cef_touch_event_type_t),
-        ('modifiers', uint32),
+        ('modifiers', uint32_t),
         ('pointer_type', cef_pointer_type_t),
     )
 
@@ -1229,12 +1366,12 @@ class cef_key_event_t(Structure):
     _align_ = CEFALIGN
     _fields_ = (
         ('type', cef_key_event_type_t),
-        ('modifiers', uint32),
+        ('modifiers', uint32_t),
         ('windows_key_code', c_int),
         ('native_key_code', c_int),
         ('is_system_key', c_int),
-        ('character', char16),
-        ('unmodified_character', char16),
+        ('character', char16_t),
+        ('unmodified_character', char16_t),
         ('focus_on_editable_field', c_int),
     )
 
@@ -1249,10 +1386,7 @@ class cef_popup_features_t(Structure):
         ('widthSet', c_int),
         ('height', c_int),
         ('heightSet', c_int),
-        ('menuBarVisible', c_int),
-        ('statusBarVisible', c_int),
-        ('toolBarVisible', c_int),
-        ('scrollbarsVisible', c_int),
+        ('isPopup', c_int),
     )
 
 class cef_cursor_info_t(Structure):
@@ -1282,6 +1416,7 @@ class cef_pdf_print_settings_t(Structure):
         ('display_header_footer', c_int),
         ('header_template', cef_string_t),
         ('footer_template', cef_string_t),
+        ('generate_tagged_pdf', c_int),
     )
 
 class cef_box_layout_settings_t(Structure):
@@ -1301,8 +1436,8 @@ class cef_box_layout_settings_t(Structure):
 class cef_range_t(Structure):
     _align_ = CEFALIGN
     _fields_ = (
-        ('xfrom', c_int),
-        ('to', c_int),
+        ('xfrom', uint32_t),
+        ('to', uint32_t),
     )
 
 class cef_composition_underline_t(Structure):
@@ -1335,7 +1470,7 @@ class cef_touch_handle_state_t(Structure):
     _align_ = CEFALIGN
     _fields_ = (
         ('touch_handle_id', c_int),
-        ('flags', uint32),
+        ('flags', uint32_t),
         ('enabled', c_int),
         ('orientation', cef_horizontal_alignment_t),
         ('mirror_vertical', c_int),
@@ -1424,50 +1559,50 @@ def cef_time_now(cef_time):
 def cef_time_delta(cef_time1, cef_time2, delta):
     return cef_time_delta._api_(cef_time1, cef_time2, delta)
 
-#void cef_trace_event_instant(char* category, char* name, char* arg1_name, uint64 arg1_val, char* arg2_name, uint64 arg2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_instant", POINTER(char), POINTER(char), POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_instant(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy):
-    return cef_trace_event_instant._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy)
+#void cef_trace_event_instant(char* category, char* name, char* arg1_name, uint64_t arg1_val, char* arg2_name, uint64_t arg2_val);
+@CEFENTRY(c_void, "cef_trace_event_instant", POINTER(char), POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_instant(category, name, arg1_name, arg1_val, arg2_name, arg2_val):
+    return cef_trace_event_instant._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 
-#void cef_trace_event_begin(char* category, char* name, char* arg1_name, uint64 arg1_val, char* arg2_name, uint64 arg2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_begin", POINTER(char), POINTER(char), POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_begin(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy):
-    return cef_trace_event_begin._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy)
+#void cef_trace_event_begin(char* category, char* name, char* arg1_name, uint64_t arg1_val, char* arg2_name, uint64_t arg2_val);
+@CEFENTRY(c_void, "cef_trace_event_begin", POINTER(char), POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_begin(category, name, arg1_name, arg1_val, arg2_name, arg2_val):
+    return cef_trace_event_begin._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 
-#void cef_trace_event_end(char* category, char* name, char* arg1_name, uint64 arg1_val, char* arg2_name, uint64 arg2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_end", POINTER(char), POINTER(char), POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_end(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy):
-    return cef_trace_event_end._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val, copy)
+#void cef_trace_event_end(char* category, char* name, char* arg1_name, uint64_t arg1_val, char* arg2_name, uint64_t arg2_val);
+@CEFENTRY(c_void, "cef_trace_event_end", POINTER(char), POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_end(category, name, arg1_name, arg1_val, arg2_name, arg2_val):
+    return cef_trace_event_end._api_(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
 
-#void cef_trace_counter(char* category, char* name, char* value1_name, uint64 value1_val, char* value2_name, uint64 value2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_counter", POINTER(char), POINTER(char), POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_counter(category, name, value1_name, value1_val, value2_name, value2_val, copy):
-    return cef_trace_counter._api_(category, name, value1_name, value1_val, value2_name, value2_val, copy)
+#void cef_trace_counter(char* category, char* name, char* value1_name, uint64_t value1_val, char* value2_name, uint64_t value2_val);
+@CEFENTRY(c_void, "cef_trace_counter", POINTER(char), POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_counter(category, name, value1_name, value1_val, value2_name, value2_val):
+    return cef_trace_counter._api_(category, name, value1_name, value1_val, value2_name, value2_val)
 
-#void cef_trace_counter_id(char* category, char* name, uint64 id, char* value1_name, uint64 value1_val, char* value2_name, uint64 value2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_counter_id", POINTER(char), POINTER(char), uint64, POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_counter_id(category, name, id, value1_name, value1_val, value2_name, value2_val, copy):
-    return cef_trace_counter_id._api_(category, name, id, value1_name, value1_val, value2_name, value2_val, copy)
+#void cef_trace_counter_id(char* category, char* name, uint64_t id, char* value1_name, uint64_t value1_val, char* value2_name, uint64_t value2_val);
+@CEFENTRY(c_void, "cef_trace_counter_id", POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_counter_id(category, name, id, value1_name, value1_val, value2_name, value2_val):
+    return cef_trace_counter_id._api_(category, name, id, value1_name, value1_val, value2_name, value2_val)
 
-#void cef_trace_event_async_begin(char* category, char* name, uint64 id, char* arg1_name, uint64 arg1_val, char* arg2_name, uint64 arg2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_async_begin", POINTER(char), POINTER(char), uint64, POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_async_begin(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy):
-    return cef_trace_event_async_begin._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy)
+#void cef_trace_event_async_begin(char* category, char* name, uint64_t id, char* arg1_name, uint64_t arg1_val, char* arg2_name, uint64_t arg2_val);
+@CEFENTRY(c_void, "cef_trace_event_async_begin", POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_async_begin(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val):
+    return cef_trace_event_async_begin._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val)
 
-#void cef_trace_event_async_step_into(char* category, char* name, uint64 id, uint64 step, char* arg1_name, uint64 arg1_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_async_step_into", POINTER(char), POINTER(char), uint64, uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_async_step_into(category, name, id, step, arg1_name, arg1_val, copy):
-    return cef_trace_event_async_step_into._api_(category, name, id, step, arg1_name, arg1_val, copy)
+#void cef_trace_event_async_step_into(char* category, char* name, uint64_t id, uint64_t step, char* arg1_name, uint64_t arg1_val);
+@CEFENTRY(c_void, "cef_trace_event_async_step_into", POINTER(char), POINTER(char), uint64_t, uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_async_step_into(category, name, id, step, arg1_name, arg1_val):
+    return cef_trace_event_async_step_into._api_(category, name, id, step, arg1_name, arg1_val)
 
-#void cef_trace_event_async_step_past(char* category, char* name, uint64 id, uint64 step, char* arg1_name, uint64 arg1_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_async_step_past", POINTER(char), POINTER(char), uint64, uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_async_step_past(category, name, id, step, arg1_name, arg1_val, copy):
-    return cef_trace_event_async_step_past._api_(category, name, id, step, arg1_name, arg1_val, copy)
+#void cef_trace_event_async_step_past(char* category, char* name, uint64_t id, uint64_t step, char* arg1_name, uint64_t arg1_val);
+@CEFENTRY(c_void, "cef_trace_event_async_step_past", POINTER(char), POINTER(char), uint64_t, uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_async_step_past(category, name, id, step, arg1_name, arg1_val):
+    return cef_trace_event_async_step_past._api_(category, name, id, step, arg1_name, arg1_val)
 
-#void cef_trace_event_async_end(char* category, char* name, uint64 id, char* arg1_name, uint64 arg1_val, char* arg2_name, uint64 arg2_val, int copy);
-@CEFENTRY(c_void, "cef_trace_event_async_end", POINTER(char), POINTER(char), uint64, POINTER(char), uint64, POINTER(char), uint64, c_int)
-def cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy):
-    return cef_trace_event_async_end._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val, copy)
+#void cef_trace_event_async_end(char* category, char* name, uint64_t id, char* arg1_name, uint64_t arg1_val, char* arg2_name, uint64_t arg2_val);
+@CEFENTRY(c_void, "cef_trace_event_async_end", POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t, POINTER(char), uint64_t)
+def cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val):
+    return cef_trace_event_async_end._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val)
 
 #char* cef_api_hash(int entry);
 @CEFENTRY(POINTER(char), "cef_api_hash", c_int)

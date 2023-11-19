@@ -65,7 +65,7 @@ class CefLifeSpanHandler(cef.cef_life_span_handler_t):
 
 class Client(cef.cef_client_t):
     def __init__(self):
-        super().__init__()
+        cef.cef_client_t.__init__(self)
         self.life_span_handler = CefLifeSpanHandler()
         self.load_handler = CefLoadHandler()
     def py_get_life_span_handler(self, *args):
