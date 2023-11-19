@@ -25,10 +25,8 @@ print("chrome_version_info {}.{}.{}.{}".format(
 
 hashname = ["platform", "universal", "commit"]
 for i in range(3):
-    v = bytes(cefi.cef_api_hash(i)[:40]).decode("ascii")
+    v = ''.join(map(chr, cefi.cef_api_hash(i)[:40]))
     print("hash({})= {}".format(hashname[i], v))
-for i in range(8):
-    print(cefi.cef_version_info(i))
 
 assert cefi.CEF_VERSION_MAJOR == cefi.cef_version_info(0)
 assert cefi.CEF_VERSION_MINOR == cefi.cef_version_info(1)
@@ -40,4 +38,5 @@ assert cefi.CHROME_VERSION_MINOR == cefi.cef_version_info(5)
 assert cefi.CHROME_VERSION_BUILD == cefi.cef_version_info(6)
 assert cefi.CHROME_VERSION_PATCH == cefi.cef_version_info(7)
 
-assert cefi.CEF_COMMIT_HASH == bytes(cefi.cef_api_hash(2)[:40]).decode("ascii")
+assert cefi.CEF_COMMIT_HASH == ''.join(map(chr, cefi.cef_api_hash(2)[:40]))
+#assert cefi.CEF_COMMIT_HASH == bytes(cefi.cef_api_hash(2)[:40]).decode("ascii")
