@@ -8,25 +8,20 @@ import wx
 import ctypes as ct
 from cefct import libcef
 from cefappcommon import Client
-if libcef.win:
-    import win32con
-
-
-import threading
-import appflask
-
-tflask = threading.Thread(target=appflask.app.run, daemon=True)
-tflask.start()
 
 gui = None
 
 def guiStartup():
     global gui
-    if libcef.win:
-        return
     class GUI:
         pass
     gui = GUI()
+
+    if libcef.win:
+        import win32con
+        gui.win32con = win32con
+        return
+
     import gi
 
     gi.require_version("Gtk", "3.0")
@@ -37,6 +32,14 @@ def guiStartup():
     gui.GdkX11 = GdkX11
     gui.libX11 = ctypes.CDLL("libX11.so.6")
     gui.linuxhelper = ctypes.CDLL("./linuxhelper.so")
+guiStartup()
+
+
+import threading
+import appflask
+
+tflask = threading.Thread(target=appflask.app.run, daemon=True)
+tflask.start()
 
 useTimer = False
 #useTimer = True
@@ -170,11 +173,11 @@ class Main(wx.Frame):
 
         window_info = libcef.cef_window_info_t()
         window_info.style = (
-            win32con.WS_CHILD |
-            win32con.WS_CLIPCHILDREN |
-            win32con.WS_CLIPSIBLINGS |
-            win32con.WS_TABSTOP |
-            win32con.WS_VISIBLE
+            gui.win32con.WS_CHILD |
+            gui.win32con.WS_CLIPCHILDREN |
+            gui.win32con.WS_CLIPSIBLINGS |
+            gui.win32con.WS_TABSTOP |
+            gui.win32con.WS_VISIBLE
         )
         window_info.parent_window = handle_to_use
         window_info.bounds.x = 0
@@ -265,7 +268,7 @@ class Main(wx.Frame):
                     size.width, size.height,
                     SWP_NOZORDER)
         else:
-            print('X11.onsize', hwnd)
+            #print('X11.onsize', hwnd)
             display = gui.Gdk.Display.get_default() # GdkX11.X11Display
             window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)

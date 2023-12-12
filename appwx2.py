@@ -263,7 +263,7 @@ class Main(wx.Frame):
                     size.width, size.height,
                     SWP_NOZORDER)
         else:
-            print('X11.onsize', hwnd)
+            #print('X11.onsize', hwnd)
             display = gui.Gdk.Display.get_default() # GdkX11.X11Display
             window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)

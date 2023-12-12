@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-bin/
+bin
 bin-cefdata/
 cef
 cef-source
@@ -141,3 +141,4 @@ linuxhelper.so
 crash_reporter.cfg
 screenshot.png
 screenshot-2.png
+*.tar.bz2

@@ -108,7 +108,7 @@ class Example():
             #window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
             #window.resize(width, height)
             #host.contents._notify_move_or_resize_started(host)
-            host.contents._was_resized(host)
+            host.contents.was_resized(host)
 
     def on_size_allocate(self, _, data):
         print("on-size-allocate", "w/h=", data.width, data.height)
@@ -121,7 +121,7 @@ class Example():
             window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
             window.resize(data.width, data.height)
             # host.contents._notify_move_or_resize_started(host)
-            host.contents._was_resized(host)
+            host.contents.was_resized(host)
 
 if __name__ == '__main__':
     gtkmain()

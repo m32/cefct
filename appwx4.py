@@ -5,7 +5,35 @@ import wx
 import ctypes as ct
 import cefapp
 from cefct import libcef as cef
-import win32con
+
+gui = None
+
+def guiStartup():
+    global gui
+    class GUI:
+        win = False
+        linux = False
+
+    gui = GUI()
+
+    if cef.win:
+        import win32con
+        gui.win = True
+        gui.win32con = win32con
+        return
+
+    import gi
+
+    gui.linux = True
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk, Gdk, GdkX11
+
+    gui.Gtk = Gtk
+    gui.Gdk = Gdk
+    gui.GdkX11 = GdkX11
+    gui.libX11 = ct.CDLL("libX11.so.6")
+    gui.linuxhelper = ct.CDLL("./linuxhelper.so")
+guiStartup()
 
 useTimer = False
 useTimer = True
@@ -75,19 +103,19 @@ class CefHandler(cef.cef_client_t):
 
     def x_showmsg(self, message):
         print('*'*20, 'process_message')
-        print '\tis_valid', message.contents.is_valid(message)
-        print '\tis_read_only', message.contents.is_read_only(message)
+        print('\tis_valid', message.contents.is_valid(message))
+        print('\tis_read_only', message.contents.is_read_only(message))
         name = message.contents.get_name(message)
         name = cef.cast(name, cef.POINTER(cef.cef_string_userfree_t))
         sname = name.contents.ToString()
-        print '\tget_name', sname
+        print('\tget_name', sname)
         name.contents.Free()
         args = message.contents.get_argument_list(message)
         args = cef.cast(args, cef.POINTER(cef.cef_list_value_t))
-        print '\tget_argument_list.is_valid', args.contents.is_valid(args)
+        print('\tget_argument_list.is_valid', args.contents.is_valid(args))
         argc = args.contents.get_size(args)
-        print '\tget_argument_list.get_size', argc
-        print '\tget_shared_memory_region', message.contents.get_shared_memory_region(message)
+        print('\tget_argument_list.get_size', argc)
+        print('\tget_shared_memory_region', message.contents.get_shared_memory_region(message))
         for i in range(argc):
             t = args.contents.get_type(args, i)
             if t == cef.VTYPE_INT:
@@ -101,7 +129,7 @@ class CefHandler(cef.cef_client_t):
                 vp.contents.Free()
             else:
                 v = None
-            print '\ti={} t={} v={}'.format(i, t, v)
+            print('\ti={} t={} v={}'.format(i, t, v))
         return sname, args
 
     def py_on_process_message_received(self, xself, browser, frame, source_process, message):
@@ -175,6 +203,10 @@ class Main(wx.Frame):
 
         szv.Add(szh)
 
+        if gui.linux:
+            window = self.GetGtkWidget()
+            gui.linuxhelper.FixGtk(int(window))
+
         self.browserWindow = wx.Window(self, wx.ID_ANY, size=self.size, style=wx.WANTS_CHARS)
         self.browserWindow.Bind(wx.EVT_SET_FOCUS, self.OnBrowserWindowSetFocus)
         self.browserWindow.Bind(wx.EVT_SIZE, self.OnBrowserWindowSize)
@@ -202,21 +234,18 @@ class Main(wx.Frame):
         cef.cef_do_message_loop_work()
 
     def OnClose(self, event):
-        print('Main.OnClose')
+        print('OnClose')
         if self.browser is None:
-            # - no browser was started
-            # - buggy when not using timer - second close click will close window
             if self.timer:
                 self.timer.Stop()
                 self.timer = None
                 time.sleep(1)
             if not useTimer:
-                cef.cef_quit_message_loop()
+                libcef.cef_quit_message_loop()
             event.Skip()
             print('wx.Destroy.0')
             self.Destroy()
-            # when not using timer will not exit from app without this call
-            cef.cef_quit_message_loop()
+            libcef.cef_quit_message_loop()
             return
 
         host = self.browser.contents.get_host(self.browser)
@@ -225,11 +254,11 @@ class Main(wx.Frame):
         print('try_close_browser')
         rc = host.contents.try_close_browser(host)
         print('try_close_browser.1, rc=', rc)
-        if rc == 0:
+        if not rc:
             print('skip')
-            event.Veto()
+            event.Skip(True)
             return
-        #event.Skip()
+        event.Skip(False)
         self.browser = None
         self.Destroy()
         if self.timer:
@@ -237,23 +266,55 @@ class Main(wx.Frame):
             self.timer = None
         #if not useTimer:
         #    cef.cef_quit_message_loop()
-        print('/Main.OnClose')
+        print('/OnClose')
 
     def OnBrowser(self, event):
         if self.browser is not None:
             return
+        if gui.win:
+            return self.OnBrowserWin(event)
+        return self.OnBrowserLin(event)
 
+    def OnBrowserLin(self, event):
+        xid = self.browserWindow.GetHandle()
+        assert xid, "Window handle not available"
+        (width, height) = self.browserWindow.GetClientSize().Get()
+
+        window_info = cef.cef_window_info_t()
+        window_info.window_name = cef.cef_string_t("cef window")
+        window_info.parent_window = xid
+        window_info.bounds.x = 0
+        window_info.bounds.y = 0
+        window_info.bounds.width = width
+        window_info.bounds.height = height
+
+        cef_url = cef.cef_string_t(URL)
+        browser_settings = cef.cef_browser_settings_t()
+        browser_settings.size = cef.sizeof(cef.cef_browser_settings_t)
+        extra_info = None
+        request_context = None
+
+        self.browser = cef.cef_browser_host_create_browser_sync(
+            window_info,
+            self.handler,
+            cef_url,
+            browser_settings,
+            extra_info,
+            request_context
+        )
+
+    def OnBrowserWin(self, event):
         handle_to_use = self.browserWindow.GetHandle()
         assert handle_to_use, "Window handle not available"
         (width, height) = self.browserWindow.GetClientSize().Get()
 
         window_info = cef.cef_window_info_t()
         window_info.style = (
-            win32con.WS_CHILD |
-            win32con.WS_CLIPCHILDREN |
-            win32con.WS_CLIPSIBLINGS |
-            win32con.WS_TABSTOP |
-            win32con.WS_VISIBLE
+            gui.win32con.WS_CHILD |
+            gui.win32con.WS_CLIPCHILDREN |
+            gui.win32con.WS_CLIPSIBLINGS |
+            gui.win32con.WS_TABSTOP |
+            gui.win32con.WS_VISIBLE
         )
         window_info.parent_window = handle_to_use
         window_info.bounds.x = 0
@@ -305,10 +366,21 @@ class Main(wx.Frame):
         host.contents.set_focus(host, 1)
         # browser.SetFocus(True)
 
-    def OnBrowserWindowSize(self, evt):
-        evt.Skip()
+    def OnBrowserWindowSize(self, event):
+        event.Skip()
         if self.browser is None:
             return
+        if gui.win:
+            return self.OnBrowserWindowSizeWin(event)
+        return self.OnBrowserWindowSizeLin(event)
+
+    def OnBrowserWindowSizeLin(self, event):
+        display = gui.Gdk.Display.get_default() # GdkX11.X11Display
+        window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
+        window.resize(size.width, size.height)
+        host.contents.was_resized(host)
+
+    def OnBrowserWindowSizeWin(self, event):
         size = self.browserWindow.GetClientSize()
         # browser.SetBounds(x, y, width, height)
         host = self.browser.contents.get_host(self.browser)

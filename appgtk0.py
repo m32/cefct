@@ -77,7 +77,7 @@ def MAIN():
                 window = GdkX11.X11Window.foreign_new_for_display(display, hwnd)
                 window.resize(data.width, data.height)
                 # host.contents._notify_move_or_resize_started(host)
-                host.contents._was_resized(host)
+                host.contents.was_resized(host)
                 print("8")
 
         def on_focus_in(self, *_):
