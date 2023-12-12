@@ -1479,25 +1479,23 @@ class cef_touch_handle_state_t(Structure):
         ('alpha', float),
     )
 
-if win:
+if linux:
 
     class cef_main_args_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
-            ('instance', HINSTANCE),
+            ('argc', c_int),
+            ('argv', POINTER(POINTER(char))),
         )
 
-if win:
+if linux:
 
     class cef_window_info_t(Structure):
         _align_ = CEFALIGN
         _fields_ = (
-            ('ex_style', DWORD),
             ('window_name', cef_string_t),
-            ('style', DWORD),
             ('bounds', cef_rect_t),
             ('parent_window', cef_window_handle_t),
-            ('menu', HMENU),
             ('windowless_rendering_enabled', c_int),
             ('shared_texture_enabled', c_int),
             ('external_begin_frame_enabled', c_int),
@@ -1603,6 +1601,12 @@ def cef_trace_event_async_step_past(category, name, id, step, arg1_name, arg1_va
 @CEFENTRY(c_void, "cef_trace_event_async_end", POINTER(char), POINTER(char), uint64_t, POINTER(char), uint64_t, POINTER(char), uint64_t)
 def cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val):
     return cef_trace_event_async_end._api_(category, name, id, arg1_name, arg1_val, arg2_name, arg2_val)
+
+if linux:
+    #XDisplay* cef_get_xdisplay(void);
+    @CEFENTRY(POINTER(XDisplay), "cef_get_xdisplay")
+    def cef_get_xdisplay():
+        return cef_get_xdisplay._api_()
 
 #char* cef_api_hash(int entry);
 @CEFENTRY(POINTER(char), "cef_api_hash", c_int)
