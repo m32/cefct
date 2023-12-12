@@ -39,6 +39,6 @@ Show used CEF version and assert compability with used CEF version
 
 If you want to check the operation of another version of CEF,
 you will have to download its standard distribution and generate the required files.
-The commands ./cefcapi (linux) and cefcapi.cmd (windows) are used for this purpose,
+The commands ./cefcapi.sh (linux) and cefcapi.cmd (windows) are used for this purpose,
 but first create a soft link from cef_binary .... to the cef directory and prepare
 the cefclient file (cefclient.exe)
