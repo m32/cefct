@@ -30,6 +30,9 @@ This library is at the stage of testing and playing, but something can be starte
 - appwx4.py - most advanced cross platform application with flask and callbacks
 - appwxflask.py - wxPython application with flask
 
+TLS error fix (https://www.magpcss.org/ceforum/viewtopic.php?f=6&t=19622):
+export LD_PRELOAD=$PWD/bin/libcef.so && ./appwx3.py
+
 Common application libraries:
 - cefapp.py
 - cefappcommon.py
