@@ -109,13 +109,13 @@ class TypeDef(Element):
             line = elem.split(" ", 1)
             if line[1] == 'base':
                 if self.basename is not None:
-                    print('bang', self.basename, line)
+                    print('base already set:', self.basename, line)
                 self.basename = line[0]
                 if self.basename not in (
                     'cef_base_ref_counted_t',
                     'cef_base_scoped_t',
                 ):
-                    print('warning', self.typename, line)
+                    print('struct inheritance warning', self.typename, line)
                 continue
             elem = elem.strip()
             i = elem.find("(")
@@ -158,7 +158,7 @@ class Parser(object):
             start = data.find("{", start)
             end = data.find(s, start)
             if end == -1:
-                print("bang", fqname, start, name)
+                print("structure end definition not found", fqname, start, name)
             lines = data[start + 1 : end]
             start = end + len(s)
             lines = lines.replace("CEF_CALLBACK", "")
@@ -298,13 +298,21 @@ class {}(Structure):
             )
             for typedata in typedef.typedata:
                 result = typedata.result
-                if result.split("(")[0] == "POINTER":
+                s = result.split("(")
+                if s[0] == "POINTER" and s[1] != 'c_void)':
+                    fp.write(
+                    """\
+    # CFUNCTYPE({}{}),
+""".format(
+                        result, typedata.sargtypes
+                    )
+                )
                     result = "POINTER(c_void)"
                 fp.write(
                     """\
-    CFUNCTYPE({}{}),
+    CFUNCTYPE({}{}), # {}
 """.format(
-                        result, typedata.sargtypes
+                        result, typedata.sargtypes, typedata.lp
                     )
                 )
             fp.write(

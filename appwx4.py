@@ -162,7 +162,7 @@ class CefHandler(cef.cef_client_t):
                 def py_execute(self, this):
                     print('xtask.py_execute')
         else:
-            pyresult = cef.cef_string_t('{a:"some success"}')
+            pyresult = cef.cef_string_t('{a:"some success data"}')
             msg = cef.cef_process_message_create(cef.cef_string_t("cefQueryMsg"))
             args = message.contents.get_argument_list(msg)
             args = cef.cast(args, cef.POINTER(cef.cef_list_value_t))

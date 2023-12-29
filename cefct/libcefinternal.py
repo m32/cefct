@@ -9,16 +9,16 @@ from cefct.libcefinternal_t import *
 # https://v4.chriskrycho.com/2015/ctypes-structures-and-dll-exports.html
 #
 
-CEF_VERSION = "119.4.3+gc76a3b9+chromium-119.0.6045.159"
-CEF_VERSION_MAJOR = 119
-CEF_VERSION_MINOR = 4
-CEF_VERSION_PATCH = 3
-CEF_COMMIT_NUMBER = 2864
-CEF_COMMIT_HASH = "c76a3b9f2e3fd582512e89fd0e901368bac1a822"
-CHROME_VERSION_MAJOR = 119
+CEF_VERSION = "120.1.10+g3ce3184+chromium-120.0.6099.129"
+CEF_VERSION_MAJOR = 120
+CEF_VERSION_MINOR = 1
+CEF_VERSION_PATCH = 10
+CEF_COMMIT_NUMBER = 2878
+CEF_COMMIT_HASH = "3ce31844f897a30bc5314dbfd64997c71e257cd7"
+CHROME_VERSION_MAJOR = 120
 CHROME_VERSION_MINOR = 0
-CHROME_VERSION_BUILD = 6045
-CHROME_VERSION_PATCH = 159
+CHROME_VERSION_BUILD = 6099
+CHROME_VERSION_PATCH = 129
 
 import enum
 class IntEnum(enum.IntEnum):
@@ -1000,6 +1000,7 @@ if 1:
     CEF_PERMISSION_TYPE_STORAGE_ACCESS = 131072
     CEF_PERMISSION_TYPE_VR_SESSION = 262144
     CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 524288
+    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 1048576
 
 
 #class cef_permission_request_result_t(enum):
@@ -1242,6 +1243,7 @@ class cef_settings_t(Structure):
         ('cookieable_schemes_list', cef_string_t),
         ('cookieable_schemes_exclude_defaults', c_int),
         ('chrome_policy_id', cef_string_t),
+        ('chrome_app_icon_id', c_int),
     )
 
 class cef_request_context_settings_t(Structure):

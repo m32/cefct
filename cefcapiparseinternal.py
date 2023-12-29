@@ -9,7 +9,7 @@ import string
 class Element(object):
     def parseArg(self, arg):
         arg = arg.strip()
-        print('arg=', arg)
+        # print('arg=', arg)
         atype = re.match(r"\w+", arg)[0]
         aname = arg[len(atype) :].strip()
         atype1 = re.match(r"\w+", aname)
@@ -150,7 +150,7 @@ class Parser(object):
             start = data.find("{", start)
             end = data.find(s, start)
             if end == -1:
-                print("bang", fqname, start, name)
+                print("no structure end definition found", fqname, start, name)
             lines = data[start + 1 : end]
             start = end + len(s)
             lines = lines.replace("const ", "")

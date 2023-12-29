@@ -113,14 +113,17 @@ class cef_browser_process_handler_t(Structure):
         self.on_register_custom_preferences = self._callbacks[0](self.py_on_register_custom_preferences)
         self.on_context_initialized = self._callbacks[1](self.py_on_context_initialized)
         self.on_before_child_process_launch = self._callbacks[2](self.py_on_before_child_process_launch)
-        self.on_schedule_message_pump_work = self._callbacks[3](self.py_on_schedule_message_pump_work)
-        self.get_default_client = self._callbacks[4](self.py_get_default_client)
+        self.on_already_running_app_relaunch = self._callbacks[3](self.py_on_already_running_app_relaunch)
+        self.on_schedule_message_pump_work = self._callbacks[4](self.py_on_schedule_message_pump_work)
+        self.get_default_client = self._callbacks[5](self.py_get_default_client)
 
     def py_on_register_custom_preferences(self, xself, type, registrar):
         return 0
     def py_on_context_initialized(self, xself):
         return 0
     def py_on_before_child_process_launch(self, xself, command_line):
+        return 0
+    def py_on_already_running_app_relaunch(self, xself, command_line, current_directory):
         return 0
     def py_on_schedule_message_pump_work(self, xself, delay_ms):
         return 0
@@ -1361,28 +1364,33 @@ class cef_zip_reader_t(Structure):
 
 
 cef_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(double, POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_value_t)), # 4
+    # CFUNCTYPE(POINTER(cef_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)), # 5
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_value_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 8
+    CFUNCTYPE(double, POINTER(cef_value_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)), # 10
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)), # 11
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)), # 12
+    # CFUNCTYPE(POINTER(cef_list_value_t), POINTER(cef_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_value_t)), # 13
+    CFUNCTYPE(c_int, POINTER(cef_value_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int), # 15
+    CFUNCTYPE(c_int, POINTER(cef_value_t), c_int), # 16
+    CFUNCTYPE(c_int, POINTER(cef_value_t), double), # 17
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_string_t)), # 18
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_binary_value_t)), # 19
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_dictionary_value_t)), # 20
+    CFUNCTYPE(c_int, POINTER(cef_value_t), POINTER(cef_list_value_t)), # 21
 )
 cef_value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1412,8 +1420,8 @@ cef_value_t._fields_ = (
 
 
 cef_accessibility_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_accessibility_handler_t), POINTER(cef_value_t)),
-    CFUNCTYPE(c_void, POINTER(cef_accessibility_handler_t), POINTER(cef_value_t)),
+    CFUNCTYPE(c_void, POINTER(cef_accessibility_handler_t), POINTER(cef_value_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_accessibility_handler_t), POINTER(cef_value_t)), # 1
 )
 cef_accessibility_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1423,26 +1431,30 @@ cef_accessibility_handler_t._fields_ = (
 
 
 cef_command_line_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), c_int, POINTER(POINTER(char))),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_map_t),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)), # 1
+    # CFUNCTYPE(POINTER(cef_command_line_t), POINTER(cef_command_line_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), c_int, POINTER(POINTER(char))), # 3
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_command_line_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)), # 7
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_command_line_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 9
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 11
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_command_line_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_command_line_t), POINTER(cef_string_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_map_t), # 13
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 15
+    CFUNCTYPE(c_int, POINTER(cef_command_line_t)), # 16
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), cef_string_list_t), # 17
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_command_line_t), POINTER(cef_string_t)), # 19
 )
 cef_command_line_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1470,7 +1482,7 @@ cef_command_line_t._fields_ = (
 
 
 cef_scheme_registrar_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_scheme_registrar_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_scheme_registrar_t), POINTER(cef_string_t), c_int), # 0
 )
 cef_scheme_registrar_t._fields_ = (
     ('_base', cef_base_scoped_t),
@@ -1479,11 +1491,14 @@ cef_scheme_registrar_t._fields_ = (
 
 
 cef_app_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_app_t), POINTER(cef_string_t), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_app_t), POINTER(cef_scheme_registrar_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)),
+    CFUNCTYPE(c_void, POINTER(cef_app_t), POINTER(cef_string_t), POINTER(cef_command_line_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_app_t), POINTER(cef_scheme_registrar_t)), # 1
+    # CFUNCTYPE(POINTER(cef_resource_bundle_handler_t), POINTER(cef_app_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)), # 2
+    # CFUNCTYPE(POINTER(cef_browser_process_handler_t), POINTER(cef_app_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)), # 3
+    # CFUNCTYPE(POINTER(cef_render_process_handler_t), POINTER(cef_app_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_app_t)), # 4
 )
 cef_app_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1496,27 +1511,32 @@ cef_app_t._fields_ = (
 
 
 cef_browser_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), int64_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(size_t, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t), POINTER(size_t), POINTER(int64_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_t), cef_string_list_t),
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 0
+    # CFUNCTYPE(POINTER(cef_browser_host_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_browser_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_browser_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_browser_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_browser_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_browser_t)), # 9
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_browser_t), POINTER(cef_browser_t)), # 11
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_browser_t)), # 13
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)), # 14
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)), # 15
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t), int64_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), int64_t), # 16
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), POINTER(cef_string_t)), # 17
+    CFUNCTYPE(size_t, POINTER(cef_browser_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_browser_t), POINTER(size_t), POINTER(int64_t)), # 19
+    CFUNCTYPE(c_void, POINTER(cef_browser_t), cef_string_list_t), # 20
 )
 cef_browser_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1545,11 +1565,11 @@ cef_browser_t._fields_ = (
 
 
 cef_audio_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t)),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64_t),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_audio_parameters_t), c_int), # 1
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(POINTER(float)), c_int, int64_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_audio_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)), # 4
 )
 cef_audio_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1562,8 +1582,8 @@ cef_audio_handler_t._fields_ = (
 
 
 cef_auth_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_auth_callback_t)), # 1
 )
 cef_auth_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1573,7 +1593,7 @@ cef_auth_callback_t._fields_ = (
 
 
 cef_before_download_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_before_download_callback_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_before_download_callback_t), POINTER(cef_string_t), c_int), # 0
 )
 cef_before_download_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1582,14 +1602,15 @@ cef_before_download_callback_t._fields_ = (
 
 
 cef_binary_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(size_t, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(size_t, POINTER(cef_binary_value_t), POINTER(c_void), size_t, size_t),
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)), # 3
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_binary_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)), # 4
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_binary_value_t)), # 5
+    CFUNCTYPE(size_t, POINTER(cef_binary_value_t)), # 6
+    CFUNCTYPE(size_t, POINTER(cef_binary_value_t), POINTER(c_void), size_t, size_t), # 7
 )
 cef_binary_value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1605,9 +1626,11 @@ cef_binary_value_t._fields_ = (
 
 
 cef_layout_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)),
-    CFUNCTYPE(c_int, POINTER(cef_layout_t)),
+    # CFUNCTYPE(POINTER(cef_box_layout_t), POINTER(cef_layout_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)), # 0
+    # CFUNCTYPE(POINTER(cef_fill_layout_t), POINTER(cef_layout_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_layout_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_layout_t)), # 2
 )
 cef_layout_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1618,56 +1641,67 @@ cef_layout_t._fields_ = (
 
 
 cef_view_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_size_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(cef_point_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_insets_t)),
-    CFUNCTYPE(cef_insets_t, POINTER(cef_view_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_t), cef_color_t),
-    CFUNCTYPE(cef_color_t, POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)),
+    # CFUNCTYPE(POINTER(cef_browser_view_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 0
+    # CFUNCTYPE(POINTER(cef_button_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 1
+    # CFUNCTYPE(POINTER(cef_panel_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 2
+    # CFUNCTYPE(POINTER(cef_scroll_view_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 3
+    # CFUNCTYPE(POINTER(cef_textfield_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 4
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 5
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int), # 6
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t)), # 9
+    # CFUNCTYPE(POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 10
+    # CFUNCTYPE(POINTER(cef_window_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 11
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int), # 13
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int), # 15
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t)), # 16
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_view_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_view_t), c_int), # 17
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_rect_t)), # 18
+    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)), # 19
+    CFUNCTYPE(cef_rect_t, POINTER(cef_view_t)), # 20
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_size_t)), # 21
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)), # 22
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_point_t)), # 23
+    CFUNCTYPE(cef_point_t, POINTER(cef_view_t)), # 24
+    CFUNCTYPE(c_void, POINTER(cef_view_t), POINTER(cef_insets_t)), # 25
+    CFUNCTYPE(cef_insets_t, POINTER(cef_view_t)), # 26
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)), # 27
+    CFUNCTYPE(c_void, POINTER(cef_view_t)), # 28
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)), # 29
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_t)), # 30
+    CFUNCTYPE(c_int, POINTER(cef_view_t), c_int), # 31
+    CFUNCTYPE(c_void, POINTER(cef_view_t)), # 32
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int), # 33
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 34
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 35
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int), # 36
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 37
+    CFUNCTYPE(c_void, POINTER(cef_view_t), c_int), # 38
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 39
+    CFUNCTYPE(c_int, POINTER(cef_view_t)), # 40
+    CFUNCTYPE(c_void, POINTER(cef_view_t)), # 41
+    CFUNCTYPE(c_void, POINTER(cef_view_t), cef_color_t), # 42
+    CFUNCTYPE(cef_color_t, POINTER(cef_view_t)), # 43
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)), # 44
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)), # 45
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)), # 46
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_point_t)), # 47
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)), # 48
+    CFUNCTYPE(c_int, POINTER(cef_view_t), POINTER(cef_view_t), POINTER(cef_point_t)), # 49
 )
 cef_view_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1725,8 +1759,8 @@ cef_view_t._fields_ = (
 
 
 cef_box_layout_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t), c_int), # 0
+    CFUNCTYPE(c_void, POINTER(cef_box_layout_t), POINTER(cef_view_t)), # 1
 )
 cef_box_layout_t._fields_ = (
     ('_base', cef_layout_t),
@@ -1736,7 +1770,7 @@ cef_box_layout_t._fields_ = (
 
 
 cef_run_file_dialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_run_file_dialog_callback_t), cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_run_file_dialog_callback_t), cef_string_list_t), # 0
 )
 cef_run_file_dialog_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1745,7 +1779,7 @@ cef_run_file_dialog_callback_t._fields_ = (
 
 
 cef_download_image_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_download_image_callback_t), POINTER(cef_string_t), c_int, POINTER(cef_image_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_image_callback_t), POINTER(cef_string_t), c_int, POINTER(cef_image_t)), # 0
 )
 cef_download_image_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1754,7 +1788,7 @@ cef_download_image_callback_t._fields_ = (
 
 
 cef_pdf_print_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_pdf_print_callback_t), POINTER(cef_string_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_pdf_print_callback_t), POINTER(cef_string_t), c_int), # 0
 )
 cef_pdf_print_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1763,25 +1797,43 @@ cef_pdf_print_callback_t._fields_ = (
 
 
 cef_client_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)),
-    CFUNCTYPE(c_int, POINTER(cef_client_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
+    # CFUNCTYPE(POINTER(cef_audio_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 0
+    # CFUNCTYPE(POINTER(cef_command_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 1
+    # CFUNCTYPE(POINTER(cef_context_menu_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 2
+    # CFUNCTYPE(POINTER(cef_dialog_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 3
+    # CFUNCTYPE(POINTER(cef_display_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 4
+    # CFUNCTYPE(POINTER(cef_download_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 5
+    # CFUNCTYPE(POINTER(cef_drag_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 6
+    # CFUNCTYPE(POINTER(cef_find_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 7
+    # CFUNCTYPE(POINTER(cef_focus_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 8
+    # CFUNCTYPE(POINTER(cef_frame_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 9
+    # CFUNCTYPE(POINTER(cef_permission_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 10
+    # CFUNCTYPE(POINTER(cef_jsdialog_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 11
+    # CFUNCTYPE(POINTER(cef_keyboard_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 12
+    # CFUNCTYPE(POINTER(cef_life_span_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 13
+    # CFUNCTYPE(POINTER(cef_load_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 14
+    # CFUNCTYPE(POINTER(cef_print_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 15
+    # CFUNCTYPE(POINTER(cef_render_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 16
+    # CFUNCTYPE(POINTER(cef_request_handler_t), POINTER(cef_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_client_t)), # 17
+    CFUNCTYPE(c_int, POINTER(cef_client_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)), # 18
 )
 cef_client_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1808,35 +1860,41 @@ cef_client_t._fields_ = (
 
 
 cef_dictionary_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), c_int),
-    CFUNCTYPE(size_t, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(double, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t)), # 4
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), c_int), # 5
+    CFUNCTYPE(size_t, POINTER(cef_dictionary_value_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), cef_string_list_t), # 9
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 10
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 11
+    # CFUNCTYPE(POINTER(cef_value_t), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 13
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 14
+    CFUNCTYPE(double, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 15
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 16
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 17
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 18
+    # CFUNCTYPE(POINTER(cef_list_value_t), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 19
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_value_t)), # 20
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t)), # 21
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int), # 22
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), c_int), # 23
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), double), # 24
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 25
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_binary_value_t)), # 26
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t)), # 27
+    CFUNCTYPE(c_int, POINTER(cef_dictionary_value_t), POINTER(cef_string_t), POINTER(cef_list_value_t)), # 28
 )
 cef_dictionary_value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1873,11 +1931,11 @@ cef_dictionary_value_t._fields_ = (
 
 
 cef_dev_tools_message_observer_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(c_void), size_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_void), size_t), # 1
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(c_void), size_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_dev_tools_message_observer_t), POINTER(cef_browser_t)), # 4
 )
 cef_dev_tools_message_observer_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1890,7 +1948,7 @@ cef_dev_tools_message_observer_t._fields_ = (
 
 
 cef_navigation_entry_visitor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_visitor_t), POINTER(cef_navigation_entry_t), c_int, c_int, c_int),
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_visitor_t), POINTER(cef_navigation_entry_t), c_int, c_int, c_int), # 0
 )
 cef_navigation_entry_visitor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1899,33 +1957,42 @@ cef_navigation_entry_visitor_t._fields_ = (
 
 
 cef_drag_data_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(size_t, POINTER(cef_drag_data_t), POINTER(cef_stream_writer_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)),
-    CFUNCTYPE(cef_point_t, POINTER(cef_drag_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)),
+    # CFUNCTYPE(POINTER(cef_drag_data_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)), # 4
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 5
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 7
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 8
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 10
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 11
+    CFUNCTYPE(size_t, POINTER(cef_drag_data_t), POINTER(cef_stream_writer_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t), # 13
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t), cef_string_list_t), # 14
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 16
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 17
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 19
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t)), # 20
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)), # 21
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 22
+    CFUNCTYPE(c_void, POINTER(cef_drag_data_t)), # 23
+    # CFUNCTYPE(POINTER(cef_image_t), POINTER(cef_drag_data_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_drag_data_t)), # 24
+    CFUNCTYPE(cef_point_t, POINTER(cef_drag_data_t)), # 25
+    CFUNCTYPE(c_int, POINTER(cef_drag_data_t)), # 26
 )
 cef_drag_data_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -1960,72 +2027,78 @@ cef_drag_data_t._fields_ = (
 
 
 cef_browser_host_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(cef_window_handle_t, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(cef_window_handle_t, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), cef_zoom_command_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_zoom_command_t),
-    CFUNCTYPE(double, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(double, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), double),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_run_file_dialog_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, uint32_t, c_int, POINTER(cef_download_image_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), POINTER(cef_pdf_print_settings_t), POINTER(cef_pdf_print_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_window_info_t), POINTER(cef_client_t), POINTER(cef_browser_settings_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), c_int, POINTER(cef_string_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t), POINTER(cef_dev_tools_message_observer_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_navigation_entry_visitor_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_paint_element_type_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_key_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), cef_mouse_button_type_t, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_touch_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), size_t, POINTER(cef_composition_underline_t), POINTER(cef_range_t), POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), POINTER(cef_range_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_drag_data_t), POINTER(cef_mouse_event_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, c_int, cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_state_t),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, POINTER(cef_size_t), POINTER(cef_size_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, cef_window_open_disposition_t),
+    # CFUNCTYPE(POINTER(cef_browser_t), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 1
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 3
+    CFUNCTYPE(cef_window_handle_t, POINTER(cef_browser_host_t)), # 4
+    CFUNCTYPE(cef_window_handle_t, POINTER(cef_browser_host_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 6
+    # CFUNCTYPE(POINTER(cef_client_t), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)), # 7
+    # CFUNCTYPE(POINTER(cef_request_context_t), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), cef_zoom_command_t), # 9
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_zoom_command_t), # 10
+    CFUNCTYPE(double, POINTER(cef_browser_host_t)), # 11
+    CFUNCTYPE(double, POINTER(cef_browser_host_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), double), # 13
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_run_file_dialog_callback_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, uint32_t, c_int, POINTER(cef_download_image_callback_t)), # 16
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 17
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), POINTER(cef_pdf_print_settings_t), POINTER(cef_pdf_print_callback_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), c_int, c_int, c_int), # 19
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 20
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_window_info_t), POINTER(cef_client_t), POINTER(cef_browser_settings_t), POINTER(cef_point_t)), # 21
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 22
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 23
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), POINTER(c_void), size_t), # 24
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), c_int, POINTER(cef_string_t), POINTER(cef_dictionary_value_t)), # 25
+    # CFUNCTYPE(POINTER(cef_registration_t), POINTER(cef_browser_host_t), POINTER(cef_dev_tools_message_observer_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t), POINTER(cef_dev_tools_message_observer_t)), # 26
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_navigation_entry_visitor_t), c_int), # 27
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)), # 28
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t)), # 29
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 30
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 31
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 32
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 33
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_paint_element_type_t), # 34
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 35
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_key_event_t)), # 36
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), cef_mouse_button_type_t, c_int, c_int), # 37
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), c_int), # 38
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), c_int, c_int), # 39
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_touch_event_t)), # 40
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 41
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 42
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 43
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 44
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), size_t, POINTER(cef_composition_underline_t), POINTER(cef_range_t), POINTER(cef_range_t)), # 45
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_string_t), POINTER(cef_range_t), c_int), # 46
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 47
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 48
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_drag_data_t), POINTER(cef_mouse_event_t), cef_drag_operations_mask_t), # 49
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t), cef_drag_operations_mask_t), # 50
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 51
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), POINTER(cef_mouse_event_t)), # 52
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, c_int, cef_drag_operations_mask_t), # 53
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t)), # 54
+    # CFUNCTYPE(POINTER(cef_navigation_entry_t), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)), # 55
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), cef_state_t), # 56
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, POINTER(cef_size_t), POINTER(cef_size_t)), # 57
+    # CFUNCTYPE(POINTER(cef_extension_t), POINTER(cef_browser_host_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_host_t)), # 58
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 59
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 60
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 61
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t)), # 62
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int), # 63
+    CFUNCTYPE(c_int, POINTER(cef_browser_host_t), c_int), # 64
+    CFUNCTYPE(c_void, POINTER(cef_browser_host_t), c_int, cef_window_open_disposition_t), # 65
 )
 cef_browser_host_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2099,7 +2172,7 @@ cef_browser_host_t._fields_ = (
 
 
 cef_preference_registrar_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_preference_registrar_t), POINTER(cef_string_t), POINTER(cef_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_preference_registrar_t), POINTER(cef_string_t), POINTER(cef_value_t)), # 0
 )
 cef_preference_registrar_t._fields_ = (
     ('_base', cef_base_scoped_t),
@@ -2108,33 +2181,36 @@ cef_preference_registrar_t._fields_ = (
 
 
 cef_browser_process_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), cef_preferences_type_t, POINTER(cef_preference_registrar_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), POINTER(cef_command_line_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_process_handler_t)),
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), cef_preferences_type_t, POINTER(cef_preference_registrar_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), POINTER(cef_command_line_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_browser_process_handler_t), POINTER(cef_command_line_t), POINTER(cef_string_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64_t), # 4
+    # CFUNCTYPE(POINTER(cef_client_t), POINTER(cef_browser_process_handler_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_process_handler_t)), # 5
 )
 cef_browser_process_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
     ('on_register_custom_preferences', cef_browser_process_handler_t._callbacks[0]),
     ('on_context_initialized', cef_browser_process_handler_t._callbacks[1]),
     ('on_before_child_process_launch', cef_browser_process_handler_t._callbacks[2]),
-    ('on_schedule_message_pump_work', cef_browser_process_handler_t._callbacks[3]),
-    ('get_default_client', cef_browser_process_handler_t._callbacks[4]),
+    ('on_already_running_app_relaunch', cef_browser_process_handler_t._callbacks[3]),
+    ('on_schedule_message_pump_work', cef_browser_process_handler_t._callbacks[4]),
+    ('get_default_client', cef_browser_process_handler_t._callbacks[5]),
 )
 
 
 cef_view_delegate_t._callbacks = (
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)),
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)), # 0
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)), # 1
+    CFUNCTYPE(cef_size_t, POINTER(cef_view_delegate_t), POINTER(cef_view_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int), # 3
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int, POINTER(cef_view_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), c_int), # 6
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t), POINTER(cef_rect_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_view_delegate_t), POINTER(cef_view_t)), # 9
 )
 cef_view_delegate_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2152,9 +2228,11 @@ cef_view_delegate_t._fields_ = (
 
 
 cef_browser_view_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_view_t), c_int),
+    # CFUNCTYPE(POINTER(cef_browser_t), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)), # 0
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_browser_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_t), c_int), # 2
 )
 cef_browser_view_t._fields_ = (
     ('_base', cef_view_t),
@@ -2165,13 +2243,14 @@ cef_browser_view_t._fields_ = (
 
 
 cef_browser_view_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_settings_t), POINTER(cef_client_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_view_t), c_int),
-    CFUNCTYPE(cef_chrome_toolbar_type_t, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), cef_gesture_command_t),
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_t)), # 1
+    # CFUNCTYPE(POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_settings_t), POINTER(cef_client_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_settings_t), POINTER(cef_client_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), POINTER(cef_browser_view_t), c_int), # 3
+    CFUNCTYPE(cef_chrome_toolbar_type_t, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_browser_view_delegate_t), POINTER(cef_browser_view_t), cef_gesture_command_t), # 6
 )
 cef_browser_view_delegate_t._fields_ = (
     ('_base', cef_view_delegate_t),
@@ -2186,12 +2265,13 @@ cef_browser_view_delegate_t._fields_ = (
 
 
 cef_button_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_button_t)),
-    CFUNCTYPE(c_void, POINTER(cef_button_t), cef_button_state_t),
-    CFUNCTYPE(cef_button_state_t, POINTER(cef_button_t)),
-    CFUNCTYPE(c_void, POINTER(cef_button_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)),
+    # CFUNCTYPE(POINTER(cef_label_button_t), POINTER(cef_button_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_button_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_button_t), cef_button_state_t), # 1
+    CFUNCTYPE(cef_button_state_t, POINTER(cef_button_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_button_t), c_int), # 3
+    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_button_t), POINTER(cef_string_t)), # 5
 )
 cef_button_t._fields_ = (
     ('_base', cef_view_t),
@@ -2205,8 +2285,8 @@ cef_button_t._fields_ = (
 
 
 cef_button_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)),
-    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_button_delegate_t), POINTER(cef_button_t)), # 1
 )
 cef_button_delegate_t._fields_ = (
     ('_base', cef_view_delegate_t),
@@ -2216,8 +2296,8 @@ cef_button_delegate_t._fields_ = (
 
 
 cef_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_callback_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_callback_t)), # 1
 )
 cef_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2227,11 +2307,11 @@ cef_callback_t._fields_ = (
 
 
 cef_command_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int, cef_window_open_disposition_t),
-    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_page_action_icon_type_t),
-    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_toolbar_button_type_t),
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int, cef_window_open_disposition_t), # 0
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int), # 1
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), POINTER(cef_browser_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_page_action_icon_type_t), # 3
+    CFUNCTYPE(c_int, POINTER(cef_command_handler_t), cef_chrome_toolbar_button_type_t), # 4
 )
 cef_command_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2244,7 +2324,7 @@ cef_command_handler_t._fields_ = (
 
 
 cef_completion_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_completion_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_completion_callback_t)), # 0
 )
 cef_completion_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2253,31 +2333,37 @@ cef_completion_callback_t._fields_ = (
 
 
 cef_frame_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_visitor_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_visitor_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(int64_t, POINTER(cef_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_domvisitor_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_urlrequest_client_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
+    CFUNCTYPE(c_int, POINTER(cef_frame_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_frame_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_visitor_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_visitor_t)), # 10
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_request_t)), # 11
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int), # 13
+    CFUNCTYPE(c_int, POINTER(cef_frame_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_frame_t)), # 15
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 16
+    CFUNCTYPE(int64_t, POINTER(cef_frame_t)), # 17
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 18
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 19
+    # CFUNCTYPE(POINTER(cef_browser_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 20
+    # CFUNCTYPE(POINTER(cef_v8context_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 21
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), POINTER(cef_domvisitor_t)), # 22
+    # CFUNCTYPE(POINTER(cef_urlrequest_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_urlrequest_client_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_urlrequest_client_t)), # 23
+    CFUNCTYPE(c_void, POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)), # 24
 )
 cef_frame_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2310,26 +2396,35 @@ cef_frame_t._fields_ = (
 
 
 cef_context_menu_params_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_type_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_media_type_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_media_state_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(cef_context_menu_edit_state_flags_t, POINTER(cef_context_menu_params_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 1
+    CFUNCTYPE(cef_context_menu_type_flags_t, POINTER(cef_context_menu_params_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 4
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 7
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 8
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 10
+    CFUNCTYPE(cef_context_menu_media_type_t, POINTER(cef_context_menu_params_t)), # 11
+    CFUNCTYPE(cef_context_menu_media_state_flags_t, POINTER(cef_context_menu_params_t)), # 12
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 13
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_context_menu_params_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_context_menu_params_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t), cef_string_list_t), # 15
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 16
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 17
+    CFUNCTYPE(cef_context_menu_edit_state_flags_t, POINTER(cef_context_menu_params_t)), # 18
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_params_t)), # 19
 )
 cef_context_menu_params_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2357,62 +2452,68 @@ cef_context_menu_params_t._fields_ = (
 
 
 cef_menu_model_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)),
-    CFUNCTYPE(size_t, POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, POINTER(cef_string_t)),
-    CFUNCTYPE(cef_menu_item_type_t, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(cef_menu_item_type_t, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int, c_int, c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, c_int, c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(c_int), POINTER(c_int), POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, POINTER(c_int), POINTER(c_int), POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, cef_color_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, cef_color_t),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, POINTER(cef_color_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, POINTER(cef_color_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)), # 1
+    CFUNCTYPE(size_t, POINTER(cef_menu_model_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t), c_int), # 6
+    # CFUNCTYPE(POINTER(cef_menu_model_t), POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 8
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)), # 9
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t), c_int), # 11
+    # CFUNCTYPE(POINTER(cef_menu_model_t), POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t, c_int, POINTER(cef_string_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 13
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 14
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 15
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 16
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int), # 17
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_menu_model_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int), # 18
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_menu_model_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t), # 19
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 20
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, POINTER(cef_string_t)), # 21
+    CFUNCTYPE(cef_menu_item_type_t, POINTER(cef_menu_model_t), c_int), # 22
+    CFUNCTYPE(cef_menu_item_type_t, POINTER(cef_menu_model_t), size_t), # 23
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 24
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 25
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int), # 26
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int), # 27
+    # CFUNCTYPE(POINTER(cef_menu_model_t), POINTER(cef_menu_model_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), c_int), # 28
+    # CFUNCTYPE(POINTER(cef_menu_model_t), POINTER(cef_menu_model_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_menu_model_t), size_t), # 29
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 30
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 31
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int), # 32
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int), # 33
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 34
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 35
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int), # 36
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int), # 37
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 38
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 39
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int), # 40
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int), # 41
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 42
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 43
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, c_int, c_int, c_int, c_int), # 44
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, c_int, c_int, c_int, c_int), # 45
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int), # 46
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t), # 47
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(c_int), POINTER(c_int), POINTER(c_int), POINTER(c_int)), # 48
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), size_t, POINTER(c_int), POINTER(c_int), POINTER(c_int), POINTER(c_int)), # 49
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, cef_color_t), # 50
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, cef_color_t), # 51
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, POINTER(cef_color_t)), # 52
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, cef_menu_color_type_t, POINTER(cef_color_t)), # 53
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 54
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_t), c_int, POINTER(cef_string_t)), # 55
 )
 cef_menu_model_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2476,8 +2577,8 @@ cef_menu_model_t._fields_ = (
 
 
 cef_run_context_menu_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t), c_int, cef_event_flags_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_run_context_menu_callback_t)), # 1
 )
 cef_run_context_menu_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2487,8 +2588,8 @@ cef_run_context_menu_callback_t._fields_ = (
 
 
 cef_run_quick_menu_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t), c_int, cef_event_flags_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_run_quick_menu_callback_t)), # 1
 )
 cef_run_quick_menu_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2498,13 +2599,13 @@ cef_run_quick_menu_callback_t._fields_ = (
 
 
 cef_context_menu_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t), POINTER(cef_run_context_menu_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_point_t), POINTER(cef_size_t), cef_quick_menu_edit_state_flags_t, POINTER(cef_run_quick_menu_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), POINTER(cef_menu_model_t), POINTER(cef_run_context_menu_callback_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_context_menu_params_t), c_int, cef_event_flags_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_point_t), POINTER(cef_size_t), cef_quick_menu_edit_state_flags_t, POINTER(cef_run_quick_menu_callback_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int, cef_event_flags_t), # 5
+    CFUNCTYPE(c_void, POINTER(cef_context_menu_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)), # 6
 )
 cef_context_menu_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2519,28 +2620,34 @@ cef_context_menu_handler_t._fields_ = (
 
 
 cef_request_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_request_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), cef_referrer_policy_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)),
-    CFUNCTYPE(cef_referrer_policy_t, POINTER(cef_request_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_post_data_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), cef_string_multimap_t),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), cef_string_multimap_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_post_data_t), cef_string_multimap_t),
-    CFUNCTYPE(c_int, POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)),
-    CFUNCTYPE(cef_resource_type_t, POINTER(cef_request_t)),
-    CFUNCTYPE(cef_transition_type_t, POINTER(cef_request_t)),
-    CFUNCTYPE(uint64_t, POINTER(cef_request_t)),
+    CFUNCTYPE(c_int, POINTER(cef_request_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), cef_referrer_policy_t), # 5
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)), # 6
+    CFUNCTYPE(cef_referrer_policy_t, POINTER(cef_request_t)), # 7
+    # CFUNCTYPE(POINTER(cef_post_data_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_post_data_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_request_t), cef_string_multimap_t), # 10
+    CFUNCTYPE(c_void, POINTER(cef_request_t), cef_string_multimap_t), # 11
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t), POINTER(cef_string_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int), # 13
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_post_data_t), cef_string_multimap_t), # 14
+    CFUNCTYPE(c_int, POINTER(cef_request_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_request_t), c_int), # 16
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_t)), # 17
+    CFUNCTYPE(c_void, POINTER(cef_request_t), POINTER(cef_string_t)), # 18
+    CFUNCTYPE(cef_resource_type_t, POINTER(cef_request_t)), # 19
+    CFUNCTYPE(cef_transition_type_t, POINTER(cef_request_t)), # 20
+    CFUNCTYPE(uint64_t, POINTER(cef_request_t)), # 21
 )
 cef_request_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2570,23 +2677,28 @@ cef_request_t._fields_ = (
 
 
 cef_response_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_response_t)),
-    CFUNCTYPE(cef_errorcode_t, POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_errorcode_t),
-    CFUNCTYPE(c_int, POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_response_t)), # 0
+    CFUNCTYPE(cef_errorcode_t, POINTER(cef_response_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_errorcode_t), # 2
+    CFUNCTYPE(c_int, POINTER(cef_response_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_response_t), c_int), # 4
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_response_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_response_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)), # 8
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_response_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)), # 10
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_response_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t), POINTER(cef_string_t)), # 11
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int), # 12
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t), # 13
+    CFUNCTYPE(c_void, POINTER(cef_response_t), cef_string_multimap_t), # 14
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_response_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_response_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_response_t), POINTER(cef_string_t)), # 16
 )
 cef_response_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2611,8 +2723,8 @@ cef_response_t._fields_ = (
 
 
 cef_cookie_access_filter_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_cookie_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_cookie_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_cookie_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_cookie_access_filter_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_cookie_t)), # 1
 )
 cef_cookie_access_filter_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2622,7 +2734,7 @@ cef_cookie_access_filter_t._fields_ = (
 
 
 cef_cookie_visitor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_visitor_t), POINTER(cef_cookie_t), c_int, c_int, POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_visitor_t), POINTER(cef_cookie_t), c_int, c_int, POINTER(c_int)), # 0
 )
 cef_cookie_visitor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2631,7 +2743,7 @@ cef_cookie_visitor_t._fields_ = (
 
 
 cef_set_cookie_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_set_cookie_callback_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_set_cookie_callback_t), c_int), # 0
 )
 cef_set_cookie_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2640,7 +2752,7 @@ cef_set_cookie_callback_t._fields_ = (
 
 
 cef_delete_cookies_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_delete_cookies_callback_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_delete_cookies_callback_t), c_int), # 0
 )
 cef_delete_cookies_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2649,11 +2761,11 @@ cef_delete_cookies_callback_t._fields_ = (
 
 
 cef_cookie_manager_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_cookie_visitor_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), c_int, POINTER(cef_cookie_visitor_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_cookie_t), POINTER(cef_set_cookie_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_delete_cookies_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_completion_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_cookie_visitor_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), c_int, POINTER(cef_cookie_visitor_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_cookie_t), POINTER(cef_set_cookie_callback_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_delete_cookies_callback_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_cookie_manager_t), POINTER(cef_completion_callback_t)), # 4
 )
 cef_cookie_manager_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2666,8 +2778,8 @@ cef_cookie_manager_t._fields_ = (
 
 
 cef_file_dialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t), cef_string_list_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_file_dialog_callback_t)), # 1
 )
 cef_file_dialog_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2677,7 +2789,7 @@ cef_file_dialog_callback_t._fields_ = (
 
 
 cef_dialog_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_dialog_handler_t), POINTER(cef_browser_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_file_dialog_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_dialog_handler_t), POINTER(cef_browser_t), cef_file_dialog_mode_t, POINTER(cef_string_t), POINTER(cef_string_t), cef_string_list_t, POINTER(cef_file_dialog_callback_t)), # 0
 )
 cef_dialog_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2686,17 +2798,17 @@ cef_dialog_handler_t._fields_ = (
 
 
 cef_display_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_log_severity_t, POINTER(cef_string_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), double),
-    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_cursor_handle_t, cef_cursor_type_t, POINTER(cef_cursor_info_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_string_list_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int), # 3
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_log_severity_t, POINTER(cef_string_t), POINTER(cef_string_t), c_int), # 6
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), POINTER(cef_size_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), double), # 8
+    CFUNCTYPE(c_int, POINTER(cef_display_handler_t), POINTER(cef_browser_t), cef_cursor_handle_t, cef_cursor_type_t, POINTER(cef_cursor_info_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_display_handler_t), POINTER(cef_browser_t), c_int, c_int), # 10
 )
 cef_display_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2715,13 +2827,13 @@ cef_display_handler_t._fields_ = (
 
 
 cef_display_t._callbacks = (
-    CFUNCTYPE(int64_t, POINTER(cef_display_t)),
-    CFUNCTYPE(float, POINTER(cef_display_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)),
-    CFUNCTYPE(c_int, POINTER(cef_display_t)),
+    CFUNCTYPE(int64_t, POINTER(cef_display_t)), # 0
+    CFUNCTYPE(float, POINTER(cef_display_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_display_t), POINTER(cef_point_t)), # 3
+    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)), # 4
+    CFUNCTYPE(cef_rect_t, POINTER(cef_display_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_display_t)), # 6
 )
 cef_display_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2736,20 +2848,30 @@ cef_display_t._fields_ = (
 
 
 cef_domdocument_t._callbacks = (
-    CFUNCTYPE(cef_dom_document_type_t, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
+    CFUNCTYPE(cef_dom_document_type_t, POINTER(cef_domdocument_t)), # 0
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 1
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 2
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 4
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)), # 5
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_domdocument_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 10
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 11
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t)), # 12
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domdocument_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domdocument_t), POINTER(cef_string_t)), # 13
 )
 cef_domdocument_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2771,32 +2893,44 @@ cef_domdocument_t._fields_ = (
 
 
 cef_domnode_t._callbacks = (
-    CFUNCTYPE(cef_dom_node_type_t, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(cef_dom_form_control_type_t, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_domnode_t), cef_string_map_t),
-    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_domnode_t)),
+    CFUNCTYPE(cef_dom_node_type_t, POINTER(cef_domnode_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 4
+    CFUNCTYPE(cef_dom_form_control_type_t, POINTER(cef_domnode_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_domnode_t)), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 7
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 10
+    # CFUNCTYPE(POINTER(cef_domdocument_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 11
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 12
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 13
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 15
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 16
+    # CFUNCTYPE(POINTER(cef_domnode_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 17
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 18
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t)), # 19
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t)), # 20
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t), POINTER(cef_string_t)), # 21
+    CFUNCTYPE(c_void, POINTER(cef_domnode_t), cef_string_map_t), # 22
+    CFUNCTYPE(c_int, POINTER(cef_domnode_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 23
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_domnode_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_domnode_t)), # 24
+    CFUNCTYPE(cef_rect_t, POINTER(cef_domnode_t)), # 25
 )
 cef_domnode_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2830,7 +2964,7 @@ cef_domnode_t._fields_ = (
 
 
 cef_domvisitor_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_domvisitor_t), POINTER(cef_domdocument_t)),
+    CFUNCTYPE(c_void, POINTER(cef_domvisitor_t), POINTER(cef_domdocument_t)), # 0
 )
 cef_domvisitor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2839,25 +2973,31 @@ cef_domvisitor_t._fields_ = (
 
 
 cef_download_item_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(cef_download_interrupt_reason_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(c_int, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(uint32_t, POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 4
+    CFUNCTYPE(cef_download_interrupt_reason_t, POINTER(cef_download_item_t)), # 5
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_download_item_t)), # 7
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)), # 8
+    CFUNCTYPE(int64_t, POINTER(cef_download_item_t)), # 9
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)), # 10
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_download_item_t)), # 11
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 12
+    CFUNCTYPE(uint32_t, POINTER(cef_download_item_t)), # 13
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 14
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 15
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 16
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 17
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_download_item_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_download_item_t)), # 18
 )
 cef_download_item_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2884,9 +3024,9 @@ cef_download_item_t._fields_ = (
 
 
 cef_download_item_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_download_item_callback_t)), # 2
 )
 cef_download_item_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2897,9 +3037,9 @@ cef_download_item_callback_t._fields_ = (
 
 
 cef_download_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_string_t), POINTER(cef_before_download_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_download_item_callback_t)),
+    CFUNCTYPE(c_int, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_string_t), POINTER(cef_before_download_callback_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_download_handler_t), POINTER(cef_browser_t), POINTER(cef_download_item_t), POINTER(cef_download_item_callback_t)), # 2
 )
 cef_download_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2910,8 +3050,8 @@ cef_download_handler_t._fields_ = (
 
 
 cef_drag_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), size_t, POINTER(cef_draggable_region_t)),
+    CFUNCTYPE(c_int, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_drag_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), size_t, POINTER(cef_draggable_region_t)), # 1
 )
 cef_drag_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2921,7 +3061,7 @@ cef_drag_handler_t._fields_ = (
 
 
 cef_end_tracing_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_end_tracing_callback_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_end_tracing_callback_t), POINTER(cef_string_t)), # 0
 )
 cef_end_tracing_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2930,14 +3070,19 @@ cef_end_tracing_callback_t._fields_ = (
 
 
 cef_extension_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_t)),
-    CFUNCTYPE(c_void, POINTER(cef_extension_t)),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)), # 1
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_extension_t), POINTER(cef_extension_t)), # 3
+    # CFUNCTYPE(POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)), # 4
+    # CFUNCTYPE(POINTER(cef_request_context_t), POINTER(cef_extension_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_extension_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_extension_t)), # 7
 )
 cef_extension_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2953,8 +3098,8 @@ cef_extension_t._fields_ = (
 
 
 cef_get_extension_resource_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t), POINTER(cef_stream_reader_t)),
-    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t), POINTER(cef_stream_reader_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_get_extension_resource_callback_t)), # 1
 )
 cef_get_extension_resource_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2964,14 +3109,15 @@ cef_get_extension_resource_callback_t._fields_ = (
 
 
 cef_extension_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), cef_errorcode_t),
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_string_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int, POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_get_extension_resource_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), cef_errorcode_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_extension_handler_t), POINTER(cef_extension_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_string_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t)), # 4
+    # CFUNCTYPE(POINTER(cef_browser_t), POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int), # 5
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), c_int, POINTER(cef_browser_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_extension_handler_t), POINTER(cef_extension_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_get_extension_resource_callback_t)), # 7
 )
 cef_extension_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2994,7 +3140,7 @@ cef_fill_layout_t._fields_ = (
 
 
 cef_find_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_find_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(cef_rect_t), c_int, c_int),
+    CFUNCTYPE(c_void, POINTER(cef_find_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(cef_rect_t), c_int, c_int), # 0
 )
 cef_find_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3003,9 +3149,9 @@ cef_find_handler_t._fields_ = (
 
 
 cef_focus_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), cef_focus_source_t),
-    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), c_int), # 0
+    CFUNCTYPE(c_int, POINTER(cef_focus_handler_t), POINTER(cef_browser_t), cef_focus_source_t), # 1
+    CFUNCTYPE(c_void, POINTER(cef_focus_handler_t), POINTER(cef_browser_t)), # 2
 )
 cef_focus_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3016,10 +3162,10 @@ cef_focus_handler_t._fields_ = (
 
 
 cef_frame_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)),
-    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int), # 1
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_frame_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_frame_t)), # 3
 )
 cef_frame_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3031,19 +3177,22 @@ cef_frame_handler_t._fields_ = (
 
 
 cef_image_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, c_int, c_int, cef_color_type_t, cef_alpha_type_t, POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t),
-    CFUNCTYPE(size_t, POINTER(cef_image_t)),
-    CFUNCTYPE(size_t, POINTER(cef_image_t)),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float),
-    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(float), POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, cef_color_type_t, cef_alpha_type_t, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(c_int, POINTER(cef_image_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_image_t), POINTER(cef_image_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, c_int, c_int, cef_color_type_t, cef_alpha_type_t, POINTER(c_void), size_t), # 2
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t), # 3
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(c_void), size_t), # 4
+    CFUNCTYPE(size_t, POINTER(cef_image_t)), # 5
+    CFUNCTYPE(size_t, POINTER(cef_image_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float), # 7
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float), # 8
+    CFUNCTYPE(c_int, POINTER(cef_image_t), float, POINTER(float), POINTER(c_int), POINTER(c_int)), # 9
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_image_t), float, cef_color_type_t, cef_alpha_type_t, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, cef_color_type_t, cef_alpha_type_t, POINTER(c_int), POINTER(c_int)), # 10
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)), # 11
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_image_t), float, c_int, POINTER(c_int), POINTER(c_int)), # 12
 )
 cef_image_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3064,7 +3213,7 @@ cef_image_t._fields_ = (
 
 
 cef_jsdialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_callback_t), c_int, POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_callback_t), c_int, POINTER(cef_string_t)), # 0
 )
 cef_jsdialog_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3073,10 +3222,10 @@ cef_jsdialog_callback_t._fields_ = (
 
 
 cef_jsdialog_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), cef_jsdialog_type_t, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_jsdialog_callback_t), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_jsdialog_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), cef_jsdialog_type_t, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_jsdialog_callback_t), POINTER(c_int)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_jsdialog_callback_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_jsdialog_handler_t), POINTER(cef_browser_t)), # 3
 )
 cef_jsdialog_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3088,8 +3237,8 @@ cef_jsdialog_handler_t._fields_ = (
 
 
 cef_keyboard_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t, POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t),
+    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t, POINTER(c_int)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_keyboard_handler_t), POINTER(cef_browser_t), POINTER(cef_key_event_t), cef_event_handle_t), # 1
 )
 cef_keyboard_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3099,17 +3248,20 @@ cef_keyboard_handler_t._fields_ = (
 
 
 cef_label_button_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, POINTER(cef_image_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t), cef_button_state_t),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, cef_color_t),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_color_t),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_horizontal_alignment_t),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)),
+    # CFUNCTYPE(POINTER(cef_menu_button_t), POINTER(cef_label_button_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)), # 1
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_label_button_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, POINTER(cef_image_t)), # 3
+    # CFUNCTYPE(POINTER(cef_image_t), POINTER(cef_label_button_t), cef_button_state_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_label_button_t), cef_button_state_t), # 4
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_button_state_t, cef_color_t), # 5
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_color_t), # 6
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_string_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), cef_horizontal_alignment_t), # 8
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_label_button_t), POINTER(cef_size_t)), # 10
 )
 cef_label_button_t._fields_ = (
     ('_base', cef_button_t),
@@ -3128,11 +3280,11 @@ cef_label_button_t._fields_ = (
 
 
 cef_life_span_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int, POINTER(cef_popup_features_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
-    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)),
-    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int, POINTER(cef_popup_features_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t), POINTER(cef_window_info_t), POINTER(POINTER(cef_client_t)), POINTER(cef_browser_settings_t), POINTER(POINTER(cef_dictionary_value_t)), POINTER(c_int)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_life_span_handler_t), POINTER(cef_browser_t)), # 4
 )
 cef_life_span_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3145,34 +3297,40 @@ cef_life_span_handler_t._fields_ = (
 
 
 cef_list_value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(size_t, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(cef_value_type_t, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(double, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, double),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_binary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_list_value_t)),
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), POINTER(cef_list_value_t)), # 4
+    # CFUNCTYPE(POINTER(cef_list_value_t), POINTER(cef_list_value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t), # 6
+    CFUNCTYPE(size_t, POINTER(cef_list_value_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t), # 9
+    CFUNCTYPE(cef_value_type_t, POINTER(cef_list_value_t), size_t), # 10
+    # CFUNCTYPE(POINTER(cef_value_t), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t), # 11
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t), # 12
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t), # 13
+    CFUNCTYPE(double, POINTER(cef_list_value_t), size_t), # 14
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t), # 15
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t), # 16
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t), # 17
+    # CFUNCTYPE(POINTER(cef_list_value_t), POINTER(cef_list_value_t), size_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_list_value_t), size_t), # 18
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_value_t)), # 19
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t), # 20
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int), # 21
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, c_int), # 22
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, double), # 23
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_string_t)), # 24
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_binary_value_t)), # 25
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_dictionary_value_t)), # 26
+    CFUNCTYPE(c_int, POINTER(cef_list_value_t), size_t, POINTER(cef_list_value_t)), # 27
 )
 cef_list_value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3208,10 +3366,10 @@ cef_list_value_t._fields_ = (
 
 
 cef_load_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), c_int, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_transition_type_t),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), c_int, c_int, c_int), # 0
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_transition_type_t), # 1
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), c_int), # 2
+    CFUNCTYPE(c_void, POINTER(cef_load_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_string_t)), # 3
 )
 cef_load_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3223,8 +3381,8 @@ cef_load_handler_t._fields_ = (
 
 
 cef_media_access_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32_t),
-    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t), uint32_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_media_access_callback_t)), # 1
 )
 cef_media_access_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3234,11 +3392,14 @@ cef_media_access_callback_t._fields_ = (
 
 
 cef_media_route_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_route_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_media_route_t)),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_media_route_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)), # 0
+    # CFUNCTYPE(POINTER(cef_media_source_t), POINTER(cef_media_route_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)), # 1
+    # CFUNCTYPE(POINTER(cef_media_sink_t), POINTER(cef_media_route_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_route_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_media_route_t), POINTER(c_void), size_t), # 3
+    CFUNCTYPE(c_void, POINTER(cef_media_route_t)), # 4
 )
 cef_media_route_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3251,10 +3412,10 @@ cef_media_route_t._fields_ = (
 
 
 cef_media_observer_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_sink_t))),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_route_t))),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), cef_media_route_connection_state_t),
-    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_sink_t))), # 0
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), size_t, POINTER(POINTER(cef_media_route_t))), # 1
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), cef_media_route_connection_state_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_media_observer_t), POINTER(cef_media_route_t), POINTER(c_void), size_t), # 3
 )
 cef_media_observer_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3266,7 +3427,7 @@ cef_media_observer_t._fields_ = (
 
 
 cef_media_route_create_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_route_create_callback_t), cef_media_route_create_result_t, POINTER(cef_string_t), POINTER(cef_media_route_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_route_create_callback_t), cef_media_route_create_result_t, POINTER(cef_string_t), POINTER(cef_media_route_t)), # 0
 )
 cef_media_route_create_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3275,9 +3436,10 @@ cef_media_route_create_callback_t._fields_ = (
 
 
 cef_media_source_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_source_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_source_t)),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_media_source_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_source_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_media_source_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_media_source_t)), # 2
 )
 cef_media_source_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3288,13 +3450,15 @@ cef_media_source_t._fields_ = (
 
 
 cef_media_sink_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)),
-    CFUNCTYPE(cef_media_sink_icon_type_t, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_sink_t), POINTER(cef_media_sink_device_info_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)),
-    CFUNCTYPE(c_int, POINTER(cef_media_sink_t), POINTER(cef_media_source_t)),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_media_sink_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_media_sink_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_sink_t)), # 1
+    CFUNCTYPE(cef_media_sink_icon_type_t, POINTER(cef_media_sink_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_media_sink_t), POINTER(cef_media_sink_device_info_callback_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_media_sink_t), POINTER(cef_media_source_t)), # 6
 )
 cef_media_sink_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3309,11 +3473,13 @@ cef_media_sink_t._fields_ = (
 
 
 cef_media_router_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_media_observer_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t), POINTER(cef_media_source_t), POINTER(cef_media_sink_t), POINTER(cef_media_route_create_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_media_router_t)),
+    # CFUNCTYPE(POINTER(cef_registration_t), POINTER(cef_media_router_t), POINTER(cef_media_observer_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_media_observer_t)), # 0
+    # CFUNCTYPE(POINTER(cef_media_source_t), POINTER(cef_media_router_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_media_router_t), POINTER(cef_string_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t), POINTER(cef_media_source_t), POINTER(cef_media_sink_t), POINTER(cef_media_route_create_callback_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_media_router_t)), # 4
 )
 cef_media_router_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3326,7 +3492,7 @@ cef_media_router_t._fields_ = (
 
 
 cef_media_sink_device_info_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_media_sink_device_info_callback_t), POINTER(cef_media_sink_device_info_t)),
+    CFUNCTYPE(c_void, POINTER(cef_media_sink_device_info_callback_t), POINTER(cef_media_sink_device_info_t)), # 0
 )
 cef_media_sink_device_info_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3335,8 +3501,8 @@ cef_media_sink_device_info_callback_t._fields_ = (
 
 
 cef_menu_button_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_menu_button_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t),
-    CFUNCTYPE(c_void, POINTER(cef_menu_button_t)),
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_t)), # 1
 )
 cef_menu_button_t._fields_ = (
     ('_base', cef_label_button_t),
@@ -3353,7 +3519,7 @@ cef_menu_button_pressed_lock_t._fields_ = (
 
 
 cef_menu_button_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_menu_button_delegate_t), POINTER(cef_menu_button_t), POINTER(cef_point_t), POINTER(cef_menu_button_pressed_lock_t)),
+    CFUNCTYPE(c_void, POINTER(cef_menu_button_delegate_t), POINTER(cef_menu_button_t), POINTER(cef_point_t), POINTER(cef_menu_button_pressed_lock_t)), # 0
 )
 cef_menu_button_delegate_t._fields_ = (
     ('_base', cef_button_delegate_t),
@@ -3362,13 +3528,13 @@ cef_menu_button_delegate_t._fields_ = (
 
 
 cef_menu_model_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int, cef_event_flags_t),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_point_t)),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)),
-    CFUNCTYPE(c_int, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int, cef_event_flags_t), # 0
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_point_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int), # 2
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), c_int), # 3
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_menu_model_delegate_t), POINTER(cef_menu_model_t), POINTER(cef_string_t)), # 6
 )
 cef_menu_model_delegate_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3383,16 +3549,21 @@ cef_menu_model_delegate_t._fields_ = (
 
 
 cef_navigation_entry_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(cef_transition_type_t, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)), # 1
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)), # 4
+    CFUNCTYPE(cef_transition_type_t, POINTER(cef_navigation_entry_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)), # 6
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_navigation_entry_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_navigation_entry_t)), # 8
+    # CFUNCTYPE(POINTER(cef_sslstatus_t), POINTER(cef_navigation_entry_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_navigation_entry_t)), # 9
 )
 cef_navigation_entry_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3410,25 +3581,27 @@ cef_navigation_entry_t._fields_ = (
 
 
 cef_overlay_controller_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t), POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(cef_docking_mode_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_size_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_point_t)),
-    CFUNCTYPE(cef_point_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_insets_t)),
-    CFUNCTYPE(cef_insets_t, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
-    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t), POINTER(cef_overlay_controller_t)), # 1
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)), # 2
+    # CFUNCTYPE(POINTER(cef_window_t), POINTER(cef_overlay_controller_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_overlay_controller_t)), # 3
+    CFUNCTYPE(cef_docking_mode_t, POINTER(cef_overlay_controller_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_rect_t)), # 6
+    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)), # 7
+    CFUNCTYPE(cef_rect_t, POINTER(cef_overlay_controller_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_size_t)), # 9
+    CFUNCTYPE(cef_size_t, POINTER(cef_overlay_controller_t)), # 10
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_point_t)), # 11
+    CFUNCTYPE(cef_point_t, POINTER(cef_overlay_controller_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), POINTER(cef_insets_t)), # 13
+    CFUNCTYPE(cef_insets_t, POINTER(cef_overlay_controller_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_overlay_controller_t), c_int), # 16
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)), # 17
+    CFUNCTYPE(c_int, POINTER(cef_overlay_controller_t)), # 18
 )
 cef_overlay_controller_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3462,18 +3635,23 @@ cef_panel_delegate_t._fields_ = (
 
 
 cef_panel_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), POINTER(cef_box_layout_settings_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t)),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_panel_t)),
-    CFUNCTYPE(size_t, POINTER(cef_panel_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), c_int),
+    # CFUNCTYPE(POINTER(cef_window_t), POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)), # 0
+    # CFUNCTYPE(POINTER(cef_fill_layout_t), POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)), # 1
+    # CFUNCTYPE(POINTER(cef_box_layout_t), POINTER(cef_panel_t), POINTER(cef_box_layout_settings_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), POINTER(cef_box_layout_settings_t)), # 2
+    # CFUNCTYPE(POINTER(cef_layout_t), POINTER(cef_panel_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_panel_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int), # 6
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t), c_int), # 7
+    CFUNCTYPE(c_void, POINTER(cef_panel_t), POINTER(cef_view_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_panel_t)), # 9
+    CFUNCTYPE(size_t, POINTER(cef_panel_t)), # 10
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_panel_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_panel_t), c_int), # 11
 )
 cef_panel_t._fields_ = (
     ('_base', cef_view_t),
@@ -3493,7 +3671,7 @@ cef_panel_t._fields_ = (
 
 
 cef_permission_prompt_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_permission_prompt_callback_t), cef_permission_request_result_t),
+    CFUNCTYPE(c_void, POINTER(cef_permission_prompt_callback_t), cef_permission_request_result_t), # 0
 )
 cef_permission_prompt_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3502,9 +3680,9 @@ cef_permission_prompt_callback_t._fields_ = (
 
 
 cef_permission_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32_t, POINTER(cef_media_access_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, POINTER(cef_string_t), uint32_t, POINTER(cef_permission_prompt_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, cef_permission_request_result_t),
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), uint32_t, POINTER(cef_media_access_callback_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, POINTER(cef_string_t), uint32_t, POINTER(cef_permission_prompt_callback_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_permission_handler_t), POINTER(cef_browser_t), uint64_t, cef_permission_request_result_t), # 2
 )
 cef_permission_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3515,14 +3693,15 @@ cef_permission_handler_t._fields_ = (
 
 
 cef_post_data_element_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t), size_t, POINTER(c_void)),
-    CFUNCTYPE(cef_postdataelement_type_t, POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(size_t, POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(size_t, POINTER(cef_post_data_element_t), size_t, POINTER(c_void)),
+    CFUNCTYPE(c_int, POINTER(cef_post_data_element_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t), POINTER(cef_string_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_post_data_element_t), size_t, POINTER(c_void)), # 3
+    CFUNCTYPE(cef_postdataelement_type_t, POINTER(cef_post_data_element_t)), # 4
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_post_data_element_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_post_data_element_t)), # 5
+    CFUNCTYPE(size_t, POINTER(cef_post_data_element_t)), # 6
+    CFUNCTYPE(size_t, POINTER(cef_post_data_element_t), size_t, POINTER(c_void)), # 7
 )
 cef_post_data_element_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3538,13 +3717,13 @@ cef_post_data_element_t._fields_ = (
 
 
 cef_post_data_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t)),
-    CFUNCTYPE(size_t, POINTER(cef_post_data_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_t), POINTER(size_t), POINTER(POINTER(cef_post_data_element_t))),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)),
-    CFUNCTYPE(c_void, POINTER(cef_post_data_t)),
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t)), # 1
+    CFUNCTYPE(size_t, POINTER(cef_post_data_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_post_data_t), POINTER(size_t), POINTER(POINTER(cef_post_data_element_t))), # 3
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_post_data_t), POINTER(cef_post_data_element_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_post_data_t)), # 6
 )
 cef_post_data_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3559,11 +3738,13 @@ cef_post_data_t._fields_ = (
 
 
 cef_preference_manager_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)), # 0
+    # CFUNCTYPE(POINTER(cef_value_t), POINTER(cef_preference_manager_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), POINTER(cef_string_t)), # 1
+    # CFUNCTYPE(POINTER(cef_dictionary_value_t), POINTER(cef_preference_manager_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_preference_manager_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_preference_manager_t), POINTER(cef_string_t), POINTER(cef_value_t), POINTER(cef_string_t)), # 4
 )
 cef_preference_manager_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3576,28 +3757,29 @@ cef_preference_manager_t._fields_ = (
 
 
 cef_print_settings_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_size_t), POINTER(cef_rect_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), size_t, POINTER(cef_range_t)),
-    CFUNCTYPE(size_t, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(size_t), POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_color_model_t),
-    CFUNCTYPE(cef_color_model_t, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_duplex_mode_t),
-    CFUNCTYPE(cef_duplex_mode_t, POINTER(cef_print_settings_t)),
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_size_t), POINTER(cef_rect_t), c_int), # 4
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(cef_string_t)), # 5
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_print_settings_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_print_settings_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int), # 7
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), size_t, POINTER(cef_range_t)), # 9
+    CFUNCTYPE(size_t, POINTER(cef_print_settings_t)), # 10
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), POINTER(size_t), POINTER(cef_range_t)), # 11
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int), # 12
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 13
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int), # 14
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_color_model_t), # 16
+    CFUNCTYPE(cef_color_model_t, POINTER(cef_print_settings_t)), # 17
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), c_int), # 18
+    CFUNCTYPE(c_int, POINTER(cef_print_settings_t)), # 19
+    CFUNCTYPE(c_void, POINTER(cef_print_settings_t), cef_duplex_mode_t), # 20
+    CFUNCTYPE(cef_duplex_mode_t, POINTER(cef_print_settings_t)), # 21
 )
 cef_print_settings_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3627,8 +3809,8 @@ cef_print_settings_t._fields_ = (
 
 
 cef_print_dialog_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t), POINTER(cef_print_settings_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t), POINTER(cef_print_settings_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_print_dialog_callback_t)), # 1
 )
 cef_print_dialog_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3638,7 +3820,7 @@ cef_print_dialog_callback_t._fields_ = (
 
 
 cef_print_job_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_job_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_print_job_callback_t)), # 0
 )
 cef_print_job_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3647,12 +3829,12 @@ cef_print_job_callback_t._fields_ = (
 
 
 cef_print_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_print_settings_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_print_dialog_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_print_job_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(cef_size_t, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_print_settings_t), c_int), # 1
+    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_print_dialog_callback_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_print_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_print_job_callback_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_print_handler_t), POINTER(cef_browser_t)), # 4
+    CFUNCTYPE(cef_size_t, POINTER(cef_print_handler_t), POINTER(cef_browser_t), c_int), # 5
 )
 cef_print_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3666,12 +3848,16 @@ cef_print_handler_t._fields_ = (
 
 
 cef_process_message_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
-    CFUNCTYPE(c_int, POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)),
+    CFUNCTYPE(c_int, POINTER(cef_process_message_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_process_message_t)), # 1
+    # CFUNCTYPE(POINTER(cef_process_message_t), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)), # 3
+    # CFUNCTYPE(POINTER(cef_list_value_t), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)), # 4
+    # CFUNCTYPE(POINTER(cef_shared_memory_region_t), POINTER(cef_process_message_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_process_message_t)), # 5
 )
 cef_process_message_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3685,11 +3871,11 @@ cef_process_message_t._fields_ = (
 
 
 cef_read_handler_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_read_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64_t, c_int),
-    CFUNCTYPE(int64_t, POINTER(cef_read_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)),
+    CFUNCTYPE(size_t, POINTER(cef_read_handler_t), POINTER(c_void), size_t, size_t), # 0
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t), int64_t, c_int), # 1
+    CFUNCTYPE(int64_t, POINTER(cef_read_handler_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_read_handler_t)), # 4
 )
 cef_read_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3709,23 +3895,24 @@ cef_registration_t._fields_ = (
 
 
 cef_render_handler_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_screen_info_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void), c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_horizontal_alignment_t, POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_touch_handle_state_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_drag_operations_mask_t),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), double, double),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_range_t), size_t, POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_text_input_mode_t),
+    # CFUNCTYPE(POINTER(cef_accessibility_handler_t), POINTER(cef_render_handler_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_handler_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int, c_int, POINTER(c_int), POINTER(c_int)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_screen_info_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), c_int), # 5
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_rect_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void), c_int, c_int), # 7
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_paint_element_type_t, size_t, POINTER(cef_rect_t), POINTER(c_void)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_horizontal_alignment_t, POINTER(cef_size_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_touch_handle_state_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_drag_data_t), cef_drag_operations_mask_t, c_int, c_int), # 11
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_drag_operations_mask_t), # 12
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), double, double), # 13
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_range_t), size_t, POINTER(cef_rect_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), POINTER(cef_range_t)), # 15
+    CFUNCTYPE(c_void, POINTER(cef_render_handler_t), POINTER(cef_browser_t), cef_text_input_mode_t), # 16
 )
 cef_render_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3750,15 +3937,19 @@ cef_render_handler_t._fields_ = (
 
 
 cef_v8context_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8exception_t))),
+    # CFUNCTYPE(POINTER(cef_task_runner_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)), # 1
+    # CFUNCTYPE(POINTER(cef_browser_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)), # 2
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)), # 3
+    # CFUNCTYPE(POINTER(cef_v8value_t), POINTER(cef_v8context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8context_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_v8context_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_v8context_t), POINTER(cef_string_t), POINTER(cef_string_t), c_int, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8exception_t))), # 8
 )
 cef_v8context_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3775,14 +3966,17 @@ cef_v8context_t._fields_ = (
 
 
 cef_v8exception_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)), # 1
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8exception_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8exception_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_v8exception_t)), # 7
 )
 cef_v8exception_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3798,9 +3992,10 @@ cef_v8exception_t._fields_ = (
 
 
 cef_v8stack_trace_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_trace_t), c_int),
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_trace_t)), # 1
+    # CFUNCTYPE(POINTER(cef_v8stack_frame_t), POINTER(cef_v8stack_trace_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_trace_t), c_int), # 2
 )
 cef_v8stack_trace_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3811,15 +4006,16 @@ cef_v8stack_trace_t._fields_ = (
 
 
 cef_render_process_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_dictionary_value_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_process_handler_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t), POINTER(cef_v8exception_t), POINTER(cef_v8stack_trace_t)),
-    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_domnode_t)),
-    CFUNCTYPE(c_int, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)),
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_dictionary_value_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t)), # 2
+    # CFUNCTYPE(POINTER(cef_load_handler_t), POINTER(cef_render_process_handler_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_render_process_handler_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_v8context_t), POINTER(cef_v8exception_t), POINTER(cef_v8stack_trace_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_domnode_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_render_process_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), cef_process_id_t, POINTER(cef_process_message_t)), # 8
 )
 cef_render_process_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3836,28 +4032,34 @@ cef_render_process_handler_t._fields_ = (
 
 
 cef_request_context_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_request_context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_request_context_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_scheme_handler_factory_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_resolve_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t), POINTER(cef_extension_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_context_t), cef_string_list_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, POINTER(cef_value_t)),
-    CFUNCTYPE(cef_content_setting_values_t, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t),
-    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, cef_content_setting_values_t),
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_request_context_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_request_context_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t)), # 2
+    # CFUNCTYPE(POINTER(cef_request_context_handler_t), POINTER(cef_request_context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_request_context_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t)), # 4
+    # CFUNCTYPE(POINTER(cef_cookie_manager_t), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_scheme_handler_factory_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)), # 10
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_resolve_callback_t)), # 11
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_dictionary_value_t), POINTER(cef_extension_handler_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)), # 13
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), POINTER(cef_string_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_request_context_t), cef_string_list_t), # 15
+    # CFUNCTYPE(POINTER(cef_extension_t), POINTER(cef_request_context_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t)), # 16
+    # CFUNCTYPE(POINTER(cef_media_router_t), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_completion_callback_t)), # 17
+    # CFUNCTYPE(POINTER(cef_value_t), POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t), # 18
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, POINTER(cef_value_t)), # 19
+    CFUNCTYPE(cef_content_setting_values_t, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t), # 20
+    CFUNCTYPE(c_void, POINTER(cef_request_context_t), POINTER(cef_string_t), POINTER(cef_string_t), cef_content_setting_types_t, cef_content_setting_values_t), # 21
 )
 cef_request_context_t._fields_ = (
     ('_base', cef_preference_manager_t),
@@ -3887,8 +4089,9 @@ cef_request_context_t._fields_ = (
 
 
 cef_request_context_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_request_context_handler_t), POINTER(cef_request_context_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)),
+    CFUNCTYPE(c_void, POINTER(cef_request_context_handler_t), POINTER(cef_request_context_t)), # 0
+    # CFUNCTYPE(POINTER(cef_resource_request_handler_t), POINTER(cef_request_context_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_context_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)), # 1
 )
 cef_request_context_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3898,8 +4101,9 @@ cef_request_context_handler_t._fields_ = (
 
 
 cef_sslinfo_t._callbacks = (
-    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslinfo_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslinfo_t)),
+    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslinfo_t)), # 0
+    # CFUNCTYPE(POINTER(cef_x509certificate_t), POINTER(cef_sslinfo_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslinfo_t)), # 1
 )
 cef_sslinfo_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3909,7 +4113,7 @@ cef_sslinfo_t._fields_ = (
 
 
 cef_select_client_certificate_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_select_client_certificate_callback_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(c_void, POINTER(cef_select_client_certificate_callback_t), POINTER(cef_x509certificate_t)), # 0
 )
 cef_select_client_certificate_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3918,15 +4122,16 @@ cef_select_client_certificate_callback_t._fields_ = (
 
 
 cef_request_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int),
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_sslinfo_t), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, size_t, POINTER(POINTER(cef_x509certificate_t)), POINTER(cef_select_client_certificate_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t)),
-    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t), cef_termination_status_t),
-    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t)),
+    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int), # 0
+    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), cef_window_open_disposition_t, c_int), # 1
+    # CFUNCTYPE(POINTER(cef_resource_request_handler_t), POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), c_int, c_int, POINTER(cef_string_t), POINTER(c_int)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), POINTER(cef_string_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), cef_errorcode_t, POINTER(cef_string_t), POINTER(cef_sslinfo_t), POINTER(cef_callback_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_request_handler_t), POINTER(cef_browser_t), c_int, POINTER(cef_string_t), c_int, size_t, POINTER(POINTER(cef_x509certificate_t)), POINTER(cef_select_client_certificate_callback_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t), cef_termination_status_t), # 7
+    CFUNCTYPE(c_void, POINTER(cef_request_handler_t), POINTER(cef_browser_t)), # 8
 )
 cef_request_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3943,7 +4148,7 @@ cef_request_handler_t._fields_ = (
 
 
 cef_resolve_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_resolve_callback_t), cef_errorcode_t, cef_string_list_t),
+    CFUNCTYPE(c_void, POINTER(cef_resolve_callback_t), cef_errorcode_t, cef_string_list_t), # 0
 )
 cef_resolve_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3952,9 +4157,9 @@ cef_resolve_callback_t._fields_ = (
 
 
 cef_resource_bundle_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, POINTER(POINTER(c_void)), POINTER(size_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, cef_scale_factor_t, POINTER(POINTER(c_void)), POINTER(size_t)),
+    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, POINTER(POINTER(c_void)), POINTER(size_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_resource_bundle_handler_t), c_int, cef_scale_factor_t, POINTER(POINTER(c_void)), POINTER(size_t)), # 2
 )
 cef_resource_bundle_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3965,9 +4170,12 @@ cef_resource_bundle_handler_t._fields_ = (
 
 
 cef_resource_bundle_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int, cef_scale_factor_t),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_resource_bundle_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int), # 0
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_resource_bundle_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int), # 1
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_resource_bundle_t), c_int, cef_scale_factor_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_bundle_t), c_int, cef_scale_factor_t), # 2
 )
 cef_resource_bundle_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3978,7 +4186,7 @@ cef_resource_bundle_t._fields_ = (
 
 
 cef_resource_skip_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_resource_skip_callback_t), int64_t),
+    CFUNCTYPE(c_void, POINTER(cef_resource_skip_callback_t), int64_t), # 0
 )
 cef_resource_skip_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3987,7 +4195,7 @@ cef_resource_skip_callback_t._fields_ = (
 
 
 cef_resource_read_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_resource_read_callback_t), c_int),
+    CFUNCTYPE(c_void, POINTER(cef_resource_read_callback_t), c_int), # 0
 )
 cef_resource_read_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -3996,13 +4204,13 @@ cef_resource_read_callback_t._fields_ = (
 
 
 cef_resource_handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(c_int), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t), POINTER(cef_response_t), POINTER(int64_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), int64_t, POINTER(int64_t), POINTER(cef_resource_skip_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_resource_read_callback_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t)),
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(c_int), POINTER(cef_callback_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(cef_request_t), POINTER(cef_callback_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t), POINTER(cef_response_t), POINTER(int64_t), POINTER(cef_string_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), int64_t, POINTER(int64_t), POINTER(cef_resource_skip_callback_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_resource_read_callback_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_resource_handler_t), POINTER(c_void), c_int, POINTER(c_int), POINTER(cef_callback_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_resource_handler_t)), # 6
 )
 cef_resource_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4017,14 +4225,17 @@ cef_resource_handler_t._fields_ = (
 
 
 cef_resource_request_handler_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)),
-    CFUNCTYPE(cef_return_value_t, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_callback_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)),
-    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), cef_urlrequest_status_t, int64_t),
-    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(c_int)),
+    # CFUNCTYPE(POINTER(cef_cookie_access_filter_t), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)), # 0
+    CFUNCTYPE(cef_return_value_t, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_callback_t)), # 1
+    # CFUNCTYPE(POINTER(cef_resource_handler_t), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), POINTER(cef_string_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)), # 4
+    # CFUNCTYPE(POINTER(cef_response_filter_t), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(cef_response_t), cef_urlrequest_status_t, int64_t), # 6
+    CFUNCTYPE(c_void, POINTER(cef_resource_request_handler_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_request_t), POINTER(c_int)), # 7
 )
 cef_resource_request_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4040,8 +4251,8 @@ cef_resource_request_handler_t._fields_ = (
 
 
 cef_response_filter_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_response_filter_t)),
-    CFUNCTYPE(cef_response_filter_status_t, POINTER(cef_response_filter_t), POINTER(c_void), size_t, POINTER(size_t), POINTER(c_void), size_t, POINTER(size_t)),
+    CFUNCTYPE(c_int, POINTER(cef_response_filter_t)), # 0
+    CFUNCTYPE(cef_response_filter_status_t, POINTER(cef_response_filter_t), POINTER(c_void), size_t, POINTER(size_t), POINTER(c_void), size_t, POINTER(size_t)), # 1
 )
 cef_response_filter_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4051,7 +4262,8 @@ cef_response_filter_t._fields_ = (
 
 
 cef_scheme_handler_factory_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_scheme_handler_factory_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_request_t)),
+    # CFUNCTYPE(POINTER(cef_resource_handler_t), POINTER(cef_scheme_handler_factory_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_request_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_scheme_handler_factory_t), POINTER(cef_browser_t), POINTER(cef_frame_t), POINTER(cef_string_t), POINTER(cef_request_t)), # 0
 )
 cef_scheme_handler_factory_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4060,13 +4272,14 @@ cef_scheme_handler_factory_t._fields_ = (
 
 
 cef_scroll_view_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_scroll_view_t), POINTER(cef_view_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_scroll_view_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_scroll_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
-    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(c_void, POINTER(cef_scroll_view_t), POINTER(cef_view_t)), # 0
+    # CFUNCTYPE(POINTER(cef_view_t), POINTER(cef_scroll_view_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_scroll_view_t)), # 1
+    CFUNCTYPE(cef_rect_t, POINTER(cef_scroll_view_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_scroll_view_t)), # 6
 )
 cef_scroll_view_t._fields_ = (
     ('_base', cef_view_t),
@@ -4081,19 +4294,21 @@ cef_scroll_view_t._fields_ = (
 
 
 cef_server_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_server_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_t)),
-    CFUNCTYPE(c_int, POINTER(cef_server_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_server_t)),
-    CFUNCTYPE(c_int, POINTER(cef_server_t)),
-    CFUNCTYPE(c_int, POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, c_int, POINTER(cef_string_t), int64_t, cef_string_multimap_t),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t),
+    # CFUNCTYPE(POINTER(cef_task_runner_t), POINTER(cef_server_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_server_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_server_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_server_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_server_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_server_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_server_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_server_t), c_int), # 5
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(c_void), size_t), # 6
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int), # 7
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(cef_string_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, c_int, POINTER(cef_string_t), int64_t, cef_string_multimap_t), # 9
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t), # 10
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int), # 11
+    CFUNCTYPE(c_void, POINTER(cef_server_t), c_int, POINTER(c_void), size_t), # 12
 )
 cef_server_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4114,14 +4329,14 @@ cef_server_t._fields_ = (
 
 
 cef_server_handler_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(cef_request_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(cef_request_t), POINTER(cef_callback_t)),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(c_void), size_t),
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int), # 2
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int), # 3
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(cef_request_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(cef_string_t), POINTER(cef_request_t), POINTER(cef_callback_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int), # 6
+    CFUNCTYPE(c_void, POINTER(cef_server_handler_t), POINTER(cef_server_t), c_int, POINTER(c_void), size_t), # 7
 )
 cef_server_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4137,9 +4352,9 @@ cef_server_handler_t._fields_ = (
 
 
 cef_shared_memory_region_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_shared_memory_region_t)),
-    CFUNCTYPE(size_t, POINTER(cef_shared_memory_region_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_memory_region_t)),
+    CFUNCTYPE(c_int, POINTER(cef_shared_memory_region_t)), # 0
+    CFUNCTYPE(size_t, POINTER(cef_shared_memory_region_t)), # 1
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_memory_region_t)), # 2
 )
 cef_shared_memory_region_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4150,10 +4365,11 @@ cef_shared_memory_region_t._fields_ = (
 
 
 cef_shared_process_message_builder_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_shared_process_message_builder_t)),
-    CFUNCTYPE(size_t, POINTER(cef_shared_process_message_builder_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_process_message_builder_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_process_message_builder_t)),
+    CFUNCTYPE(c_int, POINTER(cef_shared_process_message_builder_t)), # 0
+    CFUNCTYPE(size_t, POINTER(cef_shared_process_message_builder_t)), # 1
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_process_message_builder_t)), # 2
+    # CFUNCTYPE(POINTER(cef_process_message_t), POINTER(cef_shared_process_message_builder_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_shared_process_message_builder_t)), # 3
 )
 cef_shared_process_message_builder_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4165,11 +4381,12 @@ cef_shared_process_message_builder_t._fields_ = (
 
 
 cef_sslstatus_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_sslstatus_t)),
-    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslstatus_t)),
-    CFUNCTYPE(cef_ssl_version_t, POINTER(cef_sslstatus_t)),
-    CFUNCTYPE(cef_ssl_content_status_t, POINTER(cef_sslstatus_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslstatus_t)),
+    CFUNCTYPE(c_int, POINTER(cef_sslstatus_t)), # 0
+    CFUNCTYPE(cef_cert_status_t, POINTER(cef_sslstatus_t)), # 1
+    CFUNCTYPE(cef_ssl_version_t, POINTER(cef_sslstatus_t)), # 2
+    CFUNCTYPE(cef_ssl_content_status_t, POINTER(cef_sslstatus_t)), # 3
+    # CFUNCTYPE(POINTER(cef_x509certificate_t), POINTER(cef_sslstatus_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_sslstatus_t)), # 4
 )
 cef_sslstatus_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4182,11 +4399,11 @@ cef_sslstatus_t._fields_ = (
 
 
 cef_stream_reader_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_stream_reader_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t), int64_t, c_int),
-    CFUNCTYPE(int64_t, POINTER(cef_stream_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)),
+    CFUNCTYPE(size_t, POINTER(cef_stream_reader_t), POINTER(c_void), size_t, size_t), # 0
+    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t), int64_t, c_int), # 1
+    CFUNCTYPE(int64_t, POINTER(cef_stream_reader_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_stream_reader_t)), # 4
 )
 cef_stream_reader_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4199,11 +4416,11 @@ cef_stream_reader_t._fields_ = (
 
 
 cef_stream_writer_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_stream_writer_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t), int64_t, c_int),
-    CFUNCTYPE(int64_t, POINTER(cef_stream_writer_t)),
-    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)),
-    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)),
+    CFUNCTYPE(size_t, POINTER(cef_stream_writer_t), POINTER(c_void), size_t, size_t), # 0
+    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t), int64_t, c_int), # 1
+    CFUNCTYPE(int64_t, POINTER(cef_stream_writer_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_stream_writer_t)), # 4
 )
 cef_stream_writer_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4216,7 +4433,7 @@ cef_stream_writer_t._fields_ = (
 
 
 cef_string_visitor_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_string_visitor_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_string_visitor_t), POINTER(cef_string_t)), # 0
 )
 cef_string_visitor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4225,7 +4442,7 @@ cef_string_visitor_t._fields_ = (
 
 
 cef_task_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_task_t)),
+    CFUNCTYPE(c_void, POINTER(cef_task_t)), # 0
 )
 cef_task_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4234,11 +4451,11 @@ cef_task_t._fields_ = (
 
 
 cef_task_runner_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_runner_t)),
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t)),
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), cef_thread_id_t),
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t)),
-    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t), int64_t),
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_runner_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), cef_thread_id_t), # 2
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_task_runner_t), POINTER(cef_task_t), int64_t), # 4
 )
 cef_task_runner_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4251,37 +4468,40 @@ cef_task_runner_t._fields_ = (
 
 
 cef_textfield_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_textfield_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t)),
-    CFUNCTYPE(cef_range_t, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_range_t)),
-    CFUNCTYPE(size_t, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
-    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
-    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
-    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t, POINTER(cef_range_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_style_t, c_int, POINTER(cef_range_t)),
-    CFUNCTYPE(c_int, POINTER(cef_textfield_t), cef_text_field_commands_t),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_field_commands_t),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int), # 0
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_textfield_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t)), # 8
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_textfield_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), c_int), # 10
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t)), # 11
+    CFUNCTYPE(cef_range_t, POINTER(cef_textfield_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_range_t)), # 13
+    CFUNCTYPE(size_t, POINTER(cef_textfield_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t), # 15
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)), # 16
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t), # 17
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t), # 19
+    CFUNCTYPE(cef_color_t, POINTER(cef_textfield_t)), # 20
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 21
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t, POINTER(cef_range_t)), # 22
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_style_t, c_int, POINTER(cef_range_t)), # 23
+    CFUNCTYPE(c_int, POINTER(cef_textfield_t), cef_text_field_commands_t), # 24
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_text_field_commands_t), # 25
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t)), # 26
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 27
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_textfield_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_textfield_t)), # 28
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), cef_color_t), # 29
+    CFUNCTYPE(c_void, POINTER(cef_textfield_t), POINTER(cef_string_t)), # 30
 )
 cef_textfield_t._fields_ = (
     ('_base', cef_view_t),
@@ -4320,8 +4540,8 @@ cef_textfield_t._fields_ = (
 
 
 cef_textfield_delegate_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t), POINTER(cef_key_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t)),
+    CFUNCTYPE(c_int, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t), POINTER(cef_key_event_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_textfield_delegate_t), POINTER(cef_textfield_t)), # 1
 )
 cef_textfield_delegate_t._fields_ = (
     ('_base', cef_view_delegate_t),
@@ -4331,10 +4551,11 @@ cef_textfield_delegate_t._fields_ = (
 
 
 cef_thread_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_thread_t)),
-    CFUNCTYPE(cef_platform_thread_id_t, POINTER(cef_thread_t)),
-    CFUNCTYPE(c_void, POINTER(cef_thread_t)),
-    CFUNCTYPE(c_int, POINTER(cef_thread_t)),
+    # CFUNCTYPE(POINTER(cef_task_runner_t), POINTER(cef_thread_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_thread_t)), # 0
+    CFUNCTYPE(cef_platform_thread_id_t, POINTER(cef_thread_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_thread_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_thread_t)), # 3
 )
 cef_thread_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4346,13 +4567,16 @@ cef_thread_t._fields_ = (
 
 
 cef_urlrequest_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(cef_urlrequest_status_t, POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(cef_errorcode_t, POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(c_int, POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_t)),
+    # CFUNCTYPE(POINTER(cef_request_t), POINTER(cef_urlrequest_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)), # 0
+    # CFUNCTYPE(POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)), # 1
+    CFUNCTYPE(cef_urlrequest_status_t, POINTER(cef_urlrequest_t)), # 2
+    CFUNCTYPE(cef_errorcode_t, POINTER(cef_urlrequest_t)), # 3
+    # CFUNCTYPE(POINTER(cef_response_t), POINTER(cef_urlrequest_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_urlrequest_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_urlrequest_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_t)), # 6
 )
 cef_urlrequest_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4367,11 +4591,11 @@ cef_urlrequest_t._fields_ = (
 
 
 cef_urlrequest_client_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t)),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t),
-    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), POINTER(c_void), size_t),
-    CFUNCTYPE(c_int, POINTER(cef_urlrequest_client_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)),
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t), # 1
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), int64_t, int64_t), # 2
+    CFUNCTYPE(c_void, POINTER(cef_urlrequest_client_t), POINTER(cef_urlrequest_t), POINTER(c_void), size_t), # 3
+    CFUNCTYPE(c_int, POINTER(cef_urlrequest_client_t), c_int, POINTER(cef_string_t), c_int, POINTER(cef_string_t), POINTER(cef_string_t), POINTER(cef_auth_callback_t)), # 4
 )
 cef_urlrequest_client_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4384,58 +4608,68 @@ cef_urlrequest_client_t._fields_ = (
 
 
 cef_v8value_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(int32_t, POINTER(cef_v8value_t)),
-    CFUNCTYPE(uint32_t, POINTER(cef_v8value_t)),
-    CFUNCTYPE(double, POINTER(cef_v8value_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t), POINTER(cef_v8value_t), cef_v8_propertyattribute_t),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t), cef_v8_accesscontrol_t, cef_v8_propertyattribute_t),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), cef_string_list_t),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_base_ref_counted_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t)),
-    CFUNCTYPE(size_t, POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8context_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 9
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 11
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 13
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 15
+    CFUNCTYPE(int32_t, POINTER(cef_v8value_t)), # 16
+    CFUNCTYPE(uint32_t, POINTER(cef_v8value_t)), # 17
+    CFUNCTYPE(double, POINTER(cef_v8value_t)), # 18
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_v8value_t)), # 19
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 20
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 21
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 22
+    # CFUNCTYPE(POINTER(cef_v8exception_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 23
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 24
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 25
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int), # 26
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)), # 27
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int), # 28
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)), # 29
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int), # 30
+    # CFUNCTYPE(POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_string_t)), # 31
+    # CFUNCTYPE(POINTER(cef_v8value_t), POINTER(cef_v8value_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), c_int), # 32
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t), POINTER(cef_v8value_t), cef_v8_propertyattribute_t), # 33
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int, POINTER(cef_v8value_t)), # 34
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t), cef_v8_accesscontrol_t, cef_v8_propertyattribute_t), # 35
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), cef_string_list_t), # 36
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_base_ref_counted_t)), # 37
+    # CFUNCTYPE(POINTER(cef_base_ref_counted_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 38
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 39
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), c_int), # 40
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 41
+    # CFUNCTYPE(POINTER(cef_v8array_buffer_release_callback_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 42
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t)), # 43
+    CFUNCTYPE(size_t, POINTER(cef_v8value_t)), # 44
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 45
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 46
+    # CFUNCTYPE(POINTER(cef_v8handler_t), POINTER(cef_v8value_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t)), # 47
+    # CFUNCTYPE(POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))), # 48
+    # CFUNCTYPE(POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_v8context_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8value_t), POINTER(cef_v8context_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t))), # 49
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t)), # 50
+    CFUNCTYPE(c_int, POINTER(cef_v8value_t), POINTER(cef_string_t)), # 51
 )
 cef_v8value_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4495,8 +4729,8 @@ cef_v8value_t._fields_ = (
 
 
 cef_v8accessor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_v8accessor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)), # 1
 )
 cef_v8accessor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4506,7 +4740,7 @@ cef_v8accessor_t._fields_ = (
 
 
 cef_v8array_buffer_release_callback_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_v8array_buffer_release_callback_t), POINTER(c_void)),
+    CFUNCTYPE(c_void, POINTER(cef_v8array_buffer_release_callback_t), POINTER(c_void)), # 0
 )
 cef_v8array_buffer_release_callback_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4515,7 +4749,7 @@ cef_v8array_buffer_release_callback_t._fields_ = (
 
 
 cef_v8handler_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8handler_t), POINTER(cef_string_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8handler_t), POINTER(cef_string_t), POINTER(cef_v8value_t), size_t, POINTER(POINTER(cef_v8value_t)), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)), # 0
 )
 cef_v8handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4524,10 +4758,10 @@ cef_v8handler_t._fields_ = (
 
 
 cef_v8interceptor_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(POINTER(cef_v8value_t)), POINTER(cef_string_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), POINTER(cef_string_t), POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_v8interceptor_t), c_int, POINTER(cef_v8value_t), POINTER(cef_v8value_t), POINTER(cef_string_t)), # 3
 )
 cef_v8interceptor_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4539,14 +4773,17 @@ cef_v8interceptor_t._fields_ = (
 
 
 cef_v8stack_frame_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)),
-    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)),
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8stack_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)), # 1
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8stack_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_v8stack_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_v8stack_frame_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)), # 5
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_v8stack_frame_t)), # 7
 )
 cef_v8stack_frame_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4562,11 +4799,11 @@ cef_v8stack_frame_t._fields_ = (
 
 
 cef_waitable_event_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
-    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t)),
-    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)),
-    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t), int64_t),
+    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_waitable_event_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_waitable_event_t), int64_t), # 4
 )
 cef_waitable_event_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4579,44 +4816,49 @@ cef_waitable_event_t._fields_ = (
 
 
 cef_window_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_browser_view_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_size_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), size_t, POINTER(cef_draggable_region_t)),
-    CFUNCTYPE(cef_window_handle_t, POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, uint32_t),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), cef_mouse_button_type_t, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int, c_int, c_int, c_int, c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_browser_view_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_size_t)), # 3
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 5
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 6
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 8
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 9
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int), # 10
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 11
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 12
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 13
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 14
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int), # 15
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 16
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 17
+    CFUNCTYPE(c_int, POINTER(cef_window_t)), # 18
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_string_t)), # 19
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)), # 20
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)), # 21
+    # CFUNCTYPE(POINTER(cef_image_t), POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)), # 22
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)), # 23
+    # CFUNCTYPE(POINTER(cef_image_t), POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)), # 24
+    # CFUNCTYPE(POINTER(cef_overlay_controller_t), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t), # 25
+    CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t), # 26
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 27
+    # CFUNCTYPE(POINTER(cef_display_t), POINTER(cef_window_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)), # 28
+    CFUNCTYPE(cef_rect_t, POINTER(cef_window_t)), # 29
+    CFUNCTYPE(c_void, POINTER(cef_window_t), size_t, POINTER(cef_draggable_region_t)), # 30
+    CFUNCTYPE(cef_window_handle_t, POINTER(cef_window_t)), # 31
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, uint32_t), # 32
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int), # 33
+    CFUNCTYPE(c_void, POINTER(cef_window_t), cef_mouse_button_type_t, c_int, c_int), # 34
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int, c_int, c_int, c_int, c_int, c_int), # 35
+    CFUNCTYPE(c_void, POINTER(cef_window_t), c_int), # 36
+    CFUNCTYPE(c_void, POINTER(cef_window_t)), # 37
 )
 cef_window_t._fields_ = (
     ('_base', cef_panel_t),
@@ -4662,25 +4904,26 @@ cef_window_t._fields_ = (
 
 
 cef_window_delegate_t._callbacks = (
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_rect_t)),
-    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(c_int), POINTER(c_int)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(cef_rect_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(cef_show_state_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(float)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_key_event_t)),
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 0
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 1
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 2
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int), # 3
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_rect_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int), # 5
+    # CFUNCTYPE(POINTER(cef_window_t), POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(c_int), POINTER(c_int)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(c_int), POINTER(c_int)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 7
+    CFUNCTYPE(cef_rect_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 8
+    CFUNCTYPE(cef_show_state_t, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 9
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 11
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(float)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 13
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 15
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t)), # 16
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), c_int), # 17
+    CFUNCTYPE(c_int, POINTER(cef_window_delegate_t), POINTER(cef_window_t), POINTER(cef_key_event_t)), # 18
 )
 cef_window_delegate_t._fields_ = (
     ('_base', cef_panel_delegate_t),
@@ -4707,11 +4950,11 @@ cef_window_delegate_t._fields_ = (
 
 
 cef_write_handler_t._callbacks = (
-    CFUNCTYPE(size_t, POINTER(cef_write_handler_t), POINTER(c_void), size_t, size_t),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64_t, c_int),
-    CFUNCTYPE(int64_t, POINTER(cef_write_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
-    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)),
+    CFUNCTYPE(size_t, POINTER(cef_write_handler_t), POINTER(c_void), size_t, size_t), # 0
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t), int64_t, c_int), # 1
+    CFUNCTYPE(int64_t, POINTER(cef_write_handler_t)), # 2
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)), # 3
+    CFUNCTYPE(c_int, POINTER(cef_write_handler_t)), # 4
 )
 cef_write_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4724,13 +4967,18 @@ cef_write_handler_t._fields_ = (
 
 
 cef_x509cert_principal_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)),
-    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
-    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t),
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_x509cert_principal_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)), # 0
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_x509cert_principal_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)), # 1
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_x509cert_principal_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_x509cert_principal_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_x509cert_principal_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509cert_principal_t)), # 4
+    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t), # 5
+    CFUNCTYPE(c_void, POINTER(cef_x509cert_principal_t), cef_string_list_t), # 6
 )
 cef_x509cert_principal_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4745,16 +4993,21 @@ cef_x509cert_principal_t._fields_ = (
 
 
 cef_x509certificate_t._callbacks = (
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(size_t, POINTER(cef_x509certificate_t)),
-    CFUNCTYPE(c_void, POINTER(cef_x509certificate_t), POINTER(size_t), POINTER(POINTER(cef_binary_value_t))),
-    CFUNCTYPE(c_void, POINTER(cef_x509certificate_t), POINTER(size_t), POINTER(POINTER(cef_binary_value_t))),
+    # CFUNCTYPE(POINTER(cef_x509cert_principal_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)), # 0
+    # CFUNCTYPE(POINTER(cef_x509cert_principal_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)), # 1
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)), # 2
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_x509certificate_t)), # 3
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_x509certificate_t)), # 4
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)), # 5
+    # CFUNCTYPE(POINTER(cef_binary_value_t), POINTER(cef_x509certificate_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_x509certificate_t)), # 6
+    CFUNCTYPE(size_t, POINTER(cef_x509certificate_t)), # 7
+    CFUNCTYPE(c_void, POINTER(cef_x509certificate_t), POINTER(size_t), POINTER(POINTER(cef_binary_value_t))), # 8
+    CFUNCTYPE(c_void, POINTER(cef_x509certificate_t), POINTER(size_t), POINTER(POINTER(cef_binary_value_t))), # 9
 )
 cef_x509certificate_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4772,35 +5025,48 @@ cef_x509certificate_t._fields_ = (
 
 
 cef_xml_reader_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(cef_xml_node_type_t, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(size_t, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), c_int),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), POINTER(cef_string_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 2
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 3
+    CFUNCTYPE(cef_xml_node_type_t, POINTER(cef_xml_reader_t)), # 4
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 5
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 6
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 7
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 8
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 9
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 10
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 11
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 12
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 13
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 14
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 15
+    CFUNCTYPE(size_t, POINTER(cef_xml_reader_t)), # 16
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t), c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), c_int), # 17
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), POINTER(cef_string_t)), # 18
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t), POINTER(cef_string_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 19
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 20
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_xml_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_xml_reader_t)), # 21
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 22
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), c_int), # 23
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), POINTER(cef_string_t)), # 24
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t), POINTER(cef_string_t), POINTER(cef_string_t)), # 25
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 26
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 27
+    CFUNCTYPE(c_int, POINTER(cef_xml_reader_t)), # 28
 )
 cef_xml_reader_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -4837,18 +5103,19 @@ cef_xml_reader_t._fields_ = (
 
 
 cef_zip_reader_t._callbacks = (
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t), c_int),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(cef_basetime_t, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(c_void), size_t),
-    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)),
-    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)),
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)), # 0
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)), # 1
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t), c_int), # 2
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)), # 3
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_zip_reader_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_zip_reader_t)), # 4
+    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)), # 5
+    CFUNCTYPE(cef_basetime_t, POINTER(cef_zip_reader_t)), # 6
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(cef_string_t)), # 7
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)), # 8
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t), POINTER(c_void), size_t), # 9
+    CFUNCTYPE(int64_t, POINTER(cef_zip_reader_t)), # 10
+    CFUNCTYPE(c_int, POINTER(cef_zip_reader_t)), # 11
 )
 cef_zip_reader_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
