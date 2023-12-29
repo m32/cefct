@@ -14,7 +14,7 @@ libcef (dll or so). In order to check the correctness of the size of the generat
 a tiny (also generated) program cefsizes.c is required.
 
 For proper operation, you need a library, e.g.:
-https://cef-builds.spotifycdn.com/cef_binary_119.4.3+gc76a3b9+chromium-119.0.6045.159_linux64.tar.bz2
+https://cef-builds.spotifycdn.com/cef_binary_120.1.10+g3ce3184+chromium-120.0.6099.129_linux64.tar.bz2
 or its equivalent for MS-Windows.
 
 After unpacking the archive, rename the directory from Release to bin and you can test.
