@@ -13,10 +13,10 @@ cefcapiparse.py and cefcapiparseinternal.py prepare function calls exported dire
 libcef (dll or so). In order to check the correctness of the size of the generated structures,
 a tiny (also generated) program cefsizes.c is required.
 
-For proper operation, you need a library, e.g.:
+For proper operation, you need cef source, e.g.:
 https://cef-builds.spotifycdn.com/cef_binary_120.1.10+g3ce3184+chromium-120.0.6099.129_linux64.tar.bz2
 or its equivalent for MS-Windows.
-Unpack the downloaded file in the build directory and
+Unpack the downloaded file in the cef directory, inside cef directory create directory "build" and
 create a symbolic link "source" to the newly created directory,
 finally run:
 cef-2-cmake.sh
