@@ -16,8 +16,14 @@ a tiny (also generated) program cefsizes.c is required.
 For proper operation, you need a library, e.g.:
 https://cef-builds.spotifycdn.com/cef_binary_120.1.10+g3ce3184+chromium-120.0.6099.129_linux64.tar.bz2
 or its equivalent for MS-Windows.
+Unpack the downloaded file in the build directory and
+create a symbolic link "source" to the newly created directory,
+finally run:
+cef-2-cmake.sh
+cef-3-cmake-ninja.sh
+cef-4-cefcapi.sh
+cef-4-linuxhelper.sh
 
-After unpacking the archive, rename the directory from Release to bin and you can test.
 This library is at the stage of testing and playing, but something can be started:
 - appflask.py - flask/vue based http server
 - appgtk0.py - minimal GTK 3.0 example
@@ -38,7 +44,4 @@ Show used CEF version and assert compability with used CEF version
 - cefapp-vercheck.py
 
 If you want to check the operation of another version of CEF,
-you will have to download its standard distribution and generate the required files.
-The commands ./cefcapi.sh (linux) and cefcapi.cmd (windows) are used for this purpose,
-but first create a soft link from cef_binary .... to the cef directory and prepare
-the cefclient file (cefclient.exe)
+you will have to download its distribution and generate the required files.

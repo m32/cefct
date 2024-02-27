@@ -116,6 +116,7 @@ class cef_browser_process_handler_t(Structure):
         self.on_already_running_app_relaunch = self._callbacks[3](self.py_on_already_running_app_relaunch)
         self.on_schedule_message_pump_work = self._callbacks[4](self.py_on_schedule_message_pump_work)
         self.get_default_client = self._callbacks[5](self.py_get_default_client)
+        self.get_default_request_context_handler = self._callbacks[6](self.py_get_default_request_context_handler)
 
     def py_on_register_custom_preferences(self, xself, type, registrar):
         return 0
@@ -128,6 +129,8 @@ class cef_browser_process_handler_t(Structure):
     def py_on_schedule_message_pump_work(self, xself, delay_ms):
         return 0
     def py_get_default_client(self, xself):
+        return None
+    def py_get_default_request_context_handler(self, xself):
         return None
 
 
@@ -1530,12 +1533,12 @@ cef_browser_t._callbacks = (
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)), # 14
     # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t)), # 15
-    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t), int64_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), int64_t), # 16
+    # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), POINTER(cef_string_t)), # 16
     # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_browser_t), POINTER(cef_string_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_t), POINTER(cef_string_t)), # 17
     CFUNCTYPE(size_t, POINTER(cef_browser_t)), # 18
-    CFUNCTYPE(c_void, POINTER(cef_browser_t), POINTER(size_t), POINTER(int64_t)), # 19
+    CFUNCTYPE(c_void, POINTER(cef_browser_t), cef_string_list_t), # 19
     CFUNCTYPE(c_void, POINTER(cef_browser_t), cef_string_list_t), # 20
 )
 cef_browser_t._fields_ = (
@@ -1556,8 +1559,8 @@ cef_browser_t._fields_ = (
     ('has_document', cef_browser_t._callbacks[13]),
     ('get_main_frame', cef_browser_t._callbacks[14]),
     ('get_focused_frame', cef_browser_t._callbacks[15]),
-    ('get_frame_byident', cef_browser_t._callbacks[16]),
-    ('get_frame', cef_browser_t._callbacks[17]),
+    ('get_frame_by_identifier', cef_browser_t._callbacks[16]),
+    ('get_frame_by_name', cef_browser_t._callbacks[17]),
     ('get_frame_count', cef_browser_t._callbacks[18]),
     ('get_frame_identifiers', cef_browser_t._callbacks[19]),
     ('get_frame_names', cef_browser_t._callbacks[20]),
@@ -2188,6 +2191,8 @@ cef_browser_process_handler_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_browser_process_handler_t), int64_t), # 4
     # CFUNCTYPE(POINTER(cef_client_t), POINTER(cef_browser_process_handler_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_process_handler_t)), # 5
+    # CFUNCTYPE(POINTER(cef_request_context_handler_t), POINTER(cef_browser_process_handler_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_browser_process_handler_t)), # 6
 )
 cef_browser_process_handler_t._fields_ = (
     ('_base', cef_base_ref_counted_t),
@@ -2197,6 +2202,7 @@ cef_browser_process_handler_t._fields_ = (
     ('on_already_running_app_relaunch', cef_browser_process_handler_t._callbacks[3]),
     ('on_schedule_message_pump_work', cef_browser_process_handler_t._callbacks[4]),
     ('get_default_client', cef_browser_process_handler_t._callbacks[5]),
+    ('get_default_request_context_handler', cef_browser_process_handler_t._callbacks[6]),
 )
 
 
@@ -2351,7 +2357,8 @@ cef_frame_t._callbacks = (
     CFUNCTYPE(c_int, POINTER(cef_frame_t)), # 15
     # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 16
-    CFUNCTYPE(int64_t, POINTER(cef_frame_t)), # 17
+    # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_frame_t)),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 17
     # CFUNCTYPE(POINTER(cef_frame_t), POINTER(cef_frame_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_frame_t)), # 18
     # CFUNCTYPE(POINTER(cef_string_userfree_t), POINTER(cef_frame_t)),
@@ -4844,8 +4851,8 @@ cef_window_t._callbacks = (
     CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_image_t)), # 23
     # CFUNCTYPE(POINTER(cef_image_t), POINTER(cef_window_t)),
     CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t)), # 24
-    # CFUNCTYPE(POINTER(cef_overlay_controller_t), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t),
-    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t), # 25
+    # CFUNCTYPE(POINTER(cef_overlay_controller_t), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t, c_int),
+    CFUNCTYPE(POINTER(c_void), POINTER(cef_window_t), POINTER(cef_view_t), cef_docking_mode_t, c_int), # 25
     CFUNCTYPE(c_void, POINTER(cef_window_t), POINTER(cef_menu_model_t), POINTER(cef_point_t), cef_menu_anchor_position_t), # 26
     CFUNCTYPE(c_void, POINTER(cef_window_t)), # 27
     # CFUNCTYPE(POINTER(cef_display_t), POINTER(cef_window_t)),
