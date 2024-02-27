@@ -33,10 +33,9 @@ def guiStartup():
     gui.GdkX11 = GdkX11
     gui.libX11 = ct.CDLL("libX11.so.6")
     gui.linuxhelper = ct.CDLL("./linuxhelper.so")
-guiStartup()
 
 useTimer = False
-useTimer = True
+#useTimer = True
 
 URL = "http://127.0.0.1:5000/"
 import threading
@@ -184,6 +183,8 @@ class Main(wx.Frame):
     def __init__(self, parent, cefapp):
         wx.Frame.__init__(self, parent=parent, id=wx.ID_ANY, title="wxPython example")
 
+        guiStartup()
+
         self.browser = None
         self.cefapp = cefapp
         self.handler = CefHandler(self)
@@ -241,11 +242,11 @@ class Main(wx.Frame):
                 self.timer = None
                 time.sleep(1)
             if not useTimer:
-                libcef.cef_quit_message_loop()
+                cef.cef_quit_message_loop()
             event.Skip()
             print('wx.Destroy.0')
             self.Destroy()
-            libcef.cef_quit_message_loop()
+            cef.cef_quit_message_loop()
             return
 
         host = self.browser.contents.get_host(self.browser)

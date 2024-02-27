@@ -7,6 +7,7 @@ import time
 import wx
 import ctypes as ct
 from cefct import libcef
+import cefappcommon
 from cefappcommon import Client
 
 gui = None
@@ -32,7 +33,6 @@ def guiStartup():
     gui.GdkX11 = GdkX11
     gui.libX11 = ctypes.CDLL("libX11.so.6")
     gui.linuxhelper = ctypes.CDLL("./linuxhelper.so")
-guiStartup()
 
 
 import threading
@@ -44,7 +44,6 @@ tflask.start()
 useTimer = False
 #useTimer = True
 URL = "http://127.0.0.1:5000/"
-browser = None
 
 class Main(wx.Frame):
     def __init__(self, parent):
@@ -93,12 +92,11 @@ class Main(wx.Frame):
         libcef.cef_do_message_loop_work()
 
     def OnClose(self, event):
-        global browser
         if self.timer:
             self.timer.Stop()
             self.timer = None
             time.sleep(1)
-        if browser is None:
+        if cefappcommon.browser is None:
             if not useTimer:
                 libcef.cef_quit_message_loop()
             event.Skip()
@@ -107,15 +105,15 @@ class Main(wx.Frame):
             return
 
         #self.client.life_span_handler.OnBeforeClose()
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         hwnd = host.contents.get_window_handle(host)
         #if libcef.win:
         #    hwnd = ct.windll.user32.GetAncestor(hwnd, win32con.GA_ROOT)
         #    ct.windll.user32.PostMessageW(hwnd, win32con.WM_CLOSE, 0, 0)
-        browser.contents.stop_load(browser, 1)
+        cefappcommon.browser.contents.stop_load(cefappcommon.browser, 1)
         host.contents.close_browser(host, 1)
-        browser = None
+        cefappcommon.browser = None
         event.Skip()
         #gc.collect()
         print('wx.Destroy.1')
@@ -140,14 +138,17 @@ class Main(wx.Frame):
         xid = self.browserWindow.GetHandle()
         assert xid, "Window handle not available"
         (width, height) = self.browserWindow.GetClientSize().Get()
-        global window_info, cef_url, client, browser_settings
 
+        global window_name, window_info, cef_url, client, browser_settings
+
+        window_name = libcef.cef_string_t("cef window xx")
         window_info = libcef.cef_window_info_t()
+        window_info.window_name = window_name
         window_info.parent_window = xid
-        window_info.x = 0
-        window_info.y = 0
-        window_info.width = width
-        window_info.height = height
+        window_info.bounds.x = 0
+        window_info.bounds.y = 0
+        window_info.bounds.width = width
+        window_info.bounds.height = height
 
         cef_url = libcef.cef_string_t(URL)
         client = Client()
@@ -156,8 +157,7 @@ class Main(wx.Frame):
         extra_info = None
         request_context = None
 
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
+        cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
             window_info,
             client,
             cef_url,
@@ -197,8 +197,7 @@ class Main(wx.Frame):
         #cef_request_context_create_context(settings, handler)
         #cef_create_context_shared
 
-        global browser
-        browser = libcef.cef_browser_host_create_browser_sync(
+        cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
             window_info,
             client,
             cef_url,
@@ -208,7 +207,7 @@ class Main(wx.Frame):
         )
 
     def OnBrowser(self, event):
-        if browser is None:
+        if cefappcommon.browser is None:
             self.addBrowserWindow()
             if libcef.win:
                 self.embed_browser_windows()
@@ -217,9 +216,9 @@ class Main(wx.Frame):
 
     zoom = 1
     def OnZoom(self, event):
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         zoom = host.contents.get_zoom_level(host)
         if zoom == 5:
@@ -232,16 +231,16 @@ class Main(wx.Frame):
 
     def OnBrowserWindowSetFocus(self, event):
         print('OnBrowserWindowSetFocus')
-        if browser is None:
+        if cefappcommon.browser is None:
             return
-        host = browser.contents.get_host(browser)
+        host = cefappcommon.browser.contents.get_host(browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         host.contents.set_focus(host, 1)
         # browser.SetFocus(True)
 
     def OnBrowserWindowSize(self, evt):
         evt.Skip()
-        if browser is None:
+        if cefappcommon.browser is None:
             return
         size = self.browserWindow.GetClientSize()
         # browser.SetBounds(x, y, width, height)

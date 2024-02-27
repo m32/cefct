@@ -32,7 +32,6 @@ def guiStartup():
     gui.GdkX11 = GdkX11
     gui.libX11 = ctypes.CDLL("libX11.so.6")
     gui.linuxhelper = ctypes.CDLL("./linuxhelper.so")
-guiStartup()
 
 useTimer = False
 #useTimer = True
@@ -42,6 +41,8 @@ URL = "http://html5test.com/"
 class Main(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent=parent, id=wx.ID_ANY, title="wxPython example")
+
+        guiStartup()
 
         self.client = Client()
         self.browser = None
@@ -124,7 +125,9 @@ class Main(wx.Frame):
     def addBrowserWindow(self):
         if libcef.linux:
             window = self.GetGtkWidget()
+            print('gui.linuxhelper.FixGtk')
             gui.linuxhelper.FixGtk(int(window))
+            print('/gui.linuxhelper.FixGtk')
 
         self.browserWindow = wx.Window(self, wx.ID_ANY, size=self.size, style=wx.WANTS_CHARS)
         #self.browserWindow.SetMinSize(size)
@@ -262,7 +265,7 @@ class Main(wx.Frame):
                     size.width, size.height,
                     SWP_NOZORDER)
         else:
-            #print('X11.onsize', hwnd)
+            print('X11.onsize', hwnd)
             display = gui.Gdk.Display.get_default() # GdkX11.X11Display
             window = gui.GdkX11.X11Window.foreign_new_for_display(display, hwnd) # GdkX11.X11Window
             window.resize(size.width, size.height)
