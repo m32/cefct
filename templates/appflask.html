@@ -50,11 +50,19 @@
                 }
             };
 
-            Vue.createApp(
+            let app = Vue.createApp(
                 Vue.defineAsyncComponent(() =>
                     window['vue3-sfc-loader'].loadModule('/static/main.vue', options)
                 )
-            ).mount(document.body);
+            );
+            app.mount(document.body);
+
+            function callfrompython() {
+                alert("Javascript Called from python");
+                debugger;
+                console.log('call from python', app);
+            }
+
         </script>
     </body>
 </html>

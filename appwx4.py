@@ -138,8 +138,11 @@ class CefHandler(cef.cef_client_t):
         request_id = args.contents.get_int(args, 1)
         vp = args.contents.get_string(args, 2)
         vp = cef.cast(vp, cef.POINTER(cef.cef_string_userfree_t))
-        request = vp.contents.ToString()
-        vp.contents.Free()
+        if vp:
+            request = vp.contents.ToString()
+            vp.contents.Free()
+        else:
+            request = None
         persistent = args.contents.get_int(args, 3)
         print(name, context_id, request_id, request, persistent)
         #import pdb; pdb.set_trace()
@@ -194,6 +197,7 @@ class Main(wx.Frame):
 
         btBrowser = wx.Button(self, wx.ID_ANY, "Start browser")
         btZoom = wx.Button(self, wx.ID_ANY, "Zoom")
+        btCallJS = wx.Button(self, wx.ID_ANY, "Call JS")
 
         self.size = (800, 600)
         self.SetMinSize(self.size)
@@ -201,6 +205,7 @@ class Main(wx.Frame):
         # Add controls
         szh.Add(btBrowser, 0, wx.TOP | wx.LEFT, 2)
         szh.Add(btZoom, 0, wx.TOP | wx.LEFT, 2)
+        szh.Add(btCallJS, 0, wx.TOP | wx.LEFT, 2)
 
         szv.Add(szh)
 
@@ -220,6 +225,7 @@ class Main(wx.Frame):
 
         btBrowser.Bind(wx.EVT_BUTTON, self.OnBrowser)
         btZoom.Bind(wx.EVT_BUTTON, self.OnZoom)
+        btCallJS.Bind(wx.EVT_BUTTON, self.OnCallJS)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
         self.btZoom = btZoom
@@ -357,6 +363,17 @@ class Main(wx.Frame):
         zoom = zoom + self.zoom
         self.btZoom.SetLabel('Zoom: %d'%self.zoom)
         host.contents.set_zoom_level(host, zoom)
+
+    def OnCallJS(self, event):
+        if self.browser is None:
+            return
+        frame = self.browser.contents.get_main_frame(self.browser)
+        frame = cef.cast(frame, cef.POINTER(cef.cef_frame_t))
+        script = cef.cef_string_t('callfrompython()')
+        url = cef.cef_string_t("")
+        line = 1
+        frame.contents.execute_java_script(frame, script, url, line)
+        
 
     def OnBrowserWindowSetFocus(self, event):
         print('Main.OnBrowserWindowSetFocus')
