@@ -3,11 +3,10 @@ import sys
 import ctypes as ct
 import cefapp
 from cefct import libcef as cef
-import cefappcommon
 from PIL import Image
 
 # Config
-URL = "https://www.trisoft.com.pl"
+URL = "https://en.wikipedia.org/wiki/Chromium_Embedded_Framework"
 VIEWPORT_SIZE = (1024, 20000)
 
 def save_screenshot(size, buff):
@@ -61,7 +60,7 @@ def stopbrowser(browser):
 
 loaded = False
 
-class CefLoadHandler(cefappcommon.CefLoadHandler):
+class CefLoadHandler(cefapp.CefLoadHandler):
     def py_on_loading_state_change(self, this, browser, isLoading, canGoBack, canGoForward):
         print('CefLoadHandler._on_loading_state_change({}, {}, {})'.format(isLoading, canGoBack, canGoForward))
         if not isLoading:
@@ -78,7 +77,6 @@ class CefLoadHandler(cefappcommon.CefLoadHandler):
         stopbrowser(browser)
 
 class CefRendererHandler(cef.cef_render_handler_t):
-    n = 15
 
     def py_get_view_rect(self, this, browser, rect):
         r = rect.contents
@@ -89,10 +87,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
         return 0
 
     def py_on_paint(self, this, browser, eltype, dirtyRectsCount, dirtyRects, buffer, width, height):
-        if eltype == cef.PET_VIEW and loaded:
-            self.n -= 1
-            if self.n != 0:
-                return
+        if loaded:
             print('CefRendererHandler(browser, {}, {}, {}, {})'.format(eltype, dirtyRectsCount, width, height))
             try:
                 save_screenshot((width, height), buffer)
@@ -102,7 +97,7 @@ class CefRendererHandler(cef.cef_render_handler_t):
 class Client(cef.cef_client_t):
     def __init__(self):
         cef.cef_client_t.__init__(self)
-        self.life_span_handler = cefappcommon.CefLifeSpanHandler()
+        self.life_span_handler = cefapp.CefLifeSpanHandler()
         self.load_handler = CefLoadHandler()
         self.render_handler = CefRendererHandler()
 
