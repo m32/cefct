@@ -1,5 +1,6 @@
 #!/usr/bin/env vpython3
 import os
+import sys
 import gc
 
 top = os.path.join(os.getcwd(), "bin")
@@ -132,10 +133,16 @@ class AppSetup:
         settings = cef.cef_settings_t()
         settings.size = ct.sizeof(cef.cef_settings_t)
         # settings.no_sandbox = 1
-        settings.browser_subprocess_path = cef.cef_string_t(
-            os.path.normpath(os.path.join(top, "cefclient"))
-#            os.path.normpath(os.path.join(os.getcwd(), "build", "pyhelper"))
-        )
+        capp = os.path.normpath(os.path.join(top, "cefclient"))
+        if not os.path.exists(capp):
+            capp = os.path.normpath(os.path.join(top, "cefsimple"))
+        if not os.path.exists(capp):
+            capp = os.path.normpath(os.path.join(top, "pyhelper"))
+        if not os.path.exists(capp):
+            print('cefapp not found')
+            sys.exit(1)
+        print(f'using cefapp: {capp}')
+        settings.browser_subprocess_path = cef.cef_string_t(capp)
         # settings.framework_dir_path = 
         settings.chrome_runtime = 0
         # settings.multi_threaded_message_loop = 1

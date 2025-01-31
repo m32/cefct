@@ -1,6 +1,6 @@
 #!/bin/bash
-vpython3 cefcapiparse.py bin
-vpython3 cefcapiparseinternal.py bin
+python3 cefcapiparse.py bin
+python3 cefcapiparseinternal.py bin
 gcc -I bin -o cefsizes cefsizes.c
 ./cefsizes
-vpython3 cefapp
+python3 cefapp

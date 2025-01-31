@@ -3,26 +3,26 @@
 Python bindings (ctypes) for the Chromium Embedded Framework (CEF)
 
 [Binaries for Linux64](https://cef-builds.spotifycdn.com/index.html#linux64),
-[Binaries for Windows64](https://cef-builds.spotifycdn.com/index.html#windows64)
 
 ## DIY
-Compiling cefpython3 is a complicated process, so instead of creating intermediate
-code and sharing it with Python, I decided to use the standard Python library, ctypes.
+The easiest way is to download the linux64_client
+bash$ wget https://cef-builds.spotifycdn.com/cef_binary_132.3.1%2Bg144febe%2Bchromium-132.0.6834.83_linux64_client.tar.bz2
+and run the command:
+bash$ ./cef-2-cmake.sh
 
-cefcapiparse.py and cefcapiparseinternal.py prepare function calls exported directly from
-libcef (dll or so). In order to check the correctness of the size of the generated structures,
+More complicated way is to download the cef library sources and compile it yourself,
+with changes in the .h files (conditional compilation and arrays that are not supported
+by cefcapiparse.py and cefcapiparseinternal.py):
+
+In order to check the correctness of the size of the generated structures,
 a tiny (also generated) program cefsizes.c is required.
 
-For proper operation, you need cef source, e.g.:
-https://cef-builds.spotifycdn.com/cef_binary_120.1.10+g3ce3184+chromium-120.0.6099.129_linux64.tar.bz2
-or its equivalent for MS-Windows.
-Unpack the downloaded file in the cef directory, inside cef directory create directory "build" and
-create a symbolic link "source" to the newly created directory,
-finally run:
-cef-2-cmake.sh
-cef-3-cmake-ninja.sh
-cef-4-cefcapi.sh
-cef-4-linuxhelper.sh
+bash$ wget https://cef-builds.spotifycdn.com/cef_binary_132.3.1%2Bg144febe%2Bchromium-132.0.6834.83_linux64.tar.bz2
+bash$ ./cef-2-cmake.sh
+bash$ ./cef-3-cmake-ninja.sh
+bash$ ./cef-4-cefcapi.sh
+bash$ ./cef-4-linuxhelper.sh
+
 
 This library is at the stage of testing and playing, but something can be started:
 - appflask.py - flask/vue based http server
@@ -34,6 +34,7 @@ This library is at the stage of testing and playing, but something can be starte
 - appwx2.py - minimal wxPython application on WIN32 or GTK3
 - appwx3.py - minimal wxPython application on WIN32 or GTK3
 - appwx4.py - most advanced cross platform application with flask and callbacks
+    callbacks are working only wihen compiled from sources
 - appwxflask.py - wxPython application with flask
 
 Common application libraries:

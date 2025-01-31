@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
-
 # Distribution / packaging
 .Python
 build/
@@ -136,8 +133,6 @@ tempwindow/
 cefsizes
 cefsizes.obj
 cefsizes.exe
-cefsizes.c
-linuxhelper.so
 crash_reporter.cfg
 screenshot.png
 screenshot-2.png
