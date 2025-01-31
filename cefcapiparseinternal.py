@@ -417,14 +417,16 @@ if 1:
             "cef_time_wrappers.h",
             "cef_trace_event_internal.h",
             "cef_types.h",
+            "cef_types_runtime.h",
+            "cef_types_osr.h",
         ]
         for fname in sorted(fnames):
             fqname = os.path.join(self.ceftop, "include/internal/" + fname)
             self.parseFile(fqname)
         fnames = [
             "cef_types_linux.h",
-            #            'cef_types_mac.h',
-            "cef_types_win.h",
+            #"cef_types_mac.h",
+            #"cef_types_win.h",
         ]
         for fname in sorted(fnames):
             sysname = fname.split(".")[0].split("_")[-1]

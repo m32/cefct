@@ -9,16 +9,16 @@ from cefct.libcefinternal_t import *
 # https://v4.chriskrycho.com/2015/ctypes-structures-and-dll-exports.html
 #
 
-CEF_VERSION = "122.1.8+g40272b5+chromium-122.0.6261.69"
-CEF_VERSION_MAJOR = 122
-CEF_VERSION_MINOR = 1
-CEF_VERSION_PATCH = 8
-CEF_COMMIT_NUMBER = 2920
-CEF_COMMIT_HASH = "40272b5bc5890fc897011f81ee4e6f86e2f7ece9"
-CHROME_VERSION_MAJOR = 122
+CEF_VERSION = "132.3.1+g144febe+chromium-132.0.6834.83"
+CEF_VERSION_MAJOR = 132
+CEF_VERSION_MINOR = 3
+CEF_VERSION_PATCH = 1
+CEF_COMMIT_NUMBER = 3116
+CEF_COMMIT_HASH = "144febe0933be19db615901cd99023f9939a2933"
+CHROME_VERSION_MAJOR = 132
 CHROME_VERSION_MINOR = 0
-CHROME_VERSION_BUILD = 6261
-CHROME_VERSION_PATCH = 69
+CHROME_VERSION_BUILD = 6834
+CHROME_VERSION_PATCH = 83
 
 import enum
 class IntEnum(enum.IntEnum):
@@ -84,6 +84,8 @@ if 1:
     TS_PROCESS_WAS_KILLED = 2
     TS_PROCESS_CRASHED = 3
     TS_PROCESS_OOM = 4
+    TS_LAUNCH_FAILED = 5
+    TS_INTEGRITY_FAILURE = 6
 
 
 #class cef_path_key_t(enum):
@@ -128,6 +130,37 @@ if 1:
     CERT_STATUS_CT_COMPLIANCE_FAILED = 1048576
 
 
+#class cef_resultcode_t(enum):
+    CEF_RESULT_CODE_NORMAL_EXIT = 1
+    CEF_RESULT_CODE_KILLED = 2
+    CEF_RESULT_CODE_HUNG = 3
+    CEF_RESULT_CODE_KILLED_BAD_MESSAGE = 4
+    CEF_RESULT_CODE_GPU_DEAD_ON_ARRIVAL = 5
+    CEF_RESULT_CODE_CHROME_FIRST = 6
+    CEF_RESULT_CODE_MISSING_DATA = 7
+    CEF_RESULT_CODE_UNSUPPORTED_PARAM = 13
+    CEF_RESULT_CODE_PROFILE_IN_USE = 21
+    CEF_RESULT_CODE_PACK_EXTENSION_ERROR = 22
+    CEF_RESULT_CODE_NORMAL_EXIT_PROCESS_NOTIFIED = 24
+    CEF_RESULT_CODE_INVALID_SANDBOX_STATE = 31
+    CEF_RESULT_CODE_CLOUD_POLICY_ENROLLMENT_FAILED = 32
+    CEF_RESULT_CODE_GPU_EXIT_ON_CONTEXT_LOST = 34
+    CEF_RESULT_CODE_NORMAL_EXIT_PACK_EXTENSION_SUCCESS = 36
+    CEF_RESULT_CODE_SYSTEM_RESOURCE_EXHAUSTED = 37
+    CEF_RESULT_CODE_CHROME_LAST = 38
+    CEF_RESULT_CODE_SANDBOX_FATAL_FIRST = 7006
+    CEF_RESULT_CODE_SANDBOX_FATAL_INTEGRITY = 7006
+    CEF_RESULT_CODE_SANDBOX_FATAL_DROPTOKEN = 7007
+    CEF_RESULT_CODE_SANDBOX_FATAL_FLUSHANDLES = 7008
+    CEF_RESULT_CODE_SANDBOX_FATAL_CACHEDISABLE = 7009
+    CEF_RESULT_CODE_SANDBOX_FATAL_CLOSEHANDLES = 7010
+    CEF_RESULT_CODE_SANDBOX_FATAL_MITIGATION = 7011
+    CEF_RESULT_CODE_SANDBOX_FATAL_MEMORY_EXCEEDED = 7012
+    CEF_RESULT_CODE_SANDBOX_FATAL_WARMUP = 7013
+    CEF_RESULT_CODE_SANDBOX_FATAL_BROKER_SHUTDOWN_HUNG = 7014
+    CEF_RESULT_CODE_SANDBOX_FATAL_LAST = 7015
+
+
 #class cef_window_open_disposition_t(enum):
     CEF_WOD_UNKNOWN = 1
     CEF_WOD_CURRENT_TAB = 2
@@ -166,13 +199,6 @@ if 1:
     CEF_TEXT_INPUT_MODE_DECIMAL = 8
     CEF_TEXT_INPUT_MODE_SEARCH = 9
     CEF_TEXT_INPUT_MODE_MAX = 9
-
-
-#class cef_v8_accesscontrol_t(enum):
-    V8_ACCESS_CONTROL_DEFAULT = 0
-    V8_ACCESS_CONTROL_ALL_CAN_READ = 1
-    V8_ACCESS_CONTROL_ALL_CAN_WRITE = 2
-    V8_ACCESS_CONTROL_PROHIBITS_OVERWRITING = 4
 
 
 #class cef_v8_propertyattribute_t(enum):
@@ -320,8 +346,9 @@ if 1:
     MENU_ID_CUT = 112
     MENU_ID_COPY = 113
     MENU_ID_PASTE = 114
-    MENU_ID_DELETE = 115
-    MENU_ID_SELECT_ALL = 116
+    MENU_ID_PASTE_MATCH_STYLE = 115
+    MENU_ID_DELETE = 116
+    MENU_ID_SELECT_ALL = 117
     MENU_ID_FIND = 130
     MENU_ID_PRINT = 131
     MENU_ID_VIEW_SOURCE = 132
@@ -545,7 +572,7 @@ if 1:
     DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON = 1
     DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT = 2
     DOM_FORM_CONTROL_TYPE_BUTTON_RESET = 3
-    DOM_FORM_CONTROL_TYPE_BUTTON_SELECT_LIST = 4
+    DOM_FORM_CONTROL_TYPE_BUTTON_POPOVER = 4
     DOM_FORM_CONTROL_TYPE_FIELDSET = 5
     DOM_FORM_CONTROL_TYPE_INPUT_BUTTON = 6
     DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX = 7
@@ -572,8 +599,7 @@ if 1:
     DOM_FORM_CONTROL_TYPE_OUTPUT = 28
     DOM_FORM_CONTROL_TYPE_SELECT_ONE = 29
     DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE = 30
-    DOM_FORM_CONTROL_TYPE_SELECT_LIST = 31
-    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 32
+    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 31
 
 
 #class cef_file_dialog_mode_t(enum):
@@ -726,11 +752,6 @@ if 1:
     RESPONSE_FILTER_ERROR = 3
 
 
-#class cef_color_type_t(enum):
-    CEF_COLOR_TYPE_RGBA_8888 = 1
-    CEF_COLOR_TYPE_BGRA_8888 = 2
-
-
 #class cef_alpha_type_t(enum):
     CEF_ALPHA_TYPE_OPAQUE = 1
     CEF_ALPHA_TYPE_PREMULTIPLIED = 2
@@ -745,17 +766,11 @@ if 1:
     CEF_TEXT_STYLE_UNDERLINE = 5
 
 
-#class cef_main_axis_alignment_t(enum):
-    CEF_MAIN_AXIS_ALIGNMENT_START = 1
-    CEF_MAIN_AXIS_ALIGNMENT_CENTER = 2
-    CEF_MAIN_AXIS_ALIGNMENT_END = 3
-
-
-#class cef_cross_axis_alignment_t(enum):
-    CEF_CROSS_AXIS_ALIGNMENT_STRETCH = 1
-    CEF_CROSS_AXIS_ALIGNMENT_START = 2
-    CEF_CROSS_AXIS_ALIGNMENT_CENTER = 3
-    CEF_CROSS_AXIS_ALIGNMENT_END = 4
+#class cef_axis_alignment_t(enum):
+    CEF_AXIS_ALIGNMENT_START = 1
+    CEF_AXIS_ALIGNMENT_CENTER = 2
+    CEF_AXIS_ALIGNMENT_END = 3
+    CEF_AXIS_ALIGNMENT_STRETCH = 4
 
 
 #class cef_button_state_t(enum):
@@ -857,7 +872,9 @@ if 1:
     CEF_CHANNEL_LAYOUT_4_1_QUAD_SIDE = 31
     CEF_CHANNEL_LAYOUT_BITSTREAM = 32
     CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX = 33
-    CEF_CHANNEL_LAYOUT_MAX = 33
+    CEF_CHANNEL_LAYOUT_1_1 = 34
+    CEF_CHANNEL_LAYOUT_3_1_BACK = 35
+    CEF_CHANNEL_LAYOUT_MAX = 35
 
 
 #class cef_media_route_create_result_t(enum):
@@ -914,18 +931,18 @@ if 1:
     CEF_CPAIT_COOKIE_CONTROLS = 2
     CEF_CPAIT_FILE_SYSTEM_ACCESS = 3
     CEF_CPAIT_FIND = 4
-    CEF_CPAIT_HIGH_EFFICIENCY = 5
+    CEF_CPAIT_MEMORY_SAVER = 5
     CEF_CPAIT_INTENT_PICKER = 6
     CEF_CPAIT_LOCAL_CARD_MIGRATION = 7
     CEF_CPAIT_MANAGE_PASSWORDS = 8
     CEF_CPAIT_PAYMENTS_OFFER_NOTIFICATION = 9
     CEF_CPAIT_PRICE_TRACKING = 10
     CEF_CPAIT_PWA_INSTALL = 11
-    CEF_CPAIT_QR_CODE_GENERATOR = 12
-    CEF_CPAIT_READER_MODE = 13
+    CEF_CPAIT_QR_CODE_GENERATOR_DEPRECATED = 12
+    CEF_CPAIT_READER_MODE_DEPRECATED = 13
     CEF_CPAIT_SAVE_AUTOFILL_ADDRESS = 14
     CEF_CPAIT_SAVE_CARD = 15
-    CEF_CPAIT_SEND_TAB_TO_SELF = 16
+    CEF_CPAIT_SEND_TAB_TO_SELF_DEPRECATED = 16
     CEF_CPAIT_SHARING_HUB = 17
     CEF_CPAIT_SIDE_SEARCH = 18
     CEF_CPAIT_SMS_REMOTE_FETCHER = 19
@@ -937,7 +954,10 @@ if 1:
     CEF_CPAIT_MANDATORY_REAUTH = 25
     CEF_CPAIT_PRICE_INSIGHTS = 26
     CEF_CPAIT_PRICE_READ_ANYTHING = 27
-    CEF_CPAIT_MAX_VALUE = 27
+    CEF_CPAIT_PRODUCT_SPECIFICATIONS = 28
+    CEF_CPAIT_LENS_OVERLAY = 29
+    CEF_CPAIT_DISCOUNTS = 30
+    CEF_CPAIT_MAX_VALUE = 30
 
 
 #class cef_chrome_toolbar_button_type_t(enum):
@@ -982,28 +1002,31 @@ if 1:
 
 #class cef_permission_request_types_t(enum):
     CEF_PERMISSION_TYPE_NONE = 0
-    CEF_PERMISSION_TYPE_ACCESSIBILITY_EVENTS = 1
-    CEF_PERMISSION_TYPE_AR_SESSION = 2
-    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 4
-    CEF_PERMISSION_TYPE_CAMERA_STREAM = 8
-    CEF_PERMISSION_TYPE_CAPTURED_SURFACE_CONTROL = 16
-    CEF_PERMISSION_TYPE_CLIPBOARD = 32
-    CEF_PERMISSION_TYPE_TOP_LEVEL_STORAGE_ACCESS = 64
-    CEF_PERMISSION_TYPE_DISK_QUOTA = 128
-    CEF_PERMISSION_TYPE_LOCAL_FONTS = 256
-    CEF_PERMISSION_TYPE_GEOLOCATION = 512
-    CEF_PERMISSION_TYPE_IDLE_DETECTION = 1024
-    CEF_PERMISSION_TYPE_MIC_STREAM = 2048
-    CEF_PERMISSION_TYPE_MIDI = 4096
+    CEF_PERMISSION_TYPE_AR_SESSION = 1
+    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 2
+    CEF_PERMISSION_TYPE_CAMERA_STREAM = 4
+    CEF_PERMISSION_TYPE_CAPTURED_SURFACE_CONTROL = 8
+    CEF_PERMISSION_TYPE_CLIPBOARD = 16
+    CEF_PERMISSION_TYPE_TOP_LEVEL_STORAGE_ACCESS = 32
+    CEF_PERMISSION_TYPE_DISK_QUOTA = 64
+    CEF_PERMISSION_TYPE_LOCAL_FONTS = 128
+    CEF_PERMISSION_TYPE_GEOLOCATION = 256
+    CEF_PERMISSION_TYPE_HAND_TRACKING = 512
+    CEF_PERMISSION_TYPE_IDENTITY_PROVIDER = 1024
+    CEF_PERMISSION_TYPE_IDLE_DETECTION = 2048
+    CEF_PERMISSION_TYPE_MIC_STREAM = 4096
     CEF_PERMISSION_TYPE_MIDI_SYSEX = 8192
     CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 16384
     CEF_PERMISSION_TYPE_NOTIFICATIONS = 32768
-    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 65536
-    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 131072
-    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 262144
-    CEF_PERMISSION_TYPE_VR_SESSION = 524288
-    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 1048576
-    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 2097152
+    CEF_PERMISSION_TYPE_KEYBOARD_LOCK = 65536
+    CEF_PERMISSION_TYPE_POINTER_LOCK = 131072
+    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 262144
+    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 524288
+    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 1048576
+    CEF_PERMISSION_TYPE_VR_SESSION = 2097152
+    CEF_PERMISSION_TYPE_WEB_APP_INSTALLATION = 4194304
+    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 8388608
+    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 16777216
 
 
 #class cef_permission_request_result_t(enum):
@@ -1067,6 +1090,38 @@ if 1:
     CEF_ZOOM_COMMAND_RESET = 2
     CEF_ZOOM_COMMAND_IN = 3
 
+
+#class cef_color_variant_t(enum):
+    CEF_COLOR_VARIANT_SYSTEM = 1
+    CEF_COLOR_VARIANT_LIGHT = 2
+    CEF_COLOR_VARIANT_DARK = 3
+    CEF_COLOR_VARIANT_TONAL_SPOT = 4
+    CEF_COLOR_VARIANT_NEUTRAL = 5
+    CEF_COLOR_VARIANT_VIBRANT = 6
+    CEF_COLOR_VARIANT_EXPRESSIVE = 7
+
+
+#class cef_task_type_t(enum):
+    CEF_TASK_TYPE_UNKNOWN = 0
+    CEF_TASK_TYPE_BROWSER = 1
+    CEF_TASK_TYPE_GPU = 2
+    CEF_TASK_TYPE_ZYGOTE = 3
+    CEF_TASK_TYPE_UTILITY = 4
+    CEF_TASK_TYPE_RENDERER = 5
+    CEF_TASK_TYPE_EXTENSION = 6
+    CEF_TASK_TYPE_GUEST = 7
+    CEF_TASK_TYPE_PLUGIN = 8
+    CEF_TASK_TYPE_SANDBOX_HELPER = 9
+    CEF_TASK_TYPE_DEDICATED_WORKER = 10
+    CEF_TASK_TYPE_SHARED_WORKER = 11
+    CEF_TASK_TYPE_SERVICE_WORKER = 12
+
+
+#class cef_runtime_style_t(enum):
+    CEF_RUNTIME_STYLE_DEFAULT = 1
+    CEF_RUNTIME_STYLE_CHROME = 2
+    CEF_RUNTIME_STYLE_ALLOY = 3
+
 cef_log_severity_t = c_int
 cef_log_items_t = c_int
 cef_state_t = c_int
@@ -1078,10 +1133,10 @@ cef_path_key_t = c_int
 cef_storage_type_t = c_int
 cef_errorcode_t = c_int
 cef_cert_status_t = c_int
+cef_resultcode_t = c_int
 cef_window_open_disposition_t = c_int
 cef_drag_operations_mask_t = c_int
 cef_text_input_mode_t = c_int
-cef_v8_accesscontrol_t = c_int
 cef_v8_propertyattribute_t = c_int
 cef_postdataelement_type_t = c_int
 cef_resource_type_t = c_int
@@ -1128,11 +1183,9 @@ cef_pdf_print_margin_type_t = c_int
 cef_scale_factor_t = c_int
 cef_referrer_policy_t = c_int
 cef_response_filter_status_t = c_int
-cef_color_type_t = c_int
 cef_alpha_type_t = c_int
 cef_text_style_t = c_int
-cef_main_axis_alignment_t = c_int
-cef_cross_axis_alignment_t = c_int
+cef_axis_alignment_t = c_int
 cef_button_state_t = c_int
 cef_horizontal_alignment_t = c_int
 cef_menu_anchor_position_t = c_int
@@ -1160,6 +1213,9 @@ cef_preferences_type_t = c_int
 cef_download_interrupt_reason_t = c_int
 cef_gesture_command_t = c_int
 cef_zoom_command_t = c_int
+cef_color_variant_t = c_int
+cef_task_type_t = c_int
+cef_runtime_style_t = c_int
 
 class cef_point_t(Structure):
     _align_ = CEFALIGN
@@ -1220,7 +1276,6 @@ class cef_settings_t(Structure):
         ('browser_subprocess_path', cef_string_t),
         ('framework_dir_path', cef_string_t),
         ('main_bundle_path', cef_string_t),
-        ('chrome_runtime', c_int),
         ('multi_threaded_message_loop', c_int),
         ('external_message_pump', c_int),
         ('windowless_rendering_enabled', c_int),
@@ -1228,7 +1283,6 @@ class cef_settings_t(Structure):
         ('cache_path', cef_string_t),
         ('root_cache_path', cef_string_t),
         ('persist_session_cookies', c_int),
-        ('persist_user_preferences', c_int),
         ('user_agent', cef_string_t),
         ('user_agent_product', cef_string_t),
         ('locale', cef_string_t),
@@ -1238,7 +1292,6 @@ class cef_settings_t(Structure):
         ('javascript_flags', cef_string_t),
         ('resources_dir_path', cef_string_t),
         ('locales_dir_path', cef_string_t),
-        ('pack_loading_disabled', c_int),
         ('remote_debugging_port', c_int),
         ('uncaught_exception_stack_size', c_int),
         ('background_color', cef_color_t),
@@ -1247,6 +1300,7 @@ class cef_settings_t(Structure):
         ('cookieable_schemes_exclude_defaults', c_int),
         ('chrome_policy_id', cef_string_t),
         ('chrome_app_icon_id', c_int),
+        ('disable_signal_handlers', c_int),
     )
 
 class cef_request_context_settings_t(Structure):
@@ -1255,7 +1309,6 @@ class cef_request_context_settings_t(Structure):
         ('size', size_t),
         ('cache_path', cef_string_t),
         ('persist_session_cookies', c_int),
-        ('persist_user_preferences', c_int),
         ('accept_language_list', cef_string_t),
         ('cookieable_schemes_list', cef_string_t),
         ('cookieable_schemes_exclude_defaults', c_int),
@@ -1342,6 +1395,15 @@ class cef_screen_info_t(Structure):
         ('is_monochrome', c_int),
         ('rect', cef_rect_t),
         ('available_rect', cef_rect_t),
+    )
+
+class cef_linux_window_properties_t(Structure):
+    _align_ = CEFALIGN
+    _fields_ = (
+        ('wayland_app_id', cef_string_t),
+        ('wm_class_class', cef_string_t),
+        ('wm_class_name', cef_string_t),
+        ('wm_role_name', cef_string_t),
     )
 
 class cef_mouse_event_t(Structure):
@@ -1433,8 +1495,8 @@ class cef_box_layout_settings_t(Structure):
         ('inside_border_vertical_spacing', c_int),
         ('inside_border_insets', cef_insets_t),
         ('between_child_spacing', c_int),
-        ('main_axis_alignment', cef_main_axis_alignment_t),
-        ('cross_axis_alignment', cef_cross_axis_alignment_t),
+        ('main_axis_alignment', cef_axis_alignment_t),
+        ('cross_axis_alignment', cef_axis_alignment_t),
         ('minimum_cross_axis_size', c_int),
         ('default_flex', c_int),
     )
@@ -1485,6 +1547,37 @@ class cef_touch_handle_state_t(Structure):
         ('alpha', float),
     )
 
+class cef_task_info_t(Structure):
+    _align_ = CEFALIGN
+    _fields_ = (
+        ('id', int64_t),
+        ('type', cef_task_type_t),
+        ('is_killable', c_int),
+        ('title', cef_string_t),
+        ('cpu_usage', double),
+        ('number_of_processors', c_int),
+        ('memory', int64_t),
+        ('gpu_memory', int64_t),
+        ('is_gpu_memory_inflated', c_int),
+    )
+
+class cef_accelerated_paint_info_common_t(Structure):
+    _align_ = CEFALIGN
+    _fields_ = (
+        ('timestamp', uint64_t),
+        ('coded_size', cef_size_t),
+        ('visible_rect', cef_rect_t),
+        ('content_rect', cef_rect_t),
+        ('source_size', cef_size_t),
+        ('capture_update_rect', cef_rect_t),
+        ('region_capture_rect', cef_rect_t),
+        ('capture_counter', uint64_t),
+        ('has_capture_update_rect', uint8_t),
+        ('has_region_capture_rect', uint8_t),
+        ('has_source_size', uint8_t),
+        ('has_capture_counter', uint8_t),
+    )
+
 if linux:
 
     class cef_main_args_t(Structure):
@@ -1506,6 +1599,30 @@ if linux:
             ('shared_texture_enabled', c_int),
             ('external_begin_frame_enabled', c_int),
             ('window', cef_window_handle_t),
+            ('runtime_style', cef_runtime_style_t),
+        )
+
+if linux:
+
+    class cef_accelerated_paint_native_pixmap_plane_t(Structure):
+        _align_ = CEFALIGN
+        _fields_ = (
+            ('stride', uint32_t),
+            ('offset', uint64_t),
+            ('size', uint64_t),
+            ('fd', c_int),
+        )
+
+if linux:
+    kAcceleratedPaintMaxPlanes = 4
+    class cef_accelerated_paint_info_t(Structure):
+        _align_ = CEFALIGN
+        _fields_ = (
+            ('planes', cef_accelerated_paint_native_pixmap_plane_t*kAcceleratedPaintMaxPlanes),
+            ('plane_count', c_int),
+            ('modifier', uint64_t),
+            ('format', cef_color_type_t),
+            ('extra', cef_accelerated_paint_info_common_t),
         )
 
 #int cef_get_min_log_level(void);

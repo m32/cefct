@@ -13,6 +13,7 @@ dllext = ".dll" if win else ".so"
 exeext = ".exe" if win else ""
 thisdir = os.path.dirname(__file__)
 
+uint8_t = c_uint8
 uint16 = c_uint16
 int32 = c_int32
 uint32 = c_uint32

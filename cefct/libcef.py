@@ -21,6 +21,12 @@ def cef_initialize(args, settings, application, windows_sandbox_info):
     return cef_initialize._api_(args, settings, application, windows_sandbox_info)
 
 
+#int cef_get_exit_code(void);
+@CEFENTRY(c_int, "cef_get_exit_code")
+def cef_get_exit_code():
+    return cef_get_exit_code._api_()
+
+
 #void cef_shutdown(void);
 @CEFENTRY(c_void, "cef_shutdown")
 def cef_shutdown():
@@ -55,6 +61,12 @@ def cef_browser_host_create_browser(windowInfo, client, url, settings, extra_inf
 @CEFENTRY(POINTER(cef_browser_t), "cef_browser_host_create_browser_sync", POINTER(cef_window_info_t), POINTER(cef_client_t), POINTER(cef_string_t), POINTER(cef_browser_settings_t), POINTER(cef_dictionary_value_t), POINTER(cef_request_context_t))
 def cef_browser_host_create_browser_sync(windowInfo, client, url, settings, extra_info, request_context):
     return cef_browser_host_create_browser_sync._api_(windowInfo, client, url, settings, extra_info, request_context)
+
+
+#cef_browser_t* cef_browser_host_get_browser_by_identifier( int browser_id);
+@CEFENTRY(POINTER(cef_browser_t), "cef_browser_host_get_browser_by_identifier", c_int)
+def cef_browser_host_get_browser_by_identifier(browser_id):
+    return cef_browser_host_get_browser_by_identifier._api_(browser_id)
 
 
 #cef_command_line_t* cef_command_line_create(void);
@@ -435,6 +447,12 @@ def cef_post_delayed_task(threadId, task, delay_ms):
     return cef_post_delayed_task._api_(threadId, task, delay_ms)
 
 
+#cef_task_manager_t* cef_task_manager_get(void);
+@CEFENTRY(POINTER(cef_task_manager_t), "cef_task_manager_get")
+def cef_task_manager_get():
+    return cef_task_manager_get._api_()
+
+
 #cef_thread_t* cef_thread_create( cef_string_t* display_name, cef_thread_priority_t priority, cef_message_loop_type_t message_loop_type, int stoppable, cef_com_init_mode_t com_init_mode);
 @CEFENTRY(POINTER(cef_thread_t), "cef_thread_create", POINTER(cef_string_t), cef_thread_priority_t, cef_message_loop_type_t, c_int, cef_com_init_mode_t)
 def cef_thread_create(display_name, priority, message_loop_type, stoppable, com_init_mode):
@@ -547,6 +565,12 @@ def cef_v8value_create_array(length):
 @CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_array_buffer", POINTER(c_void), size_t, POINTER(cef_v8array_buffer_release_callback_t))
 def cef_v8value_create_array_buffer(buffer, length, release_callback):
     return cef_v8value_create_array_buffer._api_(buffer, length, release_callback)
+
+
+#cef_v8value_t* cef_v8value_create_array_buffer_with_copy( void* buffer, size_t length);
+@CEFENTRY(POINTER(cef_v8value_t), "cef_v8value_create_array_buffer_with_copy", POINTER(c_void), size_t)
+def cef_v8value_create_array_buffer_with_copy(buffer, length):
+    return cef_v8value_create_array_buffer_with_copy._api_(buffer, length)
 
 
 #cef_v8value_t* cef_v8value_create_function(cef_string_t* name, cef_v8handler_t* handler);
