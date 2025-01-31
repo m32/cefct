@@ -34,7 +34,7 @@ def guiStartup():
 
 useTimer = False
 #useTimer = True
-URL = "http://html5test.com/"
+URL = "https://google.com/"
 
 class Main(wx.Frame):
     def __init__(self, parent):
