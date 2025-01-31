@@ -1,7 +1,6 @@
 #!/usr/bin/env vpython3
 import cefapp
 from cefct import libcef
-from cefappcommon import Client
 
 def main():
     c = cefapp.App()

@@ -6,7 +6,6 @@ from gi.repository import Gtk, Gdk, GdkX11, GObject, GLib
 
 import cefapp
 from cefct import libcef
-from cefappcommon import Client
 
 useTimer = True
 useTimer = False
@@ -90,7 +89,7 @@ class Example():
         self.cef_url = cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
         self.browser_settings = browser_settings = libcef.cef_browser_settings_t()
         self.browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
-        self.client = client = Client()
+        self.client = client = cefapp.Client()
 
         print("cef_browser_host_create_browser")
         self.browser = libcef.cef_browser_host_create_browser_sync(

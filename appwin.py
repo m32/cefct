@@ -1,7 +1,6 @@
 import cefapp
 import win32gui, win32con, win32api
 from cefct import libcef
-import cefappcommon
 
 URL = "http://trisoft.com.pl/"
 URL = "http://html5test.com/"
@@ -40,12 +39,12 @@ def create_window(title, class_name, width, height, window_proc):
     return window_handle
 
 def close_window(window_handle, message, wparam, lparam):
-    if cefappcommon.browser is not None:
+    if cefapp.browser is not None:
         print('close_window+browser')
-        host = cefappcommon.browser.contents.get_host(cefappcommon.browser)
+        host = cefapp.browser.contents.get_host(cefapp.browser)
         host = libcef.cast(host, libcef.POINTER(libcef.cef_browser_host_t))
         host.contents.close_browser(host, 1)
-        cefappcommon.browser = None
+        cefapp.browser = None
         return
 
     # OFF: win32gui.DestroyWindow(window_handle)
@@ -100,10 +99,10 @@ def main():
     cef_url = libcef.cef_string_t(URL)
     browser_settings = libcef.cef_browser_settings_t()
     browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
-    client = cefappcommon.Client()
+    client = cefapp.Client()
 
     print("cef_browser_host_create_browser")
-    cefappcommon.browser = libcef.cef_browser_host_create_browser_sync(
+    cefapp.browser = libcef.cef_browser_host_create_browser_sync(
         window_info,
         client,
         cef_url,

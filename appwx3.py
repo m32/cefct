@@ -7,7 +7,6 @@ import time
 import wx
 import ctypes as ct
 from cefct import libcef
-from cefappcommon import Client
 
 gui = None
 
@@ -44,7 +43,7 @@ class Main(wx.Frame):
 
         guiStartup()
 
-        self.client = Client()
+        self.client = cefapp.Client()
         self.browser = None
 
         self.szv = szv = wx.BoxSizer(wx.VERTICAL)

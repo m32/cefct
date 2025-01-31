@@ -1,7 +1,6 @@
 #!/usr/bin/env vpython3
 import cefapp
 from cefct import libcef
-from cefappcommon import Client
 
 def MAIN():
     import gi
@@ -52,7 +51,7 @@ def MAIN():
             cef_url = libcef.cef_string_t("https://www.trisoft.com.pl/")
             browser_settings = libcef.cef_browser_settings_t()
             browser_settings.size = libcef.sizeof(libcef.cef_browser_settings_t)
-            client = Client()
+            client = cefapp.Client()
 
             self.client = client
             self.browser_settings = browser_settings
